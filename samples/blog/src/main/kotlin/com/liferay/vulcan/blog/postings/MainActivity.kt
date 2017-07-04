@@ -1,11 +1,10 @@
-package com.liferay.vulcan.consumer.sample
+package com.liferay.vulcan.blog.postings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
 import com.github.kittinunf.result.success
-import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.Relation
 import com.liferay.vulcan.consumer.model.Thing
