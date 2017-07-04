@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.liferay.vulcan.blog.postings.SecondActivity"/>
+        <activity android:name="com.liferay.vulcan.blog.postings.DetailActivity"/>
     </application>
 
 </manifest>

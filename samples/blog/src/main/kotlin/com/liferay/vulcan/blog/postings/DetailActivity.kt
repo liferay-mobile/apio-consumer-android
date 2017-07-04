@@ -11,7 +11,7 @@ import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import okhttp3.HttpUrl
 import org.jetbrains.anko.longToast
 
-class SecondActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity() {
 
     val thingScreenlet by lazy {
         findViewById(R.id.thing_screenlet) as ThingScreenlet

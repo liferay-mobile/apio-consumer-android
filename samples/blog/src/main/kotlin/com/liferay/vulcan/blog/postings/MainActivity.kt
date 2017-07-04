@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
     override fun <T : ThingView> onClickEvent(
         thingView: T, view: View, thing: Thing) = View.OnClickListener {
 
-        startActivity<SecondActivity>("id" to thing.id)
+        startActivity<DetailActivity>("id" to thing.id)
     }
 
 }
