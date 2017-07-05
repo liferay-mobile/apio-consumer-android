@@ -1,1 +1,7 @@
-include ':app'
+include 'liferay-vulcan-consumer'
+project(':liferay-vulcan-consumer').projectDir = new File(settingsDir, '/library')
+project(':liferay-vulcan-consumer').name = 'liferay-vulcan-consumer'
+
+include ':blog-postings'
+project(':blog-postings').projectDir = new File(settingsDir, '/samples/blog')
+project(':blog-postings').name = 'sample-blog-postings'

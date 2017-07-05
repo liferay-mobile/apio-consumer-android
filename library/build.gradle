@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+	compileSdkVersion rootProject.ext.compileSdkVersion
+	buildToolsVersion rootProject.ext.buildToolsVersion
+
+	defaultConfig {
+		minSdkVersion rootProject.ext.minSdkVersion
+		targetSdkVersion rootProject.ext.targetSdkVersion
+		versionCode rootProject.ext.versionCode
+		versionName rootProject.ext.versionName
+	}
+
+	sourceSets {
+		main.java.srcDirs += 'src/main/kotlin'
+	}
+}
+
+dependencies {
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+
+	compile libraries.appCompat
+	compile libraries.recyclerView
+
+	compile libraries.gson
+	compile libraries.okhttp
+
+	compile libraries.result
+	compile libraries.anko_commons
+
+	compile libraries.kotlin
+	compile libraries.coroutines_core
+	compile libraries.coroutines_android
+}
+
+apply from: '../install.gradle'
+
+repositories {
+	jcenter()
+	maven { url 'https://maven.google.com' }
+}
+
+kotlin {
+	experimental { coroutines 'enable' }
+}

@@ -1,0 +1,40 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+	compileSdkVersion rootProject.ext.compileSdkVersion
+	buildToolsVersion rootProject.ext.buildToolsVersion
+
+	defaultConfig {
+		minSdkVersion rootProject.ext.minSdkVersion
+		targetSdkVersion rootProject.ext.targetSdkVersion
+		versionCode rootProject.ext.versionCode
+		versionName rootProject.ext.versionName
+		applicationId 'com.liferay.vulcan.consumer.blog.postings'
+	}
+
+	sourceSets {
+		main.java.srcDirs += 'src/main/kotlin'
+	}
+}
+
+dependencies {
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+
+	compile project(':liferay-vulcan-consumer')
+
+	compile libraries.appCompat
+
+	compile libraries.okhttp
+
+	compile libraries.result
+	compile libraries.anko_commons
+
+	compile libraries.kotlin
+}
+
+repositories {
+	jcenter()
+	maven { url 'https://maven.google.com' }
+}
