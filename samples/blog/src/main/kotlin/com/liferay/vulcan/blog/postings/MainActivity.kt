@@ -11,6 +11,7 @@ import com.liferay.vulcan.consumer.screens.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.views.BaseView
 import com.liferay.vulcan.consumer.screens.views.CollectionView
+import com.liferay.vulcan.consumer.screens.adapter.ThingViewHolder
 import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity(), ScreenletEvents {
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
         thingScreenlet.load(id) {
             (it.viewModel as CollectionView).customLayout = Pair(R.layout.blog_posting_row,
                 { layout, collectionView ->
-                    object : CollectionView.ThingAdapter.ThingViewHolder(layout, collectionView) {
+                    object : ThingViewHolder(layout, collectionView) {
                         val headline by lazy { layout.findViewById(R.id.headline) as TextView }
                         val creator by lazy { layout.findViewById(R.id.creator) as TextView }
 
