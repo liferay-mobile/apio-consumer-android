@@ -1,6 +1,8 @@
 package com.liferay.vulcan.consumer.delegates
 
+import com.liferay.vulcan.consumer.graph
 import com.liferay.vulcan.consumer.model.*
+import com.liferay.vulcan.consumer.model.Collection
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import kotlin.properties.ReadWriteProperty
@@ -50,5 +52,18 @@ fun <T> convert(clazz: Class<T>, thing: Thing): T? {
 private val converters: Map<String, (Thing) -> Any> = mapOf(
     BlogPosting::class.java.name to { it: Thing ->
         BlogPosting(it["headline"] as? String)
+    },
+    Collection::class.java.name to { it: Thing ->
+        val members = (it["members"] as List<Relation>).map {
+            graph[it.id]?.value
+        }.filterNotNull()
+
+        val totalItems = (it["totalItems"] as? Double)?.toInt()
+
+        val nextPage = (it["view"] as Relation)["next"] as? String
+
+        val pages = nextPage?.let(::Pages)
+
+        Collection(members, totalItems, pages)
     }
 )

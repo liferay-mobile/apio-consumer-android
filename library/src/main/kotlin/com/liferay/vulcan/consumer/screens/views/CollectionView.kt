@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.liferay.vulcan.consumer.R
+import com.liferay.vulcan.consumer.delegates.convert
+import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
-import com.liferay.vulcan.consumer.graph
-import com.liferay.vulcan.consumer.model.Relation
+import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.model.get
 import com.liferay.vulcan.consumer.screens.ClickAction
 import okhttp3.HttpUrl
 
@@ -27,26 +27,20 @@ open class CollectionView(context: Context, attrs: AttributeSet)
 
     var customLayout: Pair<Int, (View, CollectionView) -> ThingAdapter.ThingViewHolder>? = null
 
-    override var thing: Thing? = null
-        set(value) {
-            field = value
+    override var thing: Thing? by converter<Collection> {
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = ThingAdapter(
+            R.layout.thing_default, it, this@CollectionView)
+    }
 
-            value?.apply {
-                recyclerView.layoutManager = LinearLayoutManager(context)
-                recyclerView.adapter = ThingAdapter(
-                    R.layout.thing_default, value, this@CollectionView)
-            }
-
-        }
-
-    class ThingAdapter(val layoutId: Int, thing: Thing, val collectionView: CollectionView) :
+    class ThingAdapter(val layoutId: Int, collection: Collection, val collectionView: CollectionView) :
         Adapter<ThingAdapter.ThingViewHolder>() {
 
-        val totalItems = (thing["totalItems"] as Double).toInt()
-        val members = extractElements(thing)
+        val totalItems = collection.totalItems
+        val members = collection.members?.toMutableList() ?: mutableListOf()
 
         //TODO How do we want to model this?
-        val nextPage = (thing["view"] as Relation)["next"] as? String
+        val nextPage = collection.pages?.next
 
         override fun onBindViewHolder(holder: ThingViewHolder?, position: Int) {
             //TODO architect add index? per page? page?
@@ -57,9 +51,11 @@ open class CollectionView(context: Context, attrs: AttributeSet)
                     fetch(HttpUrl.parse(nextPage)!!) {
                         it.fold(
                             success = {
-                                val moreMembers = extractElements(it)
-                                merge(members, moreMembers)
-                                notifyDataSetChanged()
+                                convert<Collection>(it)?.let {
+                                    val moreMembers = it.members
+                                    merge(members, moreMembers)
+                                    notifyDataSetChanged()
+                                }
                             },
                             failure = {}
                         )
@@ -68,16 +64,11 @@ open class CollectionView(context: Context, attrs: AttributeSet)
             }
         }
 
-        private fun merge(members: MutableList<Thing>, moreMembers: MutableList<Thing>) {
-            members.addAll(moreMembers)
+        private fun merge(members: MutableList<Thing>, moreMembers: List<Thing>?) {
+            moreMembers?.apply { members.addAll(this) }
         }
 
-        fun extractElements(it: Thing) =
-            (it["members"] as List<Relation>).map {
-                graph[it.id]?.value
-            }.filterNotNull().toMutableList()
-
-        override fun getItemCount(): Int = totalItems
+        override fun getItemCount(): Int = totalItems ?: 0
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ThingViewHolder? {
             return collectionView.customLayout?.let { (customLayoutId, viewHolderCreator) ->
