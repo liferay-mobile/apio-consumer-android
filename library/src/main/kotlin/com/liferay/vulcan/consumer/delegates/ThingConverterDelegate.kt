@@ -29,14 +29,12 @@ internal class ThingConverterDelegate<T>(
     val converter: (Thing) -> T?,
     val onConvert: (T) -> Unit) : ReadWriteProperty<Any, Thing?> {
 
-    private var thing: Thing? = null
+    private var thing: Thing? by observeNonNull { it.let(converter)?.apply(onConvert) }
 
     override fun getValue(thisRef: Any, property: KProperty<*>): Thing? = thing
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: Thing?) {
         thing = value
-
-        value?.let(converter)?.apply(onConvert)
     }
 
 }

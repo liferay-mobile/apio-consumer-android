@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import com.liferay.vulcan.consumer.R
+import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.ClickAction
 import com.liferay.vulcan.consumer.screens.views.CollectionView
@@ -14,18 +15,13 @@ open class ThingViewHolder(itemView: View, val collectionView: CollectionView) :
         itemView.findViewById(R.id.thing_type) as? TextView
     }
 
-    open var thing: Thing? = null
-        set(value) {
-            field = value
+    open var thing: Thing? by observeNonNull {
+        itemView.setOnClickListener { view ->
+            val onClickListener = collectionView.sendAction(ClickAction(view, it))
 
-            value?.let {
-                itemView?.setOnClickListener {
-                    val onClickListener = collectionView.sendAction(ClickAction(itemView, value))
-
-                    onClickListener?.onClick(itemView)
-                }
-
-                thingType?.text = value.type.joinToString()
-            }
+            onClickListener?.onClick(itemView)
         }
+
+        thingType?.text = it.type.joinToString()
+    }
 }
