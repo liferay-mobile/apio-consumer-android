@@ -1,6 +1,7 @@
 package com.liferay.vulcan.consumer.model
 
 import com.liferay.vulcan.consumer.VulcanException
+import com.liferay.vulcan.consumer.graph
 
 data class Relation(val id: String)
 
@@ -37,6 +38,8 @@ data class Thing(
 )
 
 operator fun Thing.get(attribute: String): Any? = attributes[attribute]
+
+operator fun Relation.get(attribute: String): Any? = graph[id]?.value?.get(attribute)
 
 fun Thing.merge(value: Thing?): Thing = value?.let {
     Thing(id, type, attributes + it.attributes)
