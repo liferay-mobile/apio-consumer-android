@@ -1,6 +1,8 @@
 package com.liferay.vulcan.consumer.delegates
 
 import com.liferay.vulcan.consumer.model.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.error
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -26,3 +28,23 @@ internal class ThingConverterDelegate<T>(
     }
 
 }
+
+inline fun <reified T> convert(thing: Thing): T? =
+    convert(T::class.java, thing)
+
+fun <T> convert(clazz: Class<T>, thing: Thing): T? {
+    val t = (converters[clazz.name] as? (Thing) -> T)
+        ?.invoke(thing)
+
+    if (t == null) {
+        AnkoLogger(clazz).error { "Converter not found for this class" }
+    }
+
+    return t
+}
+
+private val converters: Map<String, (Thing) -> Any> = mapOf(
+    BlogPosting::class.java.name to { it: Thing ->
+        BlogPosting(it["headline"] as? String)
+    }
+)
