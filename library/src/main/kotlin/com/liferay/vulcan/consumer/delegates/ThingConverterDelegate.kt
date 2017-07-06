@@ -12,6 +12,10 @@ fun <T> converter(converter: (Thing) -> T?, onConvert: (T) -> Unit) :
     return ThingConverterDelegate(converter, onConvert)
 }
 
+inline fun <reified T> converter(noinline onConvert: (T) -> Unit) :
+    ReadWriteProperty<Any, Thing?> =
+        ThingConverterDelegate({ convert<T>(it) }, onConvert)
+
 @PublishedApi
 internal class ThingConverterDelegate<T>(
     val converter: (Thing) -> T?,
