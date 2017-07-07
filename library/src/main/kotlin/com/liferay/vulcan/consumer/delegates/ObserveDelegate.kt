@@ -3,7 +3,7 @@ package com.liferay.vulcan.consumer.delegates
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-fun <T> observeNonNull(onChange: (T) -> Unit) : ReadWriteProperty<Any, T?> = ObserveDelegate(onChange)
+fun <T> observeNonNull(onChange: (T) -> Unit): ReadWriteProperty<Any, T?> = ObserveDelegate(onChange)
 
 @PublishedApi
 internal class ObserveDelegate<T>(val onChange: (T) -> Unit) : ReadWriteProperty<Any, T?> {

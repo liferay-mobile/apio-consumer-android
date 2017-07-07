@@ -14,15 +14,11 @@ import org.jetbrains.anko.error
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-fun <T> converter(converter: (Thing) -> T?, onConvert: (T) -> Unit) :
-    ReadWriteProperty<Any, Thing?> {
+fun <T> converter(converter: (Thing) -> T?, onConvert: (T) -> Unit): ReadWriteProperty<Any, Thing?> =
+    ThingConverterDelegate(converter, onConvert)
 
-    return ThingConverterDelegate(converter, onConvert)
-}
-
-inline fun <reified T> converter(noinline onConvert: (T) -> Unit) :
-    ReadWriteProperty<Any, Thing?> =
-        ThingConverterDelegate({ convert<T>(it) }, onConvert)
+inline fun <reified T> converter(noinline onConvert: (T) -> Unit): ReadWriteProperty<Any, Thing?> =
+    ThingConverterDelegate({ convert<T>(it) }, onConvert)
 
 @PublishedApi
 internal class ThingConverterDelegate<T>(
@@ -39,12 +35,10 @@ internal class ThingConverterDelegate<T>(
 
 }
 
-inline fun <reified T> convert(thing: Thing): T? =
-    convert(T::class.java, thing)
+inline fun <reified T> convert(thing: Thing): T? = convert(T::class.java, thing)
 
 fun <T> convert(clazz: Class<T>, thing: Thing): T? {
-    val t = (converters[clazz.name] as? (Thing) -> T)
-        ?.invoke(thing)
+    val t = (converters[clazz.name] as? (Thing) -> T)?.invoke(thing)
 
     if (t == null) {
         AnkoLogger(clazz).error { "Converter not found for this class" }

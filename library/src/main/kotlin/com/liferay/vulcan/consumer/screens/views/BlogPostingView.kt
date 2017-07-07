@@ -8,8 +8,7 @@ import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Thing
 
-class BlogPostingView(context: Context, attrs: AttributeSet) :
-    BaseView(context, attrs) {
+class BlogPostingView(context: Context, attrs: AttributeSet) : BaseView(context, attrs) {
 
     val headline by lazy { findViewById(R.id.headline) as TextView }
 

@@ -3,17 +3,10 @@ package com.liferay.vulcan.consumer.screens.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.TextView
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.Action
-import com.liferay.vulcan.consumer.screens.ThingScreenlet
-import com.liferay.vulcan.consumer.screens.ViewModel
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
-import org.jetbrains.anko.longToast
 
 open class ThingView(context: Context, attrs: AttributeSet) :
     BaseView(context, attrs) {

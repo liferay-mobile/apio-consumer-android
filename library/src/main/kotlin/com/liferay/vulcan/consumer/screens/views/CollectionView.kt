@@ -12,12 +12,9 @@ import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.adapter.ThingAdapter
 import com.liferay.vulcan.consumer.screens.adapter.ThingViewHolder
 
-
 open class CollectionView(context: Context, attrs: AttributeSet) : BaseView(context, attrs) {
 
-    val recyclerView by lazy {
-        findViewById(R.id.collection_recycler_view) as RecyclerView
-    }
+    val recyclerView by lazy { findViewById(R.id.collection_recycler_view) as RecyclerView }
 
     var customLayout: Pair<Int, (View, CollectionView) -> ThingViewHolder>? = null
 

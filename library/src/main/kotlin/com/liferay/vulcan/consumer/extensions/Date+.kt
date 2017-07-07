@@ -1,7 +1,8 @@
 package com.liferay.vulcan.consumer.extensions
 
 import java.text.DateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 fun Date.shortFormat() = format(DateFormat.getDateInstance(DateFormat.SHORT, Locale.US))
 

@@ -13,8 +13,7 @@ import org.jetbrains.anko.error
 /**
  * @author Alejandro Hernández
  */
-abstract class BaseView(context: Context, attrs: AttributeSet) :
-    FrameLayout(context, attrs), ViewModel, AnkoLogger {
+abstract class BaseView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), ViewModel, AnkoLogger {
 
     var screenlet: ThingScreenlet? = null
 
