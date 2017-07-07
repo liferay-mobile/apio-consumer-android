@@ -9,6 +9,7 @@ import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.views.BaseView
 import com.liferay.vulcan.consumer.screens.views.ThingView
 import okhttp3.HttpUrl
 
@@ -50,7 +51,7 @@ class ThingScreenlet(context: Context, attrs: AttributeSet) :
 
             addView(layout)
 
-            (layout as? ThingView)?.screenlet = this
+            (layout as? BaseView)?.screenlet = this
 
             it.fold(
                 success = { thing = it },
@@ -71,7 +72,7 @@ class ThingScreenlet(context: Context, attrs: AttributeSet) :
 
     fun <T> onEventFor(action: Action<T>) = when (action) {
         is ClickAction -> screenletEvents?.onClickEvent(
-            layout as ThingView, action.view, action.thing)
+            layout as BaseView, action.view, action.thing)
     }
 }
 
@@ -81,6 +82,5 @@ interface ViewModel {
 }
 
 interface ScreenletEvents {
-    fun <T : ThingView> onClickEvent(
-        thingView: T, view: View, thing: Thing): OnClickListener?
+    fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing): OnClickListener?
 }

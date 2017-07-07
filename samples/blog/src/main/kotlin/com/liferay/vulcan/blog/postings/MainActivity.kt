@@ -9,8 +9,8 @@ import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.model.get
 import com.liferay.vulcan.consumer.screens.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
+import com.liferay.vulcan.consumer.screens.views.BaseView
 import com.liferay.vulcan.consumer.screens.views.CollectionView
-import com.liferay.vulcan.consumer.screens.views.ThingView
 import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity(), ScreenletEvents {
@@ -48,9 +48,7 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 
     }
 
-    override fun <T : ThingView> onClickEvent(
-        thingView: T, view: View, thing: Thing) = View.OnClickListener {
-
+    override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
         startActivity<DetailActivity>("id" to thing.id)
     }
 

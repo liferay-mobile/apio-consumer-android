@@ -15,30 +15,21 @@ import org.jetbrains.anko.error
 import org.jetbrains.anko.longToast
 
 open class ThingView(context: Context, attrs: AttributeSet) :
-    FrameLayout(context, attrs), ViewModel, AnkoLogger {
+    BaseView(context, attrs) {
 
-    var screenlet: ThingScreenlet? = null
     val thingId: View? by lazy { findViewById(R.id.thing_id) }
     val thingType: View? by lazy { findViewById(R.id.thing_type) }
     val thingName: View? by lazy { findViewById(R.id.thing_name) }
 
-    fun <T> sendAction(action: Action<T>) = screenlet?.onEventFor(action)
-
     override var thing: Thing? = null
         set(value) {
-            field = value
+            super.thing = value
 
             value?.apply {
                 (thingId as? TextView)?.text = id
                 (thingType as? TextView)?.text = type.joinToString()
                 (thingName as? TextView)?.text = name
             }
-
         }
-
-    override fun showError(message: String?) {
-        context.longToast("Error loading the thing")
-        error { "Error loading the thing " + message }
-    }
 
 }
