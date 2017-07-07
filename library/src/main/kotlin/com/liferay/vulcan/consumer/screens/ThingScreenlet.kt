@@ -14,11 +14,11 @@ import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.views.BaseView
 import okhttp3.HttpUrl
 
-open class BaseScreenlet(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+open class BaseScreenlet(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     var layout: View? = null
 }
 
-class ThingScreenlet(context: Context, attrs: AttributeSet) : BaseScreenlet(context, attrs) {
+class ThingScreenlet(context: Context, attrs: AttributeSet?) : BaseScreenlet(context, attrs) {
 
     var screenletEvents: ScreenletEvents? = null
 
@@ -60,9 +60,9 @@ class ThingScreenlet(context: Context, attrs: AttributeSet) : BaseScreenlet(cont
     }
 
     init {
-        val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.ThingScreenlet, 0, 0)
+        val typedArray = attrs?.let { context.theme.obtainStyledAttributes(it, R.styleable.ThingScreenlet, 0, 0) }
 
-        reference = typedArray.getResourceId(R.styleable.ThingScreenlet_layoutId, 0)
+        reference = typedArray?.getResourceId(R.styleable.ThingScreenlet_layoutId, 0) ?: 0
     }
 
     fun <T> onEventFor(action: Action<T>) = when (action) {
