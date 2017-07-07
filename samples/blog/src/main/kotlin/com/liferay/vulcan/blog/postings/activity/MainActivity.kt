@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.liferay.vulcan.blog.postings.R
 import com.liferay.vulcan.blog.postings.viewholder.BlogPostingViewHolder
+import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
@@ -14,9 +15,7 @@ import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity(), ScreenletEvents {
 
-    val thingScreenlet by lazy {
-        findViewById(R.id.thing_collection) as ThingScreenlet
-    }
+    val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +28,6 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
         }
 
         thingScreenlet.screenletEvents = this
-
     }
 
     override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
