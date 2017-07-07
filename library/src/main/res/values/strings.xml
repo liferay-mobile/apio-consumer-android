@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="icon_for_person">Icon for person</string>
+    <string name="icon_for_email">Icon for email</string>
+    <string name="icon_for_birthday">Icon for birthday</string>
+    <string name="icon_for_job_title">Icon for job title</string>
+    <string name="arrow_to_indicate_clickable">Arrow to indicate clickable</string>
+</resources>

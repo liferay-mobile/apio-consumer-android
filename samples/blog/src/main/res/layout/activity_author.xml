@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <com.liferay.vulcan.consumer.screens.ThingScreenlet
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/thing_collection"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/thing_screenlet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="30dp"
+    app:layoutId="@layout/person_default"
     />
