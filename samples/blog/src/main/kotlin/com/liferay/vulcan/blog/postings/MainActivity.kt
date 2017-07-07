@@ -27,8 +27,8 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 
         thingScreenlet.load(id) {
             (it.viewModel as CollectionView).customLayout = Pair(R.layout.blog_posting_row,
-                { layout, thingView ->
-                    object : CollectionView.ThingAdapter.ThingViewHolder(layout, thingView) {
+                { layout, collectionView ->
+                    object : CollectionView.ThingAdapter.ThingViewHolder(layout, collectionView) {
                         val headline by lazy { layout.findViewById(R.id.headline) as TextView }
                         val creator by lazy { layout.findViewById(R.id.creator) as TextView }
 

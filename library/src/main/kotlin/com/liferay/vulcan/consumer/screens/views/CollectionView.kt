@@ -25,7 +25,7 @@ open class CollectionView(context: Context, attrs: AttributeSet)
         findViewById(R.id.collection_recycler_view) as RecyclerView
     }
 
-    var customLayout: Pair<Int, (view: View, thingView: ThingView) -> ThingAdapter.ThingViewHolder>? = null
+    var customLayout: Pair<Int, (View, CollectionView) -> ThingAdapter.ThingViewHolder>? = null
 
     override var thing: Thing? = null
         set(value) {
@@ -39,13 +39,13 @@ open class CollectionView(context: Context, attrs: AttributeSet)
 
         }
 
-    class ThingAdapter(val layoutId: Int, thing: Thing,
-        val thingView: CollectionView) : Adapter<ThingAdapter.ThingViewHolder>() {
+    class ThingAdapter(val layoutId: Int, thing: Thing, val collectionView: CollectionView) :
+        Adapter<ThingAdapter.ThingViewHolder>() {
 
         val totalItems = (thing["totalItems"] as Double).toInt()
         val members = extractElements(thing)
+
         //TODO How do we want to model this?
-        val previousPage = (thing["view"] as Relation)["previous"] as? String
         val nextPage = (thing["view"] as Relation)["next"] as? String
 
         override fun onBindViewHolder(holder: ThingViewHolder?, position: Int) {
@@ -80,13 +80,13 @@ open class CollectionView(context: Context, attrs: AttributeSet)
         override fun getItemCount(): Int = totalItems
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ThingViewHolder? {
-            return thingView.customLayout?.let { (customLayoutId, viewHolderCreator) ->
+            return collectionView.customLayout?.let { (customLayoutId, viewHolderCreator) ->
                 parent?.inflate(customLayoutId)
-                    ?.let { viewHolderCreator(it, thingView) }
-            } ?: parent?.inflate(layoutId)?.let { ThingViewHolder(it, thingView) }
+                    ?.let { viewHolderCreator(it, collectionView) }
+            } ?: parent?.inflate(layoutId)?.let { ThingViewHolder(it, collectionView) }
         }
 
-        open class ThingViewHolder(itemView: View, val thingView: ThingView) :
+        open class ThingViewHolder(itemView: View, val collectionView: CollectionView) :
             RecyclerView.ViewHolder(itemView) {
 
             val thingType by lazy {
@@ -99,7 +99,8 @@ open class CollectionView(context: Context, attrs: AttributeSet)
 
                     value?.let {
                         itemView?.setOnClickListener {
-                            val onClickListener = thingView.sendAction(ClickAction(itemView, value))
+                            val onClickListener = collectionView.sendAction(ClickAction(itemView, value))
+
                             onClickListener?.onClick(itemView)
                         }
 
