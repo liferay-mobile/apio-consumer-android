@@ -1,8 +1,14 @@
 package com.liferay.vulcan.consumer.delegates
 
+import com.liferay.vulcan.consumer.extensions.asDate
 import com.liferay.vulcan.consumer.graph
-import com.liferay.vulcan.consumer.model.*
+import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Collection
+import com.liferay.vulcan.consumer.model.Pages
+import com.liferay.vulcan.consumer.model.Person
+import com.liferay.vulcan.consumer.model.Relation
+import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.model.get
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import kotlin.properties.ReadWriteProperty
@@ -65,5 +71,16 @@ private val converters: Map<String, (Thing) -> Any> = mapOf(
         val pages = nextPage?.let(::Pages)
 
         Collection(members, totalItems, pages)
+    },
+    Person::class.java.name to { it: Thing ->
+        val name = it["name"] as? String
+
+        val email = it["email"] as? String
+
+        val jobTitle = it["jobTitle"] as? String
+
+        val birthDate = (it["birthDate"] as? String)?.asDate()
+
+        Person(name, email, jobTitle, birthDate)
     }
 )
