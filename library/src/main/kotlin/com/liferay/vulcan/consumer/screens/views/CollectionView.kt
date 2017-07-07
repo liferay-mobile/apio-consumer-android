@@ -19,7 +19,7 @@ import com.liferay.vulcan.consumer.screens.ClickAction
 import okhttp3.HttpUrl
 
 open class CollectionView(context: Context, attrs: AttributeSet)
-    : ThingView(context, attrs) {
+    : BaseView(context, attrs) {
 
     val recyclerView by lazy {
         findViewById(R.id.collection_recycler_view) as RecyclerView
