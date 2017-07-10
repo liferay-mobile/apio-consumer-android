@@ -17,7 +17,7 @@ abstract class BaseView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
     var screenlet: ThingScreenlet? = null
 
-    fun <T> sendAction(action: Action<T>) = screenlet?.onEventFor(action)
+    fun <T> sendAction(action: Action<T>): T? = screenlet?.onEventFor(action)
 
     override var thing: Thing? = null
 

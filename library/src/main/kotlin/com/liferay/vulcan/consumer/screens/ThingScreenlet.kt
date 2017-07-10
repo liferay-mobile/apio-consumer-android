@@ -70,8 +70,9 @@ class ThingScreenlet @JvmOverloads constructor(
         layoutId = typedArray?.getResourceId(R.styleable.ThingScreenlet_layoutId, 0) ?: 0
     }
 
-    fun <T> onEventFor(action: Action<T>) = when (action) {
-        is ClickAction -> screenletEvents?.onClickEvent(layout as BaseView, action.view, action.thing)
+    fun <T> onEventFor(action: Action<T>): T? = when (action) {
+        is ClickAction -> screenletEvents?.onClickEvent(layout as BaseView, action.view, action.thing) as? T
+        is CustomLayoutAction -> screenletEvents?.onGetCustomLayout(this, action.view, action.thing, action.scenario) as? T
     }
 }
 
@@ -80,6 +81,4 @@ interface ViewModel {
     fun showError(message: String?)
 }
 
-interface ScreenletEvents {
-    fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing): OnClickListener?
 }
