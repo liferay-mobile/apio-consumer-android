@@ -6,7 +6,7 @@ import com.liferay.vulcan.consumer.screens.Scenario.DETAIL
 
 data class BlogPosting(val headline: String?, val creator: Relation?) {
     companion object {
-        val DefaultViews: Map<Scenario, Int> = mapOf(
+        val DEFAULT_VIEWS: Map<Scenario, Int> = mapOf(
             DETAIL to R.layout.blog_posting_default
         )
     }

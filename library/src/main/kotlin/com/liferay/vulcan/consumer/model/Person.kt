@@ -7,7 +7,7 @@ import java.util.Date
 
 data class Person(val name: String?, val email: String?, val jobTitle: String?, val birthDate: Date?) {
     companion object {
-        val DefaultViews: Map<Scenario, Int> = mapOf(
+        val DEFAULT_VIEWS: Map<Scenario, Int> = mapOf(
             DETAIL to R.layout.person_default
         )
     }

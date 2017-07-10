@@ -32,9 +32,9 @@ class ThingScreenlet @JvmOverloads constructor(
     var screenletEvents: ScreenletEvents? = null
 
     val layoutIds: Map<String, Map<Scenario, Int>> = mapOf(
-        "BlogPosting" to BlogPosting.DefaultViews,
-        "Collection" to Collection.DefaultViews,
-        "Person" to Person.DefaultViews
+        "BlogPosting" to BlogPosting.DEFAULT_VIEWS,
+        "Collection" to Collection.DEFAULT_VIEWS,
+        "Person" to Person.DEFAULT_VIEWS
     )
 
     val layoutId: Int
