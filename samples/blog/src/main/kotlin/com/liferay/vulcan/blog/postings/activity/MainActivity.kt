@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
         val id = "http://192.168.0.156:8080/o/api/group/20143/p/blogs"
 
         thingScreenlet.load(id) {
-            (it.viewModel as CollectionView).customLayout = R.layout.blog_posting_row to ::BlogPostingViewHolder
+            (it.viewModel as CollectionView).customLayout = R.layout.blog_posting_row_default to ::BlogPostingViewHolder
         }
 
         thingScreenlet.screenletEvents = this
