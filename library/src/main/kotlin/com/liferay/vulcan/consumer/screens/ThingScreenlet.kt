@@ -3,14 +3,18 @@ package com.liferay.vulcan.consumer.screens
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.FrameLayout
 import com.github.kittinunf.result.failure
 import com.github.kittinunf.result.success
 import com.liferay.vulcan.consumer.R
+import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
+import com.liferay.vulcan.consumer.model.BlogPosting
+import com.liferay.vulcan.consumer.model.Collection
+import com.liferay.vulcan.consumer.model.Person
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.ViewScenario.DETAIL
 import com.liferay.vulcan.consumer.screens.views.BaseView
 import okhttp3.HttpUrl
 
@@ -35,21 +39,13 @@ class ThingScreenlet @JvmOverloads constructor(
 
     val layoutId: Int
 
-    var thing: Thing? = null
-        set(value) {
-            field = value
-            viewModel?.thing = value
-        }
+    var thing: Thing? by observeNonNull { viewModel?.thing = it }
 
-    val viewModel: ViewModel? get() = layout as ViewModel
+    val viewModel: ViewModel? get() = layout as? ViewModel
 
     fun load(thingId: String, onComplete: ((ThingScreenlet) -> Unit)? = null) {
         fetch(HttpUrl.parse(thingId)!!) {
-            val layoutId = if (layoutId == 0)
-                it.component1()?.type?.get(0)
-                    ?.let { layoutIds[it] }
-                    ?: R.layout.thing_default
-            else layoutId
+            val layoutId = getLayoutIdFor(thing = it.component1()) ?: R.layout.thing_default
 
             layout = this.inflate(layoutId)
 
@@ -62,6 +58,15 @@ class ThingScreenlet @JvmOverloads constructor(
             it.success { thing = it }
 
             onComplete?.invoke(this)
+        }
+    }
+
+    private fun getLayoutIdFor(thing: Thing?): Int? {
+        if (layoutId != 0) return layoutId
+
+        return thing?.let {
+            onEventFor(CustomLayoutAction(thing = it))
+                ?: it.type[0].let { layoutIds[it]?.get(DETAIL) }
         }
     }
 
@@ -80,6 +85,4 @@ class ThingScreenlet @JvmOverloads constructor(
 interface ViewModel {
     var thing: Thing?
     fun showError(message: String?)
-}
-
 }
