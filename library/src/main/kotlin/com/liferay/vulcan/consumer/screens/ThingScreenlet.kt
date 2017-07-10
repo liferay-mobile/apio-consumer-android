@@ -14,8 +14,8 @@ import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Person
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.ViewScenario.DETAIL
 import com.liferay.vulcan.consumer.screens.views.BaseView
+import com.liferay.vulcan.consumer.screens.Scenario.DETAIL
 import okhttp3.HttpUrl
 
 open class BaseScreenlet @JvmOverloads constructor(
@@ -31,7 +31,7 @@ class ThingScreenlet @JvmOverloads constructor(
 
     var screenletEvents: ScreenletEvents? = null
 
-    val layoutIds: Map<String, Map<ViewScenario, Int>> = mapOf(
+    val layoutIds: Map<String, Map<Scenario, Int>> = mapOf(
         "BlogPosting" to BlogPosting.DefaultViews,
         "Collection" to Collection.DefaultViews,
         "Person" to Person.DefaultViews
