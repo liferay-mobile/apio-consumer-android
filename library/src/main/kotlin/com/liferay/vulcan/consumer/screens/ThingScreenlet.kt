@@ -31,7 +31,7 @@ class ThingScreenlet @JvmOverloads constructor(
 
     var screenletEvents: ScreenletEvents? = null
 
-    val layoutIds: Map<String, Map<Scenario, Int>> = mapOf(
+    val layoutIds: Map<String, Map<Scenario, ViewInfo>> = mapOf(
         "BlogPosting" to BlogPosting.DEFAULT_VIEWS,
         "Collection" to Collection.DEFAULT_VIEWS,
         "Person" to Person.DEFAULT_VIEWS
@@ -65,8 +65,8 @@ class ThingScreenlet @JvmOverloads constructor(
         if (layoutId != 0) return layoutId
 
         return thing?.let {
-            onEventFor(CustomLayoutAction(thing = it))
-                ?: it.type[0].let { layoutIds[it]?.get(DETAIL) }
+            onEventFor(CustomLayoutAction(thing = it))?.id
+                ?: it.type[0].let { layoutIds[it]?.get(DETAIL) as? Detail }?.id
         }
     }
 
