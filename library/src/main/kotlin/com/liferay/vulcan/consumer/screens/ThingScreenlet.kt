@@ -32,7 +32,7 @@ class ThingScreenlet @JvmOverloads constructor(
         "Collection" to R.layout.collection_default
     )
 
-    val reference: Int
+    val layoutId: Int
 
     var thing: Thing? = null
         set(value) {
@@ -44,11 +44,11 @@ class ThingScreenlet @JvmOverloads constructor(
 
     fun load(thingId: String, onComplete: ((ThingScreenlet) -> Unit)? = null) {
         fetch(HttpUrl.parse(thingId)!!) {
-            val layoutId = if (reference == 0)
+            val layoutId = if (layoutId == 0)
                 it.component1()?.type?.get(0)
                     ?.let { layoutIds[it] }
                     ?: R.layout.thing_default
-            else reference
+            else layoutId
 
             layout = this.inflate(layoutId)
 
@@ -67,7 +67,7 @@ class ThingScreenlet @JvmOverloads constructor(
     init {
         val typedArray = attrs?.let { context.theme.obtainStyledAttributes(it, R.styleable.ThingScreenlet, 0, 0) }
 
-        reference = typedArray?.getResourceId(R.styleable.ThingScreenlet_layoutId, 0) ?: 0
+        layoutId = typedArray?.getResourceId(R.styleable.ThingScreenlet_layoutId, 0) ?: 0
     }
 
     fun <T> onEventFor(action: Action<T>) = when (action) {
