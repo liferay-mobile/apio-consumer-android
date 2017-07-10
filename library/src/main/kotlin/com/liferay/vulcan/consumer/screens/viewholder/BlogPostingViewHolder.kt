@@ -1,18 +1,15 @@
-package com.liferay.vulcan.blog.postings.viewholder
+package com.liferay.vulcan.consumer.screens.viewholder
 
 import android.view.View
 import android.widget.TextView
-import com.liferay.vulcan.blog.postings.R
+import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.adapter.ThingViewHolder
-import com.liferay.vulcan.consumer.screens.views.CollectionView
 
-class BlogPostingViewHolder(itemView: View, collectionView: CollectionView) :
-    ThingViewHolder(itemView, collectionView) {
-
+class BlogPostingViewHolder(itemView: View) : ThingViewHolder(itemView) {
     val headline by bindNonNull<TextView>(R.id.headline)
     val creator by bindNonNull<TextView>(R.id.creator)
 

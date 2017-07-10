@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.liferay.vulcan.blog.postings.R
-import com.liferay.vulcan.blog.postings.viewholder.BlogPostingViewHolder
 import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.views.BaseView
-import com.liferay.vulcan.consumer.screens.views.CollectionView
 import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity(), ScreenletEvents {
@@ -23,9 +21,7 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 
         val id = "http://192.168.0.156:8080/o/api/group/20143/p/blogs"
 
-        thingScreenlet.load(id) {
-            (it.viewModel as CollectionView).customLayout = R.layout.blog_posting_row_default to ::BlogPostingViewHolder
-        }
+        thingScreenlet.load(id)
 
         thingScreenlet.screenletEvents = this
     }

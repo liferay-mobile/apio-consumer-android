@@ -10,16 +10,16 @@ import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.ClickAction
 import com.liferay.vulcan.consumer.screens.views.CollectionView
 
-open class ThingViewHolder(itemView: View, val collectionView: CollectionView) : RecyclerView.ViewHolder(itemView) {
+open class ThingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     val thingType by bind<TextView>(R.id.thing_type)
 
     open var thing: Thing? by observeNonNull {
-        itemView.setOnClickListener { view ->
-            val onClickListener = collectionView.sendAction(ClickAction(view, it))
-
-            onClickListener?.onClick(itemView)
-        }
+//        itemView.setOnClickListener { view ->
+//            val onClickListener = collectionView.sendAction(ClickAction(view, it))
+//
+//            onClickListener?.onClick(itemView)
+//        }
 
         thingType?.text = it.type.joinToString()
     }

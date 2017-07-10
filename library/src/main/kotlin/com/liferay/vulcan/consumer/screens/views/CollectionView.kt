@@ -17,7 +17,7 @@ open class CollectionView(context: Context, attrs: AttributeSet) : BaseView(cont
 
     val recyclerView by bindNonNull<RecyclerView>(R.id.collection_recycler_view)
 
-    var customLayout: Pair<Int, (View, CollectionView) -> ThingViewHolder>? = null
+    var customLayout: Pair<Int, (View) -> ThingViewHolder>? = null
 
     override var thing: Thing? by converter<Collection> {
         recyclerView.layoutManager = LinearLayoutManager(context)

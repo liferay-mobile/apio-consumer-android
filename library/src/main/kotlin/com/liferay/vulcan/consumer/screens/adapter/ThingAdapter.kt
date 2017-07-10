@@ -49,7 +49,7 @@ class ThingAdapter(val layoutId: Int, collection: Collection, val collectionView
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ThingViewHolder? {
         return collectionView.customLayout?.let { (customLayoutId, viewHolderCreator) ->
-            parent?.inflate(customLayoutId)?.let { viewHolderCreator(it, collectionView) }
-        } ?: parent?.inflate(layoutId)?.let { ThingViewHolder(it, collectionView) }
+            parent?.inflate(customLayoutId)?.let(viewHolderCreator)
+        } ?: parent?.inflate(layoutId)?.let { ThingViewHolder(it) }
     }
 }
