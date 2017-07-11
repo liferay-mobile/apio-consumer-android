@@ -11,11 +11,9 @@ import com.liferay.vulcan.consumer.screens.viewholder.BlogPostingViewHolder
 
 data class BlogPosting(val headline: String?, val creator: Relation?) {
     companion object {
-        val DEFAULT_VIEWS: Map<Scenario, ViewInfo> = mapOf(
+        val DEFAULT_VIEWS: MutableMap<Scenario, ViewInfo> = mutableMapOf(
             DETAIL to Detail(R.layout.blog_posting_default),
-            ROW to Row(R.layout.blog_posting_row_default) {
-                BlogPostingViewHolder(it)
-            }
+            ROW to Row(R.layout.blog_posting_row_default, ::BlogPostingViewHolder)
         )
     }
 }

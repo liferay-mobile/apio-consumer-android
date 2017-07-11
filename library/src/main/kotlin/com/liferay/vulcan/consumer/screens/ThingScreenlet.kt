@@ -31,11 +31,13 @@ class ThingScreenlet @JvmOverloads constructor(
 
     var screenletEvents: ScreenletEvents? = null
 
-    val layoutIds: Map<String, Map<Scenario, ViewInfo>> = mapOf(
-        "BlogPosting" to BlogPosting.DEFAULT_VIEWS,
-        "Collection" to Collection.DEFAULT_VIEWS,
-        "Person" to Person.DEFAULT_VIEWS
-    )
+    companion object {
+        val layoutIds: MutableMap<String, MutableMap<Scenario, ViewInfo>> = mutableMapOf(
+            "BlogPosting" to BlogPosting.DEFAULT_VIEWS,
+            "Collection" to Collection.DEFAULT_VIEWS,
+            "Person" to Person.DEFAULT_VIEWS
+        )
+    }
 
     val layoutId: Int
 
