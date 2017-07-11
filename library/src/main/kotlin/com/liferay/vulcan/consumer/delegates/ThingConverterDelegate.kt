@@ -52,9 +52,9 @@ private val converters: Map<String, (Thing) -> Any> = mapOf(
         BlogPosting(it["headline"] as? String, it["creator"] as? Relation)
     },
     Collection::class.java.name to { it: Thing ->
-        val members = (it["members"] as List<Relation>).map {
+        val members = (it["members"] as? List<Relation>)?.map {
             graph[it.id]?.value
-        }.filterNotNull()
+        }?.filterNotNull()
 
         val totalItems = (it["totalItems"] as? Double)?.toInt()
 
