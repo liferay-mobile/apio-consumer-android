@@ -21,11 +21,8 @@ open class CollectionView(context: Context, attrs: AttributeSet) : BaseView(cont
 
     override var thing: Thing? by converter<Collection> {
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ThingAdapter(R.layout.thing_default, it, this)
+        recyclerView.adapter = ThingAdapter(it, this)
     }
-
-    override fun onGetLayout(thing: Thing): ViewInfo? =
-        sendEvent(GetLayoutEvent(this, thing, Scenario.ROW))
 
     override fun onClickedRow(view: View, thing: Thing): OnClickListener? =
         sendEvent(ClickEvent(view, thing))

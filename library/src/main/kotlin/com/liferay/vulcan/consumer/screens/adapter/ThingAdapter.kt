@@ -3,16 +3,15 @@ package com.liferay.vulcan.consumer.screens.adapter
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.View
 import android.view.ViewGroup
+import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.convert
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.Row
-import com.liferay.vulcan.consumer.screens.ViewInfo
 import okhttp3.HttpUrl
 
-class ThingAdapter(val layoutId: Int, collection: Collection, val listener: Listener) :
+class ThingAdapter(collection: Collection, val listener: Listener) :
     Adapter<ThingViewHolder>(), ThingViewHolder.Listener {
 
     override fun onClickedRow(view: View, thing: Thing): View.OnClickListener? = listener.onClickedRow(view, thing)
@@ -56,18 +55,12 @@ class ThingAdapter(val layoutId: Int, collection: Collection, val listener: List
     override fun getItemCount(): Int = totalItems ?: 0
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ThingViewHolder? {
-        return members.getOrNull(viewType)
-            ?.let { listener.onGetLayout(it) }
-            ?.let { it as? Row }
-            ?.let { row ->
-                parent?.inflate(row.id)?.let {
-                    row.viewHolderCreator.invoke(it, this)
-                }
-            } ?: parent?.inflate(layoutId)?.let { ThingViewHolder(it, this) }
+        return parent?.inflate(R.layout.thing_viewholder_default)?.let {
+            ThingViewHolder(it, this)
+        }
     }
 
     interface Listener {
-        fun onGetLayout(thing: Thing): ViewInfo?
         fun onClickedRow(view: View, thing: Thing): View.OnClickListener?
     }
 }
