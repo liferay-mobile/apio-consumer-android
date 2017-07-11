@@ -8,6 +8,8 @@ import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.Row
+import com.liferay.vulcan.consumer.screens.ViewInfo
 import okhttp3.HttpUrl
 
 class ThingAdapter(val layoutId: Int, collection: Collection, val listener: Listener) :
@@ -43,6 +45,10 @@ class ThingAdapter(val layoutId: Int, collection: Collection, val listener: List
         }
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     private fun merge(members: MutableList<Thing>, moreMembers: List<Thing>?) {
         moreMembers?.apply { members.addAll(this) }
     }
@@ -50,9 +56,15 @@ class ThingAdapter(val layoutId: Int, collection: Collection, val listener: List
     override fun getItemCount(): Int = totalItems ?: 0
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ThingViewHolder? {
-        return collectionView.customLayout?.let { (customLayoutId, viewHolderCreator) ->
-            parent?.inflate(customLayoutId)?.let(viewHolderCreator)
-        } ?: parent?.inflate(layoutId)?.let { ThingViewHolder(it) }
+        return members.getOrNull(viewType)
+            ?.let { listener.onGetLayout(it) }
+            ?.let { it as? Row }
+            ?.let { row ->
+                parent?.inflate(row.id)?.let {
+                    row.viewHolderCreator.invoke(it, this)
+                }
+            } ?: parent?.inflate(layoutId)?.let { ThingViewHolder(it, this) }
+    }
 
     interface Listener {
         fun onGetLayout(thing: Thing): ViewInfo?
