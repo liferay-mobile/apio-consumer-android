@@ -10,7 +10,7 @@ sealed class Event<T>
 
 class ClickEvent(val view: View, val thing: Thing) : Event<View.OnClickListener>()
 
-class GetLayoutEvent(val view: BaseView? = null, val thing: Thing, val scenario: Scenario = DETAIL) : Event<ViewInfo>()
+class GetLayoutEvent(val view: BaseView? = null, val thing: Thing, val scenario: Scenario) : Event<ViewInfo>()
 
 enum class Scenario {
     DETAIL, ROW

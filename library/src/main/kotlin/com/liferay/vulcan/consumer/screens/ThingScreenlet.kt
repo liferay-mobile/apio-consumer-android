@@ -67,7 +67,7 @@ class ThingScreenlet @JvmOverloads constructor(
         if (layoutId != 0) return layoutId
 
         return thing?.let {
-            onEventFor(GetLayoutEvent(thing = it))?.id
+            onEventFor(GetLayoutEvent(thing = it, scenario = DETAIL))?.id
                 ?: it.type[0].let { layoutIds[it]?.get(DETAIL) as? Detail }?.id
         }
     }
