@@ -2,8 +2,6 @@ package com.liferay.vulcan.consumer.screens
 
 import android.view.View
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.Scenario.DETAIL
-import com.liferay.vulcan.consumer.screens.adapter.ThingViewHolder
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
 sealed class Event<T>
@@ -12,14 +10,13 @@ class ClickEvent(val view: View, val thing: Thing) : Event<View.OnClickListener>
 
 class GetLayoutEvent(val view: BaseView? = null, val thing: Thing, val scenario: Scenario) : Event<ViewInfo>()
 
-enum class Scenario {
-    DETAIL, ROW
-}
+interface Scenario
 
-sealed class ViewInfo(val id: Int)
+object Detail : Scenario
 
-class Detail(id: Int) : ViewInfo(id)
-class Row(id: Int, val viewHolderCreator: (View, ThingViewHolder.Listener) -> ThingViewHolder) : ViewInfo(id)
+object Row: Scenario
+
+class ViewInfo(val id: Int)
 
 interface ScreenletEvents {
     fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing): View.OnClickListener? = null
