@@ -9,7 +9,7 @@
         android:id="@+id/thing_screenlet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutId="@layout/blog_posting_default"
+        app:layoutId="@layout/blog_posting_detail_default"
         />
 
     <TextView

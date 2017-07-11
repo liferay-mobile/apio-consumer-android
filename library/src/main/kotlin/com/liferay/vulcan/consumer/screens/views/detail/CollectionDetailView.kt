@@ -1,4 +1,4 @@
-package com.liferay.vulcan.consumer.screens.views
+package com.liferay.vulcan.consumer.screens.views.detail
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -11,12 +11,10 @@ import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.ClickEvent
-import com.liferay.vulcan.consumer.screens.GetLayoutEvent
-import com.liferay.vulcan.consumer.screens.Scenario
-import com.liferay.vulcan.consumer.screens.ViewInfo
 import com.liferay.vulcan.consumer.screens.adapter.ThingAdapter
+import com.liferay.vulcan.consumer.screens.views.BaseView
 
-open class CollectionView(context: Context, attrs: AttributeSet) : BaseView(context, attrs), ThingAdapter.Listener {
+open class CollectionDetailView(context: Context, attrs: AttributeSet) : BaseView(context, attrs), ThingAdapter.Listener {
     val recyclerView by bindNonNull<RecyclerView>(R.id.collection_recycler_view)
 
     override var thing: Thing? by converter<Collection> {

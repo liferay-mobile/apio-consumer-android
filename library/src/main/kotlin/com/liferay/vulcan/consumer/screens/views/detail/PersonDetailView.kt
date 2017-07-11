@@ -1,4 +1,4 @@
-package com.liferay.vulcan.consumer.screens.views
+package com.liferay.vulcan.consumer.screens.views.detail
 
 import android.content.Context
 import android.util.AttributeSet
@@ -9,8 +9,9 @@ import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.extensions.mediumFormat
 import com.liferay.vulcan.consumer.model.Person
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.views.ThingView
 
-class PersonView(context: Context, attrs: AttributeSet) : ThingView(context, attrs) {
+class PersonDetailView(context: Context, attrs: AttributeSet) : ThingView(context, attrs) {
 
     val name by bindNonNull<TextView>(R.id.person_name)
     val email by bindNonNull<TextView>(R.id.person_email)

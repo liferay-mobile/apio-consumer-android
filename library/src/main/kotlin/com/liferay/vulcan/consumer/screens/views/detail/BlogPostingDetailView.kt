@@ -1,4 +1,4 @@
-package com.liferay.vulcan.consumer.screens.views
+package com.liferay.vulcan.consumer.screens.views.detail
 
 import android.content.Context
 import android.util.AttributeSet
@@ -8,8 +8,9 @@ import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.views.BaseView
 
-class BlogPostingView(context: Context, attrs: AttributeSet) : BaseView(context, attrs) {
+class BlogPostingDetailView(context: Context, attrs: AttributeSet) : BaseView(context, attrs) {
 
     val headline by bindNonNull<TextView>(R.id.headline)
 

@@ -9,7 +9,7 @@ import java.util.Date
 data class Person(val name: String?, val email: String?, val jobTitle: String?, val birthDate: Date?) {
     companion object {
         val DEFAULT_VIEWS: MutableMap<Scenario, ViewInfo> = mutableMapOf(
-            Detail to ViewInfo(R.layout.person_default)
+            Detail to ViewInfo(R.layout.person_detail_default)
         )
     }
 }
