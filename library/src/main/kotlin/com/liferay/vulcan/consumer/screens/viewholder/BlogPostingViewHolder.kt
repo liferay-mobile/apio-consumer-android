@@ -9,7 +9,7 @@ import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.adapter.ThingViewHolder
 
-class BlogPostingViewHolder(itemView: View) : ThingViewHolder(itemView) {
+class BlogPostingViewHolder(itemView: View, listener: Listener) : ThingViewHolder(itemView, listener) {
     val headline by bindNonNull<TextView>(R.id.headline)
     val creator by bindNonNull<TextView>(R.id.creator)
 

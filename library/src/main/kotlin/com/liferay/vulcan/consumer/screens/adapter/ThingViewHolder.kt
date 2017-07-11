@@ -8,17 +8,19 @@ import com.liferay.vulcan.consumer.delegates.bind
 import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.model.Thing
 
-open class ThingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+open class ThingViewHolder(itemView: View, listener: Listener) : RecyclerView.ViewHolder(itemView) {
 
     val thingType by bind<TextView>(R.id.thing_type)
 
     open var thing: Thing? by observeNonNull {
-//        itemView.setOnClickListener { view ->
-//            val onClickListener = collectionView.sendEvent(ClickEvent(view, it))
-//
-//            onClickListener?.onClick(itemView)
-//        }
+        itemView.setOnClickListener { view ->
+            listener.onClickedRow(view, it)?.onClick(itemView)
+        }
 
         thingType?.text = it.type.joinToString()
+    }
+
+    interface Listener {
+        fun onClickedRow(view: View, thing: Thing): View.OnClickListener?
     }
 }
