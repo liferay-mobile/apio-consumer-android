@@ -5,10 +5,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import com.github.kittinunf.result.failure
-import com.github.kittinunf.result.success
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.observe
-import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.BlogPosting
@@ -30,6 +28,8 @@ class ThingScreenlet @JvmOverloads constructor(
     BaseScreenlet(context, attrs, defStyleAttr, defStyleRes) {
 
     var screenletEvents: ScreenletEvents? = null
+
+    var scenario: Scenario = Detail
 
     companion object {
         val layoutIds: MutableMap<String, MutableMap<Scenario, ViewInfo>> = mutableMapOf(
@@ -62,9 +62,9 @@ class ThingScreenlet @JvmOverloads constructor(
 
     fun load(thingId: String, onComplete: ((ThingScreenlet) -> Unit)? = null) {
         fetch(HttpUrl.parse(thingId)!!) {
-            it.failure { viewModel?.showError(it.message) }
+            thing = it.component1()
 
-            it.success { thing = it }
+            it.failure { viewModel?.showError(it.message) }
 
             onComplete?.invoke(this)
         }
@@ -74,7 +74,7 @@ class ThingScreenlet @JvmOverloads constructor(
         if (layoutId != 0) return layoutId
 
         return thing?.let {
-            onEventFor(GetLayoutEvent(thing = it, scenario = Scenario.DETAIL))?.id
+            onEventFor(GetLayoutEvent(thing = it, scenario = scenario))?.id
         }
     }
 
