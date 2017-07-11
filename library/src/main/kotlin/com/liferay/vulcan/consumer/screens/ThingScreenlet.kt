@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import com.github.kittinunf.result.failure
 import com.github.kittinunf.result.success
 import com.liferay.vulcan.consumer.R
+import com.liferay.vulcan.consumer.delegates.observe
 import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
@@ -40,20 +41,27 @@ class ThingScreenlet @JvmOverloads constructor(
 
     val layoutId: Int
 
-    var thing: Thing? by observeNonNull { viewModel?.thing = it }
+    var thing: Thing? by observe {
+        val layoutId = getLayoutIdFor(thing = it) ?: R.layout.thing_default
+
+        layout?.also {
+            this.removeView(it)
+        }
+
+        layout = this.inflate(layoutId)
+
+        addView(layout)
+
+        (layout as? BaseView)?.apply {
+            screenlet = this@ThingScreenlet
+            thing = it
+        }
+    }
 
     val viewModel: ViewModel? get() = layout as? ViewModel
 
     fun load(thingId: String, onComplete: ((ThingScreenlet) -> Unit)? = null) {
         fetch(HttpUrl.parse(thingId)!!) {
-            val layoutId = getLayoutIdFor(thing = it.component1()) ?: R.layout.thing_default
-
-            layout = this.inflate(layoutId)
-
-            addView(layout)
-
-            (layout as? BaseView)?.screenlet = this
-
             it.failure { viewModel?.showError(it.message) }
 
             it.success { thing = it }
