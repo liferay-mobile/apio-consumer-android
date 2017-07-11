@@ -6,11 +6,11 @@ import com.liferay.vulcan.consumer.screens.Scenario.DETAIL
 import com.liferay.vulcan.consumer.screens.adapter.ThingViewHolder
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
-sealed class Action<T>
+sealed class Event<T>
 
-class ClickAction(val view: View, val thing: Thing) : Action<View.OnClickListener>()
+class ClickEvent(val view: View, val thing: Thing) : Event<View.OnClickListener>()
 
-class CustomLayoutAction(val view: BaseView? = null, val thing: Thing, val scenario: Scenario = DETAIL) : Action<ViewInfo>()
+class GetLayoutEvent(val view: BaseView? = null, val thing: Thing, val scenario: Scenario = DETAIL) : Event<ViewInfo>()
 
 enum class Scenario {
     DETAIL, ROW

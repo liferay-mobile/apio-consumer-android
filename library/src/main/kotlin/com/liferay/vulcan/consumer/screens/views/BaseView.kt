@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.Action
+import com.liferay.vulcan.consumer.screens.Event
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.ViewModel
 import org.jetbrains.anko.AnkoLogger
@@ -17,7 +17,7 @@ abstract class BaseView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
     var screenlet: ThingScreenlet? = null
 
-    fun <T> sendAction(action: Action<T>): T? = screenlet?.onEventFor(action)
+    fun <T> sendEvent(event: Event<T>): T? = screenlet?.onEventFor(event)
 
     override var thing: Thing? = null
 

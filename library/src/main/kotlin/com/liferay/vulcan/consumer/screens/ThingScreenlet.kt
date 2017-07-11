@@ -67,7 +67,7 @@ class ThingScreenlet @JvmOverloads constructor(
         if (layoutId != 0) return layoutId
 
         return thing?.let {
-            onEventFor(CustomLayoutAction(thing = it))?.id
+            onEventFor(GetLayoutEvent(thing = it))?.id
                 ?: it.type[0].let { layoutIds[it]?.get(DETAIL) as? Detail }?.id
         }
     }
@@ -78,9 +78,9 @@ class ThingScreenlet @JvmOverloads constructor(
         layoutId = typedArray?.getResourceId(R.styleable.ThingScreenlet_layoutId, 0) ?: 0
     }
 
-    fun <T> onEventFor(action: Action<T>): T? = when (action) {
-        is ClickAction -> screenletEvents?.onClickEvent(layout as BaseView, action.view, action.thing) as? T
-        is CustomLayoutAction -> screenletEvents?.onGetCustomLayout(this, action.view, action.thing, action.scenario) as? T
+    fun <T> onEventFor(event: Event<T>): T? = when (event) {
+        is ClickEvent -> screenletEvents?.onClickEvent(layout as BaseView, event.view, event.thing) as? T
+        is GetLayoutEvent -> screenletEvents?.onGetCustomLayout(this, event.view, event.thing, event.scenario) as? T
     }
 }
 
