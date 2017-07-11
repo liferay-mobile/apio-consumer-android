@@ -15,7 +15,6 @@ import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Person
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.views.BaseView
-import com.liferay.vulcan.consumer.screens.Scenario.DETAIL
 import okhttp3.HttpUrl
 
 open class BaseScreenlet @JvmOverloads constructor(
@@ -67,8 +66,7 @@ class ThingScreenlet @JvmOverloads constructor(
         if (layoutId != 0) return layoutId
 
         return thing?.let {
-            onEventFor(GetLayoutEvent(thing = it, scenario = DETAIL))?.id
-                ?: it.type[0].let { layoutIds[it]?.get(DETAIL) as? Detail }?.id
+            onEventFor(GetLayoutEvent(thing = it, scenario = Scenario.DETAIL))?.id
         }
     }
 
@@ -78,9 +76,13 @@ class ThingScreenlet @JvmOverloads constructor(
         layoutId = typedArray?.getResourceId(R.styleable.ThingScreenlet_layoutId, 0) ?: 0
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> onEventFor(event: Event<T>): T? = when (event) {
         is ClickEvent -> screenletEvents?.onClickEvent(layout as BaseView, event.view, event.thing) as? T
-        is GetLayoutEvent -> screenletEvents?.onGetCustomLayout(this, event.view, event.thing, event.scenario) as? T
+        is GetLayoutEvent -> {
+            (screenletEvents?.onGetCustomLayout(this, event.view, event.thing, event.scenario) ?:
+                layoutIds[event.thing.type[0]]?.get(event.scenario)) as? T
+        }
     }
 }
 
