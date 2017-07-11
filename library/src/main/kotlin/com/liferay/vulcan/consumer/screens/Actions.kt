@@ -19,10 +19,10 @@ enum class Scenario {
 sealed class ViewInfo(val id: Int)
 
 class Detail(id: Int) : ViewInfo(id)
-class Row(id: Int, viewHolderCreator: (View) -> ThingViewHolder) : ViewInfo(id)
+class Row(id: Int, val viewHolderCreator: (View, ThingViewHolder.Listener) -> ThingViewHolder) : ViewInfo(id)
 
 interface ScreenletEvents {
     fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing): View.OnClickListener? = null
     fun <T : BaseView> onGetCustomLayout(
-        screenlet: ThingScreenlet, parentView: T?, thing: Thing, scenario: Scenario): Int? = null
+        screenlet: ThingScreenlet, parentView: T?, thing: Thing, scenario: Scenario): ViewInfo? = null
 }
