@@ -25,6 +25,7 @@ dependencies {
 	compile project(':liferay-vulcan-consumer')
 
 	compile libraries.appCompat
+	compile libraries.cardView
 
 	compile libraries.okhttp
 

@@ -66,6 +66,7 @@ def supportLibsVersion = '25.4.0'
 
 ext.libraries = [appCompat          : 'com.android.support:appcompat-v7:' + supportLibsVersion,
 				 recyclerView       : 'com.android.support:recyclerview-v7:' + supportLibsVersion,
+				 cardView           : 'com.android.support:cardview-v7:' + supportLibsVersion,
 				 gson               : 'com.google.code.gson:gson:2.8.0',
 				 okhttp             : 'com.squareup.okhttp3:okhttp:3.8.0',
 				 result             : 'com.github.kittinunf.result:result:1.1.0',
