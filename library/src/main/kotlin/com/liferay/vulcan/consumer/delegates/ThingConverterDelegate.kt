@@ -49,7 +49,7 @@ fun <T> convert(clazz: Class<T>, thing: Thing): T? {
 
 private val converters: Map<String, (Thing) -> Any> = mapOf(
     BlogPosting::class.java.name to { it: Thing ->
-        BlogPosting(it["headline"] as? String, it["creator"] as? Relation)
+        BlogPosting(it["headline"] as? String, it["articleBody"] as? String, it["creator"] as? Relation)
     },
     Collection::class.java.name to { it: Thing ->
         val members = (it["members"] as? List<Relation>)?.map {

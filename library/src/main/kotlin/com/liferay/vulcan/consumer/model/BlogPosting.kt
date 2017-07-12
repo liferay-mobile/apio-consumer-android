@@ -6,7 +6,7 @@ import com.liferay.vulcan.consumer.screens.Row
 import com.liferay.vulcan.consumer.screens.Scenario
 import com.liferay.vulcan.consumer.screens.ViewInfo
 
-data class BlogPosting(val headline: String?, val creator: Relation?) {
+data class BlogPosting(val headline: String?, val articleBody: String?, val creator: Relation?) {
     companion object {
         val DEFAULT_VIEWS: MutableMap<Scenario, ViewInfo> = mutableMapOf(
             Detail to ViewInfo(R.layout.blog_posting_detail_default),
