@@ -2,55 +2,35 @@ package com.liferay.vulcan.blog.postings.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.TextView
+import android.view.View
 
 import com.liferay.vulcan.blog.postings.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
-import com.liferay.vulcan.consumer.fetch
-import com.liferay.vulcan.consumer.model.Relation
-import com.liferay.vulcan.consumer.model.get
+import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.Detail
+import com.liferay.vulcan.consumer.screens.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
-import okhttp3.HttpUrl
-import org.jetbrains.anko.longToast
+import com.liferay.vulcan.consumer.screens.views.BaseView
 import org.jetbrains.anko.startActivity
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), ScreenletEvents {
 
     val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail)
+        setContentView(R.layout.thing_screenlet_activity)
 
         val id = intent.getStringExtra("id")
-        thingScreenlet.load(id)
 
-        //TODO move to screenlet
-        val knowMore = findViewById(R.id.know_more)
-        val httpURL = HttpUrl.parse(id)
-        fetch(httpURL!!, embedded = listOf("creator")) {
-            it.fold(
-                success = { thing ->
-                    (findViewById(R.id.headline) as TextView).apply {
-                        text = thing["headline"] as String
-                    }
+        thingScreenlet.screenletEvents = this
 
-                    (findViewById(R.id.creator) as TextView).apply {
-                        val author = thing.attributes["author"] as Relation
-                        text = author.id
-
-                        knowMore.setOnClickListener {
-                            val authorId = (thing["creator"] as Relation).id
-                            startActivity<AuthorActivity>("id" to authorId)
-                        }
-                    }
-                },
-                failure = {
-                    longToast(it.message!!)
-                }
-            )
-
-        }
+        thingScreenlet.load(id, Detail)
     }
+
+    override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
+        startActivity<DetailActivity>("id" to thing.id)
+    }
+
 
 }

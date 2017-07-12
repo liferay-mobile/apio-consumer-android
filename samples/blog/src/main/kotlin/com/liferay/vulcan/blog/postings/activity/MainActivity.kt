@@ -20,9 +20,9 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.thing_screenlet_activity)
 
-        val id = "http://192.168.0.156:8080/o/api/group/20143/p/blogs"
+        val id = "http://192.168.50.33:8080/o/api/group/20143/p/blogs"
 
         Person.DEFAULT_VIEWS[Custom("portrait")] = ViewInfo(R.layout.person_portrait_custom)
 
