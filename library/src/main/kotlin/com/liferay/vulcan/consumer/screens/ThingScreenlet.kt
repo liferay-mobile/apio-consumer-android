@@ -60,8 +60,12 @@ class ThingScreenlet @JvmOverloads constructor(
 
     val viewModel: ViewModel? get() = layout as? ViewModel
 
-    fun load(thingId: String, onComplete: ((ThingScreenlet) -> Unit)? = null) {
+    fun load(thingId: String, scenario: Scenario? = null, onComplete: ((ThingScreenlet) -> Unit)? = null) {
         fetch(HttpUrl.parse(thingId)!!) {
+            if (scenario != null) {
+                this.scenario = scenario
+            }
+
             thing = it.component1()
 
             it.failure { viewModel?.showError(it.message) }
@@ -82,6 +86,14 @@ class ThingScreenlet @JvmOverloads constructor(
         val typedArray = attrs?.let { context.theme.obtainStyledAttributes(it, R.styleable.ThingScreenlet, 0, 0) }
 
         layoutId = typedArray?.getResourceId(R.styleable.ThingScreenlet_layoutId, 0) ?: 0
+
+        val scenarioId = typedArray?.getString(R.styleable.ThingScreenlet_scenario) ?: ""
+
+        scenario = Scenario.stringToScenario?.invoke(scenarioId) ?: when (scenarioId.toLowerCase()) {
+            "detail", "" -> Detail
+            "row" -> Row
+            else -> Detail
+        }
     }
 
     @Suppress("UNCHECKED_CAST")

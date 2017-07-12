@@ -10,7 +10,11 @@ class ClickEvent(val view: View, val thing: Thing) : Event<View.OnClickListener>
 
 class GetLayoutEvent(val view: BaseView? = null, val thing: Thing, val scenario: Scenario) : Event<ViewInfo>()
 
-interface Scenario
+interface Scenario {
+    companion object {
+        var stringToScenario: ((String) -> Scenario?)? = null
+    }
+}
 
 object Detail : Scenario
 
