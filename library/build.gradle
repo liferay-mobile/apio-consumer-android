@@ -17,7 +17,7 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
         main {
             res.srcDirs = [
-                'src/main/res/layouts/detail', 'src/main/res/layouts/row', 'src/main/res/layouts/thing', 'src/main/res'
+                'src/main/res/layouts/detail', 'src/main/res/layouts/custom', 'src/main/res/layouts/row', 'src/main/res/layouts/thing', 'src/main/res'
             ]
         }
     }
@@ -34,6 +34,9 @@ dependencies {
 
     compile libraries.result
     compile libraries.anko_commons
+
+    compile libraries.picasso
+    compile libraries.circle_image_view
 
     compile libraries.kotlin
     compile libraries.coroutines_core

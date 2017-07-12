@@ -70,6 +70,8 @@ ext.libraries = [appCompat          : 'com.android.support:appcompat-v7:' + supp
 				 okhttp             : 'com.squareup.okhttp3:okhttp:3.8.0',
 				 result             : 'com.github.kittinunf.result:result:1.1.0',
 				 anko_commons       : 'org.jetbrains.anko:anko-commons:0.10.1',
+				 picasso            : 'com.squareup.picasso:picasso:2.5.2',
+				 circle_image_view  : 'de.hdodenhof:circleimageview:2.1.0',
 				 kotlin             : 'org.jetbrains.kotlin:kotlin-stdlib-jre7:' + ext.kotlin_version,
 				 coroutines_core    : 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.16',
 				 coroutines_android : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.16']
