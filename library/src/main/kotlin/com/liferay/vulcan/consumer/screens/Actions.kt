@@ -20,6 +20,8 @@ object Detail : Scenario
 
 object Row: Scenario
 
+data class Custom(val name: String): Scenario
+
 class ViewInfo(val id: Int)
 
 interface ScreenletEvents {

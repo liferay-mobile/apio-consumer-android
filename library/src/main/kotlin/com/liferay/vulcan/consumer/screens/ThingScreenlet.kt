@@ -92,7 +92,7 @@ class ThingScreenlet @JvmOverloads constructor(
         scenario = Scenario.stringToScenario?.invoke(scenarioId) ?: when (scenarioId.toLowerCase()) {
             "detail", "" -> Detail
             "row" -> Row
-            else -> Detail
+            else -> Custom(scenarioId)
         }
     }
 
