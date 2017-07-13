@@ -4,7 +4,6 @@
     android:id="@+id/thing_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
     >
 
     <com.liferay.vulcan.consumer.screens.ThingScreenlet

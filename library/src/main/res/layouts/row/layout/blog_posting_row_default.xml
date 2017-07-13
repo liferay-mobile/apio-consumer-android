@@ -17,8 +17,7 @@
             app:scenario="portrait"
             />
 
-        <TextView
-            android:id="@+id/headline"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -28,7 +27,22 @@
             android:layout_toRightOf="@+id/creator_avatar"
             android:layout_toStartOf="@+id/arrow"
             android:layout_toLeftOf="@+id/arrow"
-            />
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/create_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/arrow"
