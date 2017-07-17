@@ -126,4 +126,3 @@ class ThingScreenlet @JvmOverloads constructor(
 		}
 	}
 }
-

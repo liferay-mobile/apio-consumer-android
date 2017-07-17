@@ -20,8 +20,8 @@ import android.view.View
 import com.liferay.vulcan.blog.postings.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.events.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
+import com.liferay.vulcan.consumer.screens.events.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.views.BaseView
 import org.jetbrains.anko.startActivity
 
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.thing_screenlet_activity)
 
-        val id = "http://docker-engine-web1:9008/o/api/group/20143/p/blogs"
+		val id = "http://docker-engine-web1:9008/o/api/group/20143/p/blogs"
 
 		thingScreenlet.load(id)
 
