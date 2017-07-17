@@ -13,7 +13,9 @@ import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
-class BlogPostingRowView(context: Context, attrs: AttributeSet) : BaseView, FrameLayout(context, attrs) {
+class BlogPostingRowView @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
+    FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     override var screenlet: ThingScreenlet? = null
 

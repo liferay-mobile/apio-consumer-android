@@ -13,7 +13,9 @@ import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.views.BaseView
 import com.liferay.vulcan.consumer.screens.views.ThingView
 
-class PersonDetailSmall(context: Context, attrs: AttributeSet) : BaseView, FrameLayout(context, attrs) {
+class PersonDetailSmall @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
+    FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     override var screenlet: ThingScreenlet? = null
 

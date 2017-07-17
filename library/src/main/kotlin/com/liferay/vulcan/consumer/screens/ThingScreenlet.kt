@@ -25,14 +25,14 @@ import com.liferay.vulcan.consumer.screens.views.Scenario
 import okhttp3.HttpUrl
 
 open class BaseScreenlet @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
     FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     var layout: View? = null
 }
 
 class ThingScreenlet @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
     BaseScreenlet(context, attrs, defStyleAttr, defStyleRes) {
 
     var screenletEvents: ScreenletEvents? = null

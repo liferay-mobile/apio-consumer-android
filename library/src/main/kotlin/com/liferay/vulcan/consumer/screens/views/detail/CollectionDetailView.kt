@@ -16,8 +16,9 @@ import com.liferay.vulcan.consumer.screens.events.ClickEvent
 import com.liferay.vulcan.consumer.screens.adapter.ThingAdapter
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
-open class CollectionDetailView(context: Context, attrs: AttributeSet) :
-    BaseView, ThingAdapter.Listener, FrameLayout(context, attrs) {
+open class CollectionDetailView @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
+    FrameLayout(context, attrs, defStyleAttr, defStyleRes), ThingAdapter.Listener {
 
     override var screenlet: ThingScreenlet? = null
 
