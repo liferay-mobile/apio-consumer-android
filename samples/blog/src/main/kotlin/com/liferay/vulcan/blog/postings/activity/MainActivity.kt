@@ -15,7 +15,6 @@ import com.liferay.vulcan.consumer.screens.Row
 import com.liferay.vulcan.consumer.screens.Scenario
 import com.liferay.vulcan.consumer.screens.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
-import com.liferay.vulcan.consumer.screens.ViewInfo
 import com.liferay.vulcan.consumer.screens.views.BaseView
 import org.jetbrains.anko.startActivity
 
@@ -33,12 +32,12 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
             if (it == "detail-small") DetailSmall else null
         }
 
-        Person.DEFAULT_VIEWS[Custom("portrait")] = ViewInfo(R.layout.person_portrait_custom)
-        Person.DEFAULT_VIEWS[DetailSmall] = ViewInfo(R.layout.person_detail_small)
-        Person.DEFAULT_VIEWS[Detail] = ViewInfo(R.layout.person_detail_custom)
-        BlogPosting.DEFAULT_VIEWS[Row] = ViewInfo(R.layout.blog_posting_row_custom)
-        BlogPosting.DEFAULT_VIEWS[Detail] = ViewInfo(R.layout.blog_posting_detail_custom)
-        Collection.DEFAULT_VIEWS[Detail] = ViewInfo(R.layout.collection_detail_custom)
+        Person.DEFAULT_VIEWS[Custom("portrait")] = R.layout.person_portrait_custom
+        Person.DEFAULT_VIEWS[DetailSmall] = R.layout.person_detail_small
+        Person.DEFAULT_VIEWS[Detail] = R.layout.person_detail_custom
+        BlogPosting.DEFAULT_VIEWS[Row] = R.layout.blog_posting_row_custom
+        BlogPosting.DEFAULT_VIEWS[Detail] = R.layout.blog_posting_detail_custom
+        Collection.DEFAULT_VIEWS[Detail] = R.layout.collection_detail_custom
 
         thingScreenlet.load(id)
 

@@ -32,7 +32,7 @@ class ThingScreenlet @JvmOverloads constructor(
     var scenario: Scenario = Detail
 
     companion object {
-        val layoutIds: MutableMap<String, MutableMap<Scenario, ViewInfo>> = mutableMapOf(
+        val layoutIds: MutableMap<String, MutableMap<Scenario, Int>> = mutableMapOf(
             "BlogPosting" to BlogPosting.DEFAULT_VIEWS,
             "Collection" to Collection.DEFAULT_VIEWS,
             "Person" to Person.DEFAULT_VIEWS
@@ -78,7 +78,7 @@ class ThingScreenlet @JvmOverloads constructor(
         if (layoutId != 0) return layoutId
 
         return thing?.let {
-            onEventFor(GetLayoutEvent(thing = it, scenario = scenario))?.id
+            onEventFor(GetLayoutEvent(thing = it, scenario = scenario))
         }
     }
 
