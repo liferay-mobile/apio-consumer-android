@@ -20,7 +20,7 @@ class PersonPortraitView @JvmOverloads constructor(
 
     override var screenlet: ThingScreenlet? = null
 
-    val image_view by bindNonNull<ImageView>(R.id.image_view)
+    val imageView by bindNonNull<ImageView>(R.id.image_view)
 
     override var thing: Thing? by converter<Person> {
         it.email
@@ -29,7 +29,7 @@ class PersonPortraitView @JvmOverloads constructor(
             ?.let(String::md5)
             ?.let { "https://www.gravatar.com/avatar/$it?d=retro" }
             ?.also {
-                Picasso.with(context).load(it).into(image_view)
+                Picasso.with(context).load(it).into(imageView)
             }
     }
 }

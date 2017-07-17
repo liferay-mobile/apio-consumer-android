@@ -4,7 +4,7 @@ import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.screens.views.Detail
 import com.liferay.vulcan.consumer.screens.views.Row
 import com.liferay.vulcan.consumer.screens.views.Scenario
-import java.util.*
+import java.util.Date
 
 data class BlogPosting(
     val headline: String?,

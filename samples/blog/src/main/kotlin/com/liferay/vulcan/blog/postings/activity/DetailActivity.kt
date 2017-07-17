@@ -32,5 +32,4 @@ class DetailActivity : AppCompatActivity(), ScreenletEvents {
         startActivity<DetailActivity>("id" to thing.id)
     }
 
-
 }

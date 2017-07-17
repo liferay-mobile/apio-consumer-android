@@ -9,7 +9,7 @@ import org.jetbrains.anko.error
 /**
  * @author Alejandro Hernández
  */
-interface BaseView: AnkoLogger {
+interface BaseView : AnkoLogger {
 
     var screenlet: ThingScreenlet?
 

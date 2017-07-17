@@ -9,7 +9,7 @@ import com.liferay.vulcan.consumer.screens.views.Detail
 import com.liferay.vulcan.consumer.screens.views.Row
 import com.liferay.vulcan.consumer.screens.views.Scenario
 
-class BlogPostingApplication: Application() {
+class BlogPostingApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

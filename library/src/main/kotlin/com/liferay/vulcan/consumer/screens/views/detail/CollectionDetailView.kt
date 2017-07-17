@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull

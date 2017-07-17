@@ -2,7 +2,6 @@ package com.liferay.vulcan.consumer.screens.views.detail
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.liferay.vulcan.consumer.R
