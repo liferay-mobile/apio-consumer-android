@@ -7,6 +7,10 @@ import android.widget.FrameLayout
 import com.github.kittinunf.result.failure
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.observe
+import com.liferay.vulcan.consumer.screens.events.ClickEvent
+import com.liferay.vulcan.consumer.screens.events.Event
+import com.liferay.vulcan.consumer.screens.events.GetLayoutEvent
+import com.liferay.vulcan.consumer.screens.events.ScreenletEvents
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.BlogPosting
@@ -14,6 +18,10 @@ import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Person
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.views.BaseView
+import com.liferay.vulcan.consumer.screens.views.Custom
+import com.liferay.vulcan.consumer.screens.views.Detail
+import com.liferay.vulcan.consumer.screens.views.Row
+import com.liferay.vulcan.consumer.screens.views.Scenario
 import okhttp3.HttpUrl
 
 open class BaseScreenlet @JvmOverloads constructor(

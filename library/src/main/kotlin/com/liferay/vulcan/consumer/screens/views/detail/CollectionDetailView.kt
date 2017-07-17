@@ -10,7 +10,7 @@ import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.ClickEvent
+import com.liferay.vulcan.consumer.screens.events.ClickEvent
 import com.liferay.vulcan.consumer.screens.adapter.ThingAdapter
 import com.liferay.vulcan.consumer.screens.views.BaseView
 

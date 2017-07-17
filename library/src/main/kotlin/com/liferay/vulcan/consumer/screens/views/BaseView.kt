@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.Event
+import com.liferay.vulcan.consumer.screens.events.Event
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.ViewModel
 import org.jetbrains.anko.AnkoLogger

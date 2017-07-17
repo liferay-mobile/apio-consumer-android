@@ -4,10 +4,10 @@ import android.app.Application
 import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Person
-import com.liferay.vulcan.consumer.screens.Custom
-import com.liferay.vulcan.consumer.screens.Detail
-import com.liferay.vulcan.consumer.screens.Row
-import com.liferay.vulcan.consumer.screens.Scenario
+import com.liferay.vulcan.consumer.screens.views.Custom
+import com.liferay.vulcan.consumer.screens.views.Detail
+import com.liferay.vulcan.consumer.screens.views.Row
+import com.liferay.vulcan.consumer.screens.views.Scenario
 
 class BlogPostingApplication: Application() {
 

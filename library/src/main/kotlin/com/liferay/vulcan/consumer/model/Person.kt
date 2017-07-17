@@ -1,9 +1,9 @@
 package com.liferay.vulcan.consumer.model
 
 import com.liferay.vulcan.consumer.R
-import com.liferay.vulcan.consumer.screens.Custom
-import com.liferay.vulcan.consumer.screens.Detail
-import com.liferay.vulcan.consumer.screens.Scenario
+import com.liferay.vulcan.consumer.screens.views.Custom
+import com.liferay.vulcan.consumer.screens.views.Detail
+import com.liferay.vulcan.consumer.screens.views.Scenario
 import java.util.Date
 
 data class Person(val name: String?, val email: String?, val jobTitle: String?, val birthDate: Date?) {

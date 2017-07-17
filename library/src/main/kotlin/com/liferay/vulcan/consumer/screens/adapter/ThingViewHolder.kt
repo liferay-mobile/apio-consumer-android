@@ -6,8 +6,8 @@ import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.Row
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
+import com.liferay.vulcan.consumer.screens.views.Row
 
 open class ThingViewHolder(itemView: View, listener: Listener) : RecyclerView.ViewHolder(itemView) {
 

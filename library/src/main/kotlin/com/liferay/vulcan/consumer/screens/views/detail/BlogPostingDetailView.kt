@@ -8,7 +8,7 @@ import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.ClickEvent
+import com.liferay.vulcan.consumer.screens.events.ClickEvent
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
