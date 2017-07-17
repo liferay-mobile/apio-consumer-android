@@ -3,14 +3,17 @@ package com.liferay.vulcan.consumer.screens.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.bind
 import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.ThingScreenlet
 
-open class ThingView(context: Context, attrs: AttributeSet) :
-    BaseView(context, attrs) {
+class ThingView(context: Context, attrs: AttributeSet) : BaseView, FrameLayout(context, attrs) {
+
+    override var screenlet: ThingScreenlet? = null
 
     val thingId by bind<View>(R.id.thing_id)
     val thingType by bind<View>(R.id.thing_type)

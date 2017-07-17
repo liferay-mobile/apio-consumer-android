@@ -3,6 +3,7 @@ package com.liferay.vulcan.blog.postings.view
 import android.content.Context
 import android.text.Html
 import android.util.AttributeSet
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.liferay.vulcan.blog.postings.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
@@ -14,7 +15,9 @@ import com.liferay.vulcan.consumer.screens.events.ClickEvent
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
-class BlogPostingDetailCustom(context: Context, attrs: AttributeSet) : BaseView(context, attrs) {
+class BlogPostingDetailCustom(context: Context, attrs: AttributeSet) : BaseView, FrameLayout(context, attrs) {
+
+    override var screenlet: ThingScreenlet? = null
 
     val headline by bindNonNull<TextView>(R.id.headline)
     val alternativeHeadline by bindNonNull<TextView>(R.id.alternative_headline)

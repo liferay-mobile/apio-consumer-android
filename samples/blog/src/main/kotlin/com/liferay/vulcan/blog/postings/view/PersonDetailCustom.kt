@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.liferay.vulcan.blog.postings.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
@@ -12,9 +13,12 @@ import com.liferay.vulcan.consumer.extensions.mediumFormat
 import com.liferay.vulcan.consumer.model.Person
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
+import com.liferay.vulcan.consumer.screens.views.BaseView
 import com.liferay.vulcan.consumer.screens.views.ThingView
 
-class PersonDetailCustom(context: Context, attrs: AttributeSet) : ThingView(context, attrs) {
+class PersonDetailCustom(context: Context, attrs: AttributeSet) : BaseView, FrameLayout(context, attrs) {
+
+    override var screenlet: ThingScreenlet? = null
 
     val avatar by bindNonNull<ThingScreenlet>(R.id.person_avatar)
     val name by bindNonNull<TextView>(R.id.person_name)

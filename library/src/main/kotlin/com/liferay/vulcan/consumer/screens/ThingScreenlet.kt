@@ -60,13 +60,13 @@ class ThingScreenlet @JvmOverloads constructor(
 
         addView(layout)
 
-        (layout as? BaseView)?.apply {
+        baseView?.apply {
             screenlet = this@ThingScreenlet
             thing = it
         }
     }
 
-    val viewModel: ViewModel? get() = layout as? ViewModel
+    val baseView: BaseView? get() = layout as? BaseView
 
     fun load(thingId: String, scenario: Scenario? = null, onComplete: ((ThingScreenlet) -> Unit)? = null) {
         fetch(HttpUrl.parse(thingId)!!) {
@@ -76,7 +76,7 @@ class ThingScreenlet @JvmOverloads constructor(
 
             thing = it.component1()
 
-            it.failure { viewModel?.showError(it.message) }
+            it.failure { baseView?.showError(it.message) }
 
             onComplete?.invoke(this)
         }
@@ -114,7 +114,3 @@ class ThingScreenlet @JvmOverloads constructor(
     }
 }
 
-interface ViewModel {
-    var thing: Thing?
-    fun showError(message: String?)
-}
