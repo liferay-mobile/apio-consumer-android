@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.thing_screenlet_activity)
 
-		val id = "http://192.168.0.156:8080/o/api/group/20143/p/blogs"
+        val id = "http://docker-engine-web1:9008/o/api/group/20143/p/blogs"
 
 		thingScreenlet.load(id)
 
