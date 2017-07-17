@@ -14,11 +14,16 @@ import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.views.BaseView
 import okhttp3.HttpUrl
 
-open class BaseScreenlet(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+open class BaseScreenlet @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+    FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+
     var layout: View? = null
 }
 
-class ThingScreenlet(context: Context, attrs: AttributeSet?) : BaseScreenlet(context, attrs) {
+class ThingScreenlet @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+    BaseScreenlet(context, attrs, defStyleAttr, defStyleRes) {
 
     var screenletEvents: ScreenletEvents? = null
 
