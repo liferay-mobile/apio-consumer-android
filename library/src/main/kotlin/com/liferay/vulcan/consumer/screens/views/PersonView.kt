@@ -4,29 +4,23 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import com.liferay.vulcan.consumer.R
+import com.liferay.vulcan.consumer.delegates.bindNonNull
+import com.liferay.vulcan.consumer.delegates.converter
+import com.liferay.vulcan.consumer.extensions.mediumFormat
+import com.liferay.vulcan.consumer.model.Person
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.model.get
-import java.text.SimpleDateFormat
-import java.util.*
 
 class PersonView(context: Context, attrs: AttributeSet) : ThingView(context, attrs) {
 
-    val name by lazy { findViewById(R.id.person_name) as TextView }
-    val email by lazy { findViewById(R.id.person_email) as TextView }
-    val jobTitle by lazy { findViewById(R.id.person_job_title) as TextView }
-    val birthDate by lazy { findViewById(R.id.person_birthDate) as TextView }
+    val name by bindNonNull<TextView>(R.id.person_name)
+    val email by bindNonNull<TextView>(R.id.person_email)
+    val jobTitle by bindNonNull<TextView>(R.id.person_job_title)
+    val birthDate by bindNonNull<TextView>(R.id.person_birthDate)
 
-    override var thing: Thing? = null
-        set(value) {
-            field = value
-
-            value?.let {
-                name.text = value["name"] as String
-                email.text = value["email"] as String
-                jobTitle.text = value["jobTitle"] as String
-
-                birthDate.text = SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(
-                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).parse(value["birthDate"] as String))
-            }
-        }
+    override var thing: Thing? by converter<Person> {
+        name.text = it.name
+        email.text = it.email
+        jobTitle.text = it.jobTitle
+        birthDate.text = it.birthDate?.mediumFormat()
+    }
 }

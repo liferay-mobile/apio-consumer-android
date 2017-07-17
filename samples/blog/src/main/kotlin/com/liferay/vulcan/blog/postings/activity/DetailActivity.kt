@@ -1,8 +1,11 @@
-package com.liferay.vulcan.blog.postings
+package com.liferay.vulcan.blog.postings.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
+
+import com.liferay.vulcan.blog.postings.R
+import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.Relation
 import com.liferay.vulcan.consumer.model.get
@@ -13,9 +16,7 @@ import org.jetbrains.anko.startActivity
 
 class DetailActivity : AppCompatActivity() {
 
-    val thingScreenlet by lazy {
-        findViewById(R.id.thing_screenlet) as ThingScreenlet
-    }
+    val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

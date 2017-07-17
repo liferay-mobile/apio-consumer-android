@@ -5,21 +5,25 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.FrameLayout
+import com.github.kittinunf.result.failure
+import com.github.kittinunf.result.success
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.views.ThingView
+import com.liferay.vulcan.consumer.screens.views.BaseView
 import okhttp3.HttpUrl
 
-open class BaseScreenlet(context: Context, attrs: AttributeSet) :
-    FrameLayout(context, attrs) {
+open class BaseScreenlet @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+    FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     var layout: View? = null
 }
 
-class ThingScreenlet(context: Context, attrs: AttributeSet) :
-    BaseScreenlet(context, attrs) {
+class ThingScreenlet @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+    BaseScreenlet(context, attrs, defStyleAttr, defStyleRes) {
 
     var screenletEvents: ScreenletEvents? = null
 
@@ -50,28 +54,24 @@ class ThingScreenlet(context: Context, attrs: AttributeSet) :
 
             addView(layout)
 
-            (layout as? ThingView)?.screenlet = this
+            (layout as? BaseView)?.screenlet = this
 
-            it.fold(
-                success = { thing = it },
-                failure = { viewModel?.showError(it.message) }
-            )
+            it.failure { viewModel?.showError(it.message) }
+
+            it.success { thing = it }
+
             onComplete?.invoke(this)
         }
     }
 
     init {
-        val typedArray =
-            context.theme.obtainStyledAttributes(
-                attrs, R.styleable.ThingScreenlet, 0, 0)
+        val typedArray = attrs?.let { context.theme.obtainStyledAttributes(it, R.styleable.ThingScreenlet, 0, 0) }
 
-        reference =
-            typedArray.getResourceId(R.styleable.ThingScreenlet_layoutId, 0)
+        reference = typedArray?.getResourceId(R.styleable.ThingScreenlet_layoutId, 0) ?: 0
     }
 
     fun <T> onEventFor(action: Action<T>) = when (action) {
-        is ClickAction -> screenletEvents?.onClickEvent(
-            layout as ThingView, action.view, action.thing)
+        is ClickAction -> screenletEvents?.onClickEvent(layout as BaseView, action.view, action.thing)
     }
 }
 
@@ -81,6 +81,5 @@ interface ViewModel {
 }
 
 interface ScreenletEvents {
-    fun <T : ThingView> onClickEvent(
-        thingView: T, view: View, thing: Thing): OnClickListener?
+    fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing): OnClickListener?
 }

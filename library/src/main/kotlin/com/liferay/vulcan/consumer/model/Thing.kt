@@ -3,16 +3,13 @@ package com.liferay.vulcan.consumer.model
 import com.liferay.vulcan.consumer.VulcanException
 import com.liferay.vulcan.consumer.graph
 
+data class Thing(val id: String, val type: List<String>, val attributes: Map<String, Any>, val name: String? = null)
+
 data class Relation(val id: String)
 
-data class Context(
-    val vocab: String,
-    val attributeContext: Map<String, Any>
-)
+data class Context(val vocab: String, val attributeContext: Map<String, Any>)
 
-fun contextFrom(
-    jsonObject: Map<String, Any>?, parentContext: Context?): Context? {
-
+fun contextFrom(jsonObject: Map<String, Any>?, parentContext: Context?): Context? {
     return jsonObject?.let {
         val vocab = (it["@vocab"] as? String)
             ?: parentContext?.vocab
@@ -30,17 +27,9 @@ fun Context.isId(attributeName: String): Boolean =
         ?.let { it == "@id" }
         ?: false
 
-data class Thing(
-    val id: String,
-    val type: List<String>,
-    val attributes: Map<String, Any>,
-    val name: String? = null
-)
-
 operator fun Thing.get(attribute: String): Any? = attributes[attribute]
 
 operator fun Relation.get(attribute: String): Any? = graph[id]?.value?.get(attribute)
 
-fun Thing.merge(value: Thing?): Thing = value?.let {
-    Thing(id, type, attributes + it.attributes)
-} ?: this
+fun Thing.merge(value: Thing?): Thing = value?.let { Thing(id, type, attributes + it.attributes) } ?: this
+
