@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Liferay Blogs</string>
+    <string name="show_more_details">Show more details…</string>
 </resources>
