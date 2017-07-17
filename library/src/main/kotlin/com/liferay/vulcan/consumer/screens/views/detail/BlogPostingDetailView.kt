@@ -3,6 +3,7 @@ package com.liferay.vulcan.consumer.screens.views.detail
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
@@ -15,7 +16,7 @@ import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class BlogPostingDetailView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-    FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+    RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     override var screenlet: ThingScreenlet? = null
 

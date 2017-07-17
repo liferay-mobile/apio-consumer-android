@@ -5,6 +5,7 @@ import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.liferay.vulcan.blog.postings.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
@@ -18,7 +19,7 @@ import com.liferay.vulcan.consumer.screens.views.ThingView
 
 class PersonDetailCustom @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-    FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+    LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     override var screenlet: ThingScreenlet? = null
 

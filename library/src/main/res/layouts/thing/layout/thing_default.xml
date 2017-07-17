@@ -3,31 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/thing_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:layout_height="wrap_content"
+        />
 
-        <TextView
-            android:id="@+id/thing_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+    <TextView
+        android:id="@+id/thing_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
-        <TextView
-            android:id="@+id/thing_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+    <TextView
+        android:id="@+id/thing_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
-        <TextView
-            android:id="@+id/thing_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
-    </LinearLayout>
 </com.liferay.vulcan.consumer.screens.views.ThingView>

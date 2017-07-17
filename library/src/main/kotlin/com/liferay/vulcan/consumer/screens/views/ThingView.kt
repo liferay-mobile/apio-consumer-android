@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.bind
@@ -13,7 +14,7 @@ import com.liferay.vulcan.consumer.screens.ThingScreenlet
 
 class ThingView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-    FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+    LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     override var screenlet: ThingScreenlet? = null
 

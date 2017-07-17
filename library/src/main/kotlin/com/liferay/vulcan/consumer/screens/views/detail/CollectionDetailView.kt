@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.delegates.converter
@@ -18,7 +19,7 @@ import com.liferay.vulcan.consumer.screens.views.BaseView
 
 open class CollectionDetailView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-    FrameLayout(context, attrs, defStyleAttr, defStyleRes), ThingAdapter.Listener {
+    RelativeLayout(context, attrs, defStyleAttr, defStyleRes), ThingAdapter.Listener {
 
     override var screenlet: ThingScreenlet? = null
 
