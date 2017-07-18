@@ -16,39 +16,39 @@ import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class BlogPostingDetailCustom @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-    FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
+	FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    override var screenlet: ThingScreenlet? = null
+	override var screenlet: ThingScreenlet? = null
 
-    val headline by bindNonNull<TextView>(R.id.headline)
-    val alternativeHeadline by bindNonNull<TextView>(R.id.alternative_headline)
-    val creatorAvatar by bindNonNull<ThingScreenlet>(R.id.creator_avatar)
-    val creatorDetail by bindNonNull<ThingScreenlet>(R.id.creator_detail)
-    val articleBody by bindNonNull<TextView>(R.id.article_body)
-    val createDate by bindNonNull<TextView>(R.id.create_date)
+	val headline by bindNonNull<TextView>(R.id.headline)
+	val alternativeHeadline by bindNonNull<TextView>(R.id.alternative_headline)
+	val creatorAvatar by bindNonNull<ThingScreenlet>(R.id.creator_avatar)
+	val creatorDetail by bindNonNull<ThingScreenlet>(R.id.creator_detail)
+	val articleBody by bindNonNull<TextView>(R.id.article_body)
+	val createDate by bindNonNull<TextView>(R.id.create_date)
 
-    override var thing: Thing? by converter<BlogPosting> {
-        headline.text = it.headline
+	override var thing: Thing? by converter<BlogPosting> {
+		headline.text = it.headline
 
-        alternativeHeadline.text = it.alternativeHeadline
+		alternativeHeadline.text = it.alternativeHeadline
 
-        Html.fromHtml(it.articleBody, Html.FROM_HTML_MODE_COMPACT)
-            .toString()
-            .replace("\n", "\n\n")
-            .also { articleBody.text = it }
+		Html.fromHtml(it.articleBody, Html.FROM_HTML_MODE_COMPACT)
+			.toString()
+			.replace("\n", "\n\n")
+			.also { articleBody.text = it }
 
-        it.creator?.also {
-            creatorAvatar.load(it.id)
+		it.creator?.also {
+			creatorAvatar.load(it.id)
 
-            creatorAvatar.setOnClickListener { view ->
-                sendEvent(ClickEvent(view, Thing(it.id, listOf("Person"), emptyMap())))?.onClick(view)
-            }
+			creatorAvatar.setOnClickListener { view ->
+				sendEvent(ClickEvent(view, Thing(it.id, listOf("Person"), emptyMap())))?.onClick(view)
+			}
 
-            creatorDetail.load(it.id)
-        }
+			creatorDetail.load(it.id)
+		}
 
-        createDate.text = it.createDate?.fullFormat()
-    }
+		createDate.text = it.createDate?.fullFormat()
+	}
 
 }

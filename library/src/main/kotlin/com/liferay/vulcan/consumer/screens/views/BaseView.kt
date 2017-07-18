@@ -11,14 +11,14 @@ import org.jetbrains.anko.error
  */
 interface BaseView : AnkoLogger {
 
-    var screenlet: ThingScreenlet?
+	var screenlet: ThingScreenlet?
 
-    fun <T> sendEvent(event: Event<T>): T? = screenlet?.onEventFor(event)
+	fun <T> sendEvent(event: Event<T>): T? = screenlet?.onEventFor(event)
 
-    var thing: Thing?
+	var thing: Thing?
 
-    fun showError(message: String?) {
-        error { "Error loading the thing " + message }
-    }
+	fun showError(message: String?) {
+		error { "Error loading the thing " + message }
+	}
 
 }

@@ -16,24 +16,24 @@ import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class PersonDetailCustom @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-    LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
+	LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    override var screenlet: ThingScreenlet? = null
+	override var screenlet: ThingScreenlet? = null
 
-    val avatar by bindNonNull<ThingScreenlet>(R.id.person_avatar)
-    val name by bindNonNull<TextView>(R.id.person_name)
-    val email by bindNonNull<TextView>(R.id.person_email)
-    val jobTitle by bindNonNull<TextView>(R.id.person_job_title)
-    val birthDate by bindNonNull<TextView>(R.id.person_birthDate)
+	val avatar by bindNonNull<ThingScreenlet>(R.id.person_avatar)
+	val name by bindNonNull<TextView>(R.id.person_name)
+	val email by bindNonNull<TextView>(R.id.person_email)
+	val jobTitle by bindNonNull<TextView>(R.id.person_job_title)
+	val birthDate by bindNonNull<TextView>(R.id.person_birthDate)
 
-    override var thing: Thing? by converter<Person> {
-        avatar.thing = thing
-        name.text = it.name
-        email.text = Html.fromHtml("<a href=\"mailto:${it.email}\">${it.email}</a>", Html.FROM_HTML_MODE_COMPACT)
-        email.linksClickable = true
-        email.movementMethod = LinkMovementMethod.getInstance()
-        jobTitle.text = it.jobTitle
-        birthDate.text = it.birthDate?.mediumFormat()
-    }
+	override var thing: Thing? by converter<Person> {
+		avatar.thing = thing
+		name.text = it.name
+		email.text = Html.fromHtml("<a href=\"mailto:${it.email}\">${it.email}</a>", Html.FROM_HTML_MODE_COMPACT)
+		email.linksClickable = true
+		email.movementMethod = LinkMovementMethod.getInstance()
+		jobTitle.text = it.jobTitle
+		birthDate.text = it.birthDate?.mediumFormat()
+	}
 }

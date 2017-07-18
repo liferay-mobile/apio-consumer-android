@@ -10,29 +10,29 @@ fun <T> observe(onChange: (T?) -> Unit): ReadWriteProperty<Any, T?> = ObserveDel
 @PublishedApi
 internal class ObserveNonNullDelegate<T>(val onChange: (T) -> Unit) : ReadWriteProperty<Any, T?> {
 
-    private var t: T? = null
+	private var t: T? = null
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): T? = t
+	override fun getValue(thisRef: Any, property: KProperty<*>): T? = t
 
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
-        t = value
+	override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
+		t = value
 
-        value?.apply(onChange)
-    }
+		value?.apply(onChange)
+	}
 
 }
 
 @PublishedApi
 internal class ObserveDelegate<T>(val onChange: (T?) -> Unit) : ReadWriteProperty<Any, T?> {
 
-    private var t: T? = null
+	private var t: T? = null
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): T? = t
+	override fun getValue(thisRef: Any, property: KProperty<*>): T? = t
 
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
-        t = value
+	override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
+		t = value
 
-        value.apply(onChange)
-    }
+		value.apply(onChange)
+	}
 
 }

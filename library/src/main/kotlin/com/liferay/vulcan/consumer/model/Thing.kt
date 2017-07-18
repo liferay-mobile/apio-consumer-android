@@ -10,22 +10,22 @@ data class Relation(val id: String)
 data class Context(val vocab: String, val attributeContext: Map<String, Any>)
 
 fun contextFrom(jsonObject: Map<String, Any>?, parentContext: Context?): Context? {
-    return jsonObject?.let {
-        val vocab = (it["@vocab"] as? String)
-            ?: parentContext?.vocab
-            ?: throw VulcanException("Empty Vocab")
+	return jsonObject?.let {
+		val vocab = (it["@vocab"] as? String)
+			?: parentContext?.vocab
+			?: throw VulcanException("Empty Vocab")
 
-        val attributeContexts = it.filterKeys { it != "@vocab" }
+		val attributeContexts = it.filterKeys { it != "@vocab" }
 
-        Context(vocab, attributeContexts)
-    }
+		Context(vocab, attributeContexts)
+	}
 }
 
 fun Context.isId(attributeName: String): Boolean =
-    (attributeContext[attributeName] as? Map<String, Any>)
-        ?.let { it["@type"] }
-        ?.let { it == "@id" }
-        ?: false
+	(attributeContext[attributeName] as? Map<String, Any>)
+		?.let { it["@type"] }
+		?.let { it == "@id" }
+		?: false
 
 operator fun Thing.get(attribute: String): Any? = attributes[attribute]
 

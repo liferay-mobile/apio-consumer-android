@@ -1,9 +1,9 @@
 package com.liferay.vulcan.consumer.screens.views
 
 interface Scenario {
-    companion object {
-        var stringToScenario: ((String) -> Scenario?)? = null
-    }
+	companion object {
+		var stringToScenario: ((String) -> Scenario?)? = null
+	}
 }
 
 object Detail : Scenario

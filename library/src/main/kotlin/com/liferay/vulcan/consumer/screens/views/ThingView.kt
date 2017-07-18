@@ -12,19 +12,19 @@ import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
 
 class ThingView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-    LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
+	LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    override var screenlet: ThingScreenlet? = null
+	override var screenlet: ThingScreenlet? = null
 
-    val thingId by bind<View>(R.id.thing_id)
-    val thingType by bind<View>(R.id.thing_type)
-    val thingName by bind<View>(R.id.thing_name)
+	val thingId by bind<View>(R.id.thing_id)
+	val thingType by bind<View>(R.id.thing_type)
+	val thingName by bind<View>(R.id.thing_name)
 
-    override var thing: Thing? by observeNonNull {
-        (thingId as? TextView)?.text = it.id
-        (thingType as? TextView)?.text = it.type.joinToString()
-        (thingName as? TextView)?.text = it.name
-    }
+	override var thing: Thing? by observeNonNull {
+		(thingId as? TextView)?.text = it.id
+		(thingType as? TextView)?.text = it.type.joinToString()
+		(thingName as? TextView)?.text = it.name
+	}
 
 }

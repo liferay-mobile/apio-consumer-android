@@ -7,7 +7,7 @@ import com.liferay.vulcan.consumer.screens.views.BaseView
 import com.liferay.vulcan.consumer.screens.views.Scenario
 
 interface ScreenletEvents {
-    fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing): View.OnClickListener? = null
-    fun <T : BaseView> onGetCustomLayout(
-        screenlet: ThingScreenlet, parentView: T?, thing: Thing, scenario: Scenario): Int? = null
+	fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing): View.OnClickListener? = null
+	fun <T : BaseView> onGetCustomLayout(
+		screenlet: ThingScreenlet, parentView: T?, thing: Thing, scenario: Scenario): Int? = null
 }

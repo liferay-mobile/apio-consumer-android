@@ -11,18 +11,18 @@ import com.liferay.vulcan.consumer.screens.views.Row
 
 open class ThingViewHolder(itemView: View, listener: Listener) : RecyclerView.ViewHolder(itemView) {
 
-    val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
+	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
 
-    open var thing: Thing? by observeNonNull {
-        itemView.setOnClickListener { view ->
-            listener.onClickedRow(view, it)?.onClick(itemView)
-        }
+	open var thing: Thing? by observeNonNull {
+		itemView.setOnClickListener { view ->
+			listener.onClickedRow(view, it)?.onClick(itemView)
+		}
 
-        thingScreenlet.scenario = Row
-        thingScreenlet.thing = thing
-    }
+		thingScreenlet.scenario = Row
+		thingScreenlet.thing = thing
+	}
 
-    interface Listener {
-        fun onClickedRow(view: View, thing: Thing): View.OnClickListener?
-    }
+	interface Listener {
+		fun onClickedRow(view: View, thing: Thing): View.OnClickListener?
+	}
 }

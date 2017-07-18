@@ -13,21 +13,21 @@ import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity(), ScreenletEvents {
 
-    val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
+	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.thing_screenlet_activity)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setContentView(R.layout.thing_screenlet_activity)
 
-        val id = "http://192.168.50.33:8080/o/api/group/20143/p/blogs"
+		val id = "http://192.168.0.156:8080/o/api/group/20143/p/blogs"
 
-        thingScreenlet.load(id)
+		thingScreenlet.load(id)
 
-        thingScreenlet.screenletEvents = this
-    }
+		thingScreenlet.screenletEvents = this
+	}
 
-    override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
-        startActivity<DetailActivity>("id" to thing.id)
-    }
+	override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
+		startActivity<DetailActivity>("id" to thing.id)
+	}
 
 }

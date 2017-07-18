@@ -15,21 +15,21 @@ import org.jetbrains.anko.startActivity
 
 class DetailActivity : AppCompatActivity(), ScreenletEvents {
 
-    val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
+	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.thing_screenlet_activity)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setContentView(R.layout.thing_screenlet_activity)
 
-        val id = intent.getStringExtra("id")
+		val id = intent.getStringExtra("id")
 
-        thingScreenlet.screenletEvents = this
+		thingScreenlet.screenletEvents = this
 
-        thingScreenlet.load(id, Detail)
-    }
+		thingScreenlet.load(id, Detail)
+	}
 
-    override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
-        startActivity<DetailActivity>("id" to thing.id)
-    }
+	override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
+		startActivity<DetailActivity>("id" to thing.id)
+	}
 
 }

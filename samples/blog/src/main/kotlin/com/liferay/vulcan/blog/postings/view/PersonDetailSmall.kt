@@ -13,14 +13,14 @@ import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class PersonDetailSmall @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-    FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
+	FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    override var screenlet: ThingScreenlet? = null
+	override var screenlet: ThingScreenlet? = null
 
-    val name by bindNonNull<TextView>(R.id.person_name)
+	val name by bindNonNull<TextView>(R.id.person_name)
 
-    override var thing: Thing? by converter<Person> {
-        name.text = it.name
-    }
+	override var thing: Thing? by converter<Person> {
+		name.text = it.name
+	}
 }

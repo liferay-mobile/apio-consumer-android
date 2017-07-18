@@ -17,18 +17,18 @@ import com.liferay.vulcan.consumer.screens.adapter.ThingAdapter
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
 open class CollectionDetailView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-    RelativeLayout(context, attrs, defStyleAttr, defStyleRes), ThingAdapter.Listener {
+	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
+	RelativeLayout(context, attrs, defStyleAttr, defStyleRes), ThingAdapter.Listener {
 
-    override var screenlet: ThingScreenlet? = null
+	override var screenlet: ThingScreenlet? = null
 
-    val recyclerView by bindNonNull<RecyclerView>(R.id.collection_recycler_view)
+	val recyclerView by bindNonNull<RecyclerView>(R.id.collection_recycler_view)
 
-    override var thing: Thing? by converter<Collection> {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ThingAdapter(it, this)
-    }
+	override var thing: Thing? by converter<Collection> {
+		recyclerView.layoutManager = LinearLayoutManager(context)
+		recyclerView.adapter = ThingAdapter(it, this)
+	}
 
-    override fun onClickedRow(view: View, thing: Thing): OnClickListener? =
-        sendEvent(ClickEvent(view, thing))
+	override fun onClickedRow(view: View, thing: Thing): OnClickListener? =
+		sendEvent(ClickEvent(view, thing))
 }
