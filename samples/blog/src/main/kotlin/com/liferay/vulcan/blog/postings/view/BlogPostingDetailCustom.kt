@@ -11,8 +11,8 @@ import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.extensions.fullFormat
 import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.events.ClickEvent
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
+import com.liferay.vulcan.consumer.screens.events.Event
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class BlogPostingDetailCustom @JvmOverloads constructor(
@@ -42,7 +42,7 @@ class BlogPostingDetailCustom @JvmOverloads constructor(
 			creatorAvatar.load(it.id)
 
 			creatorAvatar.setOnClickListener { view ->
-				sendEvent(ClickEvent(view, Thing(it.id, listOf("Person"), emptyMap())))?.onClick(view)
+				sendEvent(Event.Click(view, Thing(it.id, listOf("Person"), emptyMap())))?.onClick(view)
 			}
 
 			creatorDetail.load(it.id)

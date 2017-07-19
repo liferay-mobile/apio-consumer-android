@@ -7,9 +7,7 @@ import android.widget.FrameLayout
 import com.github.kittinunf.result.failure
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.observe
-import com.liferay.vulcan.consumer.screens.events.ClickEvent
 import com.liferay.vulcan.consumer.screens.events.Event
-import com.liferay.vulcan.consumer.screens.events.GetLayoutEvent
 import com.liferay.vulcan.consumer.screens.events.ScreenletEvents
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
@@ -86,7 +84,7 @@ class ThingScreenlet @JvmOverloads constructor(
 		if (layoutId != 0) return layoutId
 
 		return thing?.let {
-			onEventFor(GetLayoutEvent(thing = it, scenario = scenario))
+			onEventFor(Event.FetchLayout(thing = it, scenario = scenario))
 		}
 	}
 
@@ -106,8 +104,8 @@ class ThingScreenlet @JvmOverloads constructor(
 
 	@Suppress("UNCHECKED_CAST")
 	fun <T> onEventFor(event: Event<T>): T? = when (event) {
-		is ClickEvent -> screenletEvents?.onClickEvent(layout as BaseView, event.view, event.thing) as? T
-		is GetLayoutEvent -> {
+		is Event.Click -> screenletEvents?.onClickEvent(layout as BaseView, event.view, event.thing) as? T
+		is Event.FetchLayout -> {
 			(screenletEvents?.onGetCustomLayout(this, event.view, event.thing, event.scenario) ?:
 				layoutIds[event.thing.type[0]]?.get(event.scenario)) as? T
 		}

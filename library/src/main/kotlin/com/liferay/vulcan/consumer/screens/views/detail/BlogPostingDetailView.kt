@@ -9,8 +9,8 @@ import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.delegates.converter
 import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.events.ClickEvent
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
+import com.liferay.vulcan.consumer.screens.events.Event
 import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class BlogPostingDetailView @JvmOverloads constructor(
@@ -32,7 +32,7 @@ class BlogPostingDetailView @JvmOverloads constructor(
 			creator.load(it.id)
 
 			creator.setOnClickListener { view ->
-				sendEvent(ClickEvent(view, Thing(it.id, listOf("Person"), emptyMap())))?.onClick(view)
+				sendEvent(Event.Click(view, Thing(it.id, listOf("Person"), emptyMap())))?.onClick(view)
 			}
 		}
 	}
