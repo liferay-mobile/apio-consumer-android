@@ -1,56 +1,49 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.vulcan.blog.postings.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.TextView
+import android.view.View
 
 import com.liferay.vulcan.blog.postings.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
-import com.liferay.vulcan.consumer.fetch
-import com.liferay.vulcan.consumer.model.Relation
-import com.liferay.vulcan.consumer.model.get
+import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.events.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
-import okhttp3.HttpUrl
-import org.jetbrains.anko.longToast
+import com.liferay.vulcan.consumer.screens.views.BaseView
+import com.liferay.vulcan.consumer.screens.views.Detail
 import org.jetbrains.anko.startActivity
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), ScreenletEvents {
 
-    val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
+	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setContentView(R.layout.thing_screenlet_activity)
 
-        val id = intent.getStringExtra("id")
-        thingScreenlet.load(id)
+		val id = intent.getStringExtra("id")
 
-        //TODO move to screenlet
-        val knowMore = findViewById(R.id.know_more)
-        val httpURL = HttpUrl.parse(id)
-        fetch(httpURL!!, embedded = listOf("creator")) {
-            it.fold(
-                success = { thing ->
-                    (findViewById(R.id.headline) as TextView).apply {
-                        text = thing["headline"] as String
-                    }
+		thingScreenlet.screenletEvents = this
 
-                    (findViewById(R.id.creator) as TextView).apply {
-                        val author = thing.attributes["author"] as Relation
-                        text = author.id
+		thingScreenlet.load(id, Detail)
+	}
 
-                        knowMore.setOnClickListener {
-                            val authorId = (thing["creator"] as Relation).id
-                            startActivity<AuthorActivity>("id" to authorId)
-                        }
-                    }
-                },
-                failure = {
-                    longToast(it.message!!)
-                }
-            )
-
-        }
-    }
+	override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
+		startActivity<DetailActivity>("id" to thing.id)
+	}
 
 }

@@ -1,26 +1,42 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.vulcan.consumer.screens.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.TextView
 import com.liferay.vulcan.consumer.R
-import com.liferay.vulcan.consumer.delegates.bind
+import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.ClickAction
-import com.liferay.vulcan.consumer.screens.views.CollectionView
+import com.liferay.vulcan.consumer.screens.ThingScreenlet
+import com.liferay.vulcan.consumer.screens.views.Row
 
-open class ThingViewHolder(itemView: View, val collectionView: CollectionView) : RecyclerView.ViewHolder(itemView) {
+open class ThingViewHolder(itemView: View, listener: Listener) : RecyclerView.ViewHolder(itemView) {
 
-    val thingType by bind<TextView>(R.id.thing_type)
+	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
 
-    open var thing: Thing? by observeNonNull {
-        itemView.setOnClickListener { view ->
-            val onClickListener = collectionView.sendAction(ClickAction(view, it))
+	open var thing: Thing? by observeNonNull {
+		itemView.setOnClickListener { view ->
+			listener.onClickedRow(view, it)?.onClick(itemView)
+		}
 
-            onClickListener?.onClick(itemView)
-        }
+		thingScreenlet.scenario = Row
+		thingScreenlet.thing = thing
+	}
 
-        thingType?.text = it.type.joinToString()
-    }
+	interface Listener {
+		fun onClickedRow(view: View, thing: Thing): View.OnClickListener?
+	}
 }

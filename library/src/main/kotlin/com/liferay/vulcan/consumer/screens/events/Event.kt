@@ -12,11 +12,15 @@
  * details.
  */
 
-package com.liferay.vulcan.consumer.extensions
+package com.liferay.vulcan.consumer.screens.events
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.views.Scenario
+import com.liferay.vulcan.consumer.screens.views.BaseView
 
-fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View =
-	LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
+sealed class Event<T> {
+	class Click(val view: View, val thing: Thing) : Event<View.OnClickListener>()
+
+	class FetchLayout(val view: BaseView? = null, val thing: Thing, val scenario: Scenario) : Event<Int>()
+}

@@ -12,11 +12,16 @@
  * details.
  */
 
-package com.liferay.vulcan.consumer.extensions
+package com.liferay.vulcan.consumer.screens.views
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+interface Scenario {
+	companion object {
+		var stringToScenario: ((String) -> Scenario?)? = null
+	}
+}
 
-fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View =
-	LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
+object Detail : Scenario
+
+object Row: Scenario
+
+data class Custom(val name: String) : Scenario
