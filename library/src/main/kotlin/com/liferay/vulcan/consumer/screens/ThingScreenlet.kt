@@ -65,6 +65,7 @@ class ThingScreenlet @JvmOverloads constructor(
 		val layoutId = getLayoutIdFor(thing = it) ?: R.layout.thing_default
 
 		layout?.also {
+			baseView?.onDestroy()
 			this.removeView(it)
 		}
 

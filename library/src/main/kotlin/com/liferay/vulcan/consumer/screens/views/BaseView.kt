@@ -31,6 +31,8 @@ interface BaseView : AnkoLogger {
 
 	var thing: Thing?
 
+	fun onDestroy() {}
+
 	fun showError(message: String?) {
 		error { "Error loading the thing " + message }
 	}
