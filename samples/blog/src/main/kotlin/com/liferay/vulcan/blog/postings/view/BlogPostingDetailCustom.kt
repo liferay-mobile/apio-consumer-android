@@ -47,7 +47,7 @@ class BlogPostingDetailCustom @JvmOverloads constructor(
 
 		alternativeHeadline.text = it.alternativeHeadline
 
-		Html.fromHtml(it.articleBody, Html.FROM_HTML_MODE_COMPACT)
+		Html.fromHtml(it.articleBody)
 			.toString()
 			.replace("\n", "\n\n")
 			.also { articleBody.text = it }
