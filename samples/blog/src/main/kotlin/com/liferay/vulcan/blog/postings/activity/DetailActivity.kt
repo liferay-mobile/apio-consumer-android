@@ -38,7 +38,7 @@ class DetailActivity : AppCompatActivity(), ScreenletEvents {
 
 		thingScreenlet.screenletEvents = this
 
-		thingScreenlet.load(id, Detail)
+		thingScreenlet.load(id, scenario = Detail)
 	}
 
 	override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
