@@ -31,7 +31,7 @@ import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class BlogPostingDetailCustom @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-	FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+	FrameLayout(context, attrs, defStyleAttr) {
 
 	override var screenlet: ThingScreenlet? = null
 

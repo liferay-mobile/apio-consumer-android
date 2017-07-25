@@ -27,7 +27,7 @@ import com.liferay.vulcan.consumer.screens.ThingScreenlet
 
 class ThingView @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-	LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+	LinearLayout(context, attrs, defStyleAttr) {
 
 	override var screenlet: ThingScreenlet? = null
 
