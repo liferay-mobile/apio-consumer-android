@@ -82,16 +82,18 @@ class ThingScreenlet @JvmOverloads constructor(
 	val baseView: BaseView? get() = layout as? BaseView
 
 	fun load(thingId: String, scenario: Scenario? = null, onComplete: ((ThingScreenlet) -> Unit)? = null) {
-		fetch(HttpUrl.parse(thingId)!!) {
-			if (scenario != null) {
-				this.scenario = scenario
+		HttpUrl.parse(thingId)?.let {
+			fetch(it) {
+				if (scenario != null) {
+					this.scenario = scenario
+				}
+
+				thing = it.component1()
+
+				it.failure { baseView?.showError(it.message) }
+
+				onComplete?.invoke(this)
 			}
-
-			thing = it.component1()
-
-			it.failure { baseView?.showError(it.message) }
-
-			onComplete?.invoke(this)
 		}
 	}
 
