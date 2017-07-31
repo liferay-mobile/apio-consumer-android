@@ -21,9 +21,12 @@ import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.delegates.observeNonNull
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
+import com.liferay.vulcan.consumer.screens.events.ScreenletEvents
+import com.liferay.vulcan.consumer.screens.views.BaseView
 import com.liferay.vulcan.consumer.screens.views.Row
+import com.liferay.vulcan.consumer.screens.views.Scenario
 
-open class ThingViewHolder(itemView: View, listener: Listener) : RecyclerView.ViewHolder(itemView) {
+open class ThingViewHolder(itemView: View, listener: Listener) : RecyclerView.ViewHolder(itemView), ScreenletEvents {
 
 	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
 
@@ -33,10 +36,20 @@ open class ThingViewHolder(itemView: View, listener: Listener) : RecyclerView.Vi
 		}
 
 		thingScreenlet.scenario = Row
+
+		thingScreenlet.screenletEvents = object : ScreenletEvents {
+			override fun <T : BaseView> onGetCustomLayout(screenlet: ThingScreenlet, parentView: T?, thing: Thing,
+				scenario: Scenario): Int? {
+				return listener.onLayoutRow(screenlet.baseView, thing, scenario)
+			}
+		}
+
 		thingScreenlet.thing = thing
 	}
 
 	interface Listener {
 		fun onClickedRow(view: View, thing: Thing): View.OnClickListener?
+		fun onLayoutRow(view: BaseView?, thing: Thing, scenario: Scenario): Int?
 	}
+
 }
