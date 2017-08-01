@@ -29,7 +29,7 @@ import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class BlogPostingDetailView @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-	RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
+	RelativeLayout(context, attrs, defStyleAttr) {
 
 	override var screenlet: ThingScreenlet? = null
 
@@ -44,7 +44,6 @@ class BlogPostingDetailView @JvmOverloads constructor(
 
 		it.creator?.also {
 			creator.load(it.id)
-
 			creator.setOnClickListener { view ->
 				sendEvent(Event.Click(view, Thing(it.id, listOf("Person"), emptyMap())))?.onClick(view)
 			}

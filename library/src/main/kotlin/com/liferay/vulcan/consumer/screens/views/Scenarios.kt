@@ -22,6 +22,6 @@ interface Scenario {
 
 object Detail : Scenario
 
-object Row: Scenario
+object Row : Scenario
 
 data class Custom(val name: String) : Scenario

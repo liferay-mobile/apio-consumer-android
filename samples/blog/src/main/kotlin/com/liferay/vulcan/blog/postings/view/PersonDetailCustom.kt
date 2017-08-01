@@ -31,7 +31,7 @@ import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class PersonDetailCustom @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-	LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+	LinearLayout(context, attrs, defStyleAttr) {
 
 	override var screenlet: ThingScreenlet? = null
 
