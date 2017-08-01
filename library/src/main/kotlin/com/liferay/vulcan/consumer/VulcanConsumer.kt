@@ -105,7 +105,7 @@ fun parse(json: String): Pair<Thing, Map<String, Thing?>> {
 private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair<Thing, Map<String, Thing?>> {
 	val id = jsonObject["@id"] as String
 
-	val types = jsonObject["@type"] as List<String>
+	val types = jsonObject["@type"] as? List<String> ?: listOf()
 
 	val context = contextFrom(jsonObject["@context"] as? Map<String, Any>, parentContext)
 

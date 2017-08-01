@@ -28,9 +28,10 @@ data class BlogPosting(
 	val createDate: Date?) {
 
 	companion object {
-		val DEFAULT_VIEWS: MutableMap<Scenario, Int> = mutableMapOf(
-			Detail to R.layout.blog_posting_detail_default,
-			Row to R.layout.blog_posting_row_default
-		)
+		val DEFAULT_VIEWS: MutableMap<Scenario, Int> =
+			mutableMapOf(
+				Detail to R.layout.blog_posting_detail_default,
+				Row to R.layout.blog_posting_row_default
+			)
 	}
 }

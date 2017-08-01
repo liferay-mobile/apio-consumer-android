@@ -20,9 +20,10 @@ import com.liferay.vulcan.consumer.screens.views.Scenario
 
 data class Collection(val members: List<Thing>?, val totalItems: Int?, val pages: Pages?) {
 	companion object {
-		val DEFAULT_VIEWS: MutableMap<Scenario, Int> = mutableMapOf(
-			Detail to R.layout.collection_detail_default
-		)
+		val DEFAULT_VIEWS: MutableMap<Scenario, Int> =
+			mutableMapOf(
+				Detail to R.layout.collection_detail_default
+			)
 	}
 }
 

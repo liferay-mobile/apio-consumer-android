@@ -44,7 +44,6 @@ class BlogPostingDetailView @JvmOverloads constructor(
 
 		it.creator?.also {
 			creator.load(it.id)
-
 			creator.setOnClickListener { view ->
 				sendEvent(Event.Click(view, Thing(it.id, listOf("Person"), emptyMap())))?.onClick(view)
 			}

@@ -42,18 +42,21 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 			holder?.thing = members[position]
 		} else {
 			nextPage.let {
-				fetch(HttpUrl.parse(nextPage)!!) {
-					it.fold(
-						success = {
-							convert<Collection>(it)?.let {
-								val moreMembers = it.members
-								merge(members, moreMembers)
-								notifyDataSetChanged()
-							}
-						},
-						failure = {}
-					)
+				HttpUrl.parse(nextPage)?.let {
+					fetch(it) {
+						it.fold(
+							success = {
+								convert<Collection>(it)?.let {
+									val moreMembers = it.members
+									merge(members, moreMembers)
+									notifyDataSetChanged()
+								}
+							},
+							failure = {}
+						)
+					}
 				}
+
 			}
 		}
 	}
