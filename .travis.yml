@@ -20,4 +20,5 @@ android:
     - '.+'
 
 script:
-  ./gradlew build test && ./gradlew assembleRelease
+  - ./gradlew build test && ./gradlew assembleRelease
+  - ./gradlew detektCheck

@@ -38,27 +38,28 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 	val totalItems = collection.totalItems
 	val members = collection.members?.toMutableList() ?: mutableListOf()
 
-	//TODO How do we want to model this?
 	val nextPage = collection.pages?.next
 
 	override fun onBindViewHolder(holder: ThingViewHolder?, position: Int) {
-		//TODO architect add index? per page? page?
 		if (members.size > position) {
 			holder?.thing = members[position]
 		} else {
 			nextPage.let {
-				fetch(HttpUrl.parse(nextPage)!!) {
-					it.fold(
-						success = {
-							convert<Collection>(it)?.let {
-								val moreMembers = it.members
-								merge(members, moreMembers)
-								notifyDataSetChanged()
-							}
-						},
-						failure = {}
-					)
+				HttpUrl.parse(nextPage)?.let {
+					fetch(it) {
+						it.fold(
+							success = {
+								convert<Collection>(it)?.let {
+									val moreMembers = it.members
+									merge(members, moreMembers)
+									notifyDataSetChanged()
+								}
+							},
+							failure = {}
+						)
+					}
 				}
+
 			}
 		}
 	}

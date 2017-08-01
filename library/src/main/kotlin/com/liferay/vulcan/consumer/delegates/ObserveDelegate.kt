@@ -33,7 +33,6 @@ internal class ObserveNonNullDelegate<T>(val onChange: (T) -> Unit) : ReadWriteP
 
 		value?.apply(onChange)
 	}
-
 }
 
 @PublishedApi
@@ -48,5 +47,4 @@ internal class ObserveDelegate<T>(val onChange: (T?) -> Unit) : ReadWritePropert
 
 		value.apply(onChange)
 	}
-
 }

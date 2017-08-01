@@ -52,7 +52,7 @@ formatting:
   active: true
   useTabs: true
   Indentation:
-    active: false
+    active: true
     indentSize: 4
   ConsecutiveBlankLines:
     active: true
@@ -95,7 +95,7 @@ formatting:
     autoCorrect: false
   OptionalReturnKeyword:
     active: true
-    autoCorrect: false
+    autoCorrect: true
 
 style:
   active: true

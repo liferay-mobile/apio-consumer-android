@@ -21,14 +21,14 @@ import android.widget.FrameLayout
 import com.github.kittinunf.result.failure
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.observe
-import com.liferay.vulcan.consumer.screens.events.Event
-import com.liferay.vulcan.consumer.screens.events.ScreenletEvents
 import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.BlogPosting
 import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Person
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.events.Event
+import com.liferay.vulcan.consumer.screens.events.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.views.BaseView
 import com.liferay.vulcan.consumer.screens.views.Custom
 import com.liferay.vulcan.consumer.screens.views.Detail
@@ -38,7 +38,7 @@ import okhttp3.HttpUrl
 
 open class BaseScreenlet @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
-	FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+	FrameLayout(context, attrs, defStyleAttr) {
 
 	var layout: View? = null
 }
@@ -81,18 +81,22 @@ class ThingScreenlet @JvmOverloads constructor(
 
 	val baseView: BaseView? get() = layout as? BaseView
 
-	fun load(thingId: String, scenario: Scenario? = null, onComplete: ((ThingScreenlet) -> Unit)? = null) {
-		fetch(HttpUrl.parse(thingId)!!) {
-			if (scenario != null) {
-				this.scenario = scenario
+	fun load(thingId: String, credentials: String? = null, scenario: Scenario? = null,
+		onComplete: ((ThingScreenlet) -> Unit)? = null) {
+		HttpUrl.parse(thingId)?.let {
+			fetch(it, credentials) {
+				if (scenario != null) {
+					this.scenario = scenario
+				}
+
+				thing = it.component1()
+
+				it.failure { baseView?.showError(it.message) }
+
+				onComplete?.invoke(this)
 			}
-
-			thing = it.component1()
-
-			it.failure { baseView?.showError(it.message) }
-
-			onComplete?.invoke(this)
 		}
+
 	}
 
 	private fun getLayoutIdFor(thing: Thing?): Int? {
@@ -126,4 +130,3 @@ class ThingScreenlet @JvmOverloads constructor(
 		}
 	}
 }
-

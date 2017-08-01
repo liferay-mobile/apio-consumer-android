@@ -16,8 +16,8 @@ package com.liferay.vulcan.consumer.screens.events
 
 import android.view.View
 import com.liferay.vulcan.consumer.model.Thing
-import com.liferay.vulcan.consumer.screens.views.Scenario
 import com.liferay.vulcan.consumer.screens.views.BaseView
+import com.liferay.vulcan.consumer.screens.views.Scenario
 
 sealed class Event<T> {
 	class Click(val view: View, val thing: Thing) : Event<View.OnClickListener>()

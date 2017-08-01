@@ -33,7 +33,7 @@ import com.liferay.vulcan.consumer.screens.views.Scenario
 
 open class CollectionDetailView @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-	RelativeLayout(context, attrs, defStyleAttr, defStyleRes), ThingAdapter.Listener {
+	RelativeLayout(context, attrs, defStyleAttr), ThingAdapter.Listener {
 
 	override var screenlet: ThingScreenlet? = null
 

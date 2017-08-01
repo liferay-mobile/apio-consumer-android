@@ -31,7 +31,7 @@ import com.liferay.vulcan.consumer.screens.views.BaseView
 
 class BlogPostingDetailCustom @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
-	FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+	FrameLayout(context, attrs, defStyleAttr) {
 
 	override var screenlet: ThingScreenlet? = null
 
@@ -47,7 +47,7 @@ class BlogPostingDetailCustom @JvmOverloads constructor(
 
 		alternativeHeadline.text = it.alternativeHeadline
 
-		Html.fromHtml(it.articleBody, Html.FROM_HTML_MODE_COMPACT)
+		Html.fromHtml(it.articleBody)
 			.toString()
 			.replace("\n", "\n\n")
 			.also { articleBody.text = it }
