@@ -29,6 +29,7 @@ import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.adapter.ThingAdapter
 import com.liferay.vulcan.consumer.screens.events.Event
 import com.liferay.vulcan.consumer.screens.views.BaseView
+import com.liferay.vulcan.consumer.screens.views.Scenario
 
 open class CollectionDetailView @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,
@@ -45,4 +46,8 @@ open class CollectionDetailView @JvmOverloads constructor(
 
 	override fun onClickedRow(view: View, thing: Thing): OnClickListener? =
 		sendEvent(Event.Click(view, thing))
+
+	override fun onLayoutRow(view: BaseView?, thing: Thing, scenario: Scenario): Int? {
+		return sendEvent(Event.FetchLayout(view, thing, scenario))
+	}
 }

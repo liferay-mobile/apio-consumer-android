@@ -23,10 +23,15 @@ import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.views.BaseView
+import com.liferay.vulcan.consumer.screens.views.Scenario
 import okhttp3.HttpUrl
 
 class ThingAdapter(collection: Collection, val listener: Listener) :
 	Adapter<ThingViewHolder>(), ThingViewHolder.Listener {
+
+	override fun onLayoutRow(view: BaseView?, thing: Thing, scenario: Scenario) =
+		listener.onLayoutRow(view, thing, scenario)
 
 	override fun onClickedRow(view: View, thing: Thing): View.OnClickListener? = listener.onClickedRow(view, thing)
 
@@ -77,5 +82,6 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 
 	interface Listener {
 		fun onClickedRow(view: View, thing: Thing): View.OnClickListener?
+		fun onLayoutRow(view: BaseView?, thing: Thing, scenario: Scenario): Int?
 	}
 }

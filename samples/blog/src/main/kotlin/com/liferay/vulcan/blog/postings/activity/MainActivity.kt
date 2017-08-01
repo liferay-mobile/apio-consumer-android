@@ -20,9 +20,11 @@ import android.view.View
 import com.liferay.vulcan.blog.postings.R
 import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.model.get
 import com.liferay.vulcan.consumer.screens.ThingScreenlet
 import com.liferay.vulcan.consumer.screens.events.ScreenletEvents
 import com.liferay.vulcan.consumer.screens.views.BaseView
+import com.liferay.vulcan.consumer.screens.views.Scenario
 import okhttp3.Credentials
 import org.jetbrains.anko.startActivity
 
@@ -44,4 +46,10 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 	override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
 		startActivity<DetailActivity>("id" to thing.id)
 	}
+
+	override fun <T : BaseView> onGetCustomLayout(screenlet: ThingScreenlet, parentView: T?, thing: Thing,
+		scenario: Scenario): Int? =
+		if (thing["headline"] == "My blog") R.layout.blog_posting_row_by_id
+		else super.onGetCustomLayout(screenlet, parentView, thing, scenario)
+
 }
