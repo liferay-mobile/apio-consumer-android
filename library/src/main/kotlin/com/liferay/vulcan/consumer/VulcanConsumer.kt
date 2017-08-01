@@ -36,7 +36,8 @@ import kotlin.collections.Map.Entry
 import kotlin.collections.set
 
 fun fetch(
-	url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
+	url: HttpUrl, credentials: String? = null, fields: Map<String, List<String>> = emptyMap(),
+	embedded: List<String> = emptyList(),
 	onComplete: (Result<Thing, Exception>) -> Unit) {
 
 	//FIXME event oriented
@@ -44,7 +45,9 @@ fun fetch(
 		asyncTask {
 			val httpUrl = createUrl(url, fields, embedded)
 
-			val credential = createAuthentication()
+			if (credentials != null) {
+				credential = credentials
+			}
 
 			val request = createRequest(httpUrl, credential)
 
@@ -92,7 +95,7 @@ class Node(val id: String, var value: Thing? = null)
 
 var graph: MutableMap<String, Node> = mutableMapOf()
 
-fun createAuthentication(): String? = Credentials.basic("test@liferay.com", "test")
+var credential: String = Credentials.basic("test@liferay.com", "test")
 
 fun parse(json: String): Pair<Thing, Map<String, Thing?>> {
 	val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type

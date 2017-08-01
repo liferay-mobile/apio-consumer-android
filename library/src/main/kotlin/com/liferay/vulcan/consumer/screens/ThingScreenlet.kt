@@ -81,9 +81,10 @@ class ThingScreenlet @JvmOverloads constructor(
 
 	val baseView: BaseView? get() = layout as? BaseView
 
-	fun load(thingId: String, scenario: Scenario? = null, onComplete: ((ThingScreenlet) -> Unit)? = null) {
+	fun load(thingId: String, credentials: String? = null, scenario: Scenario? = null,
+		onComplete: ((ThingScreenlet) -> Unit)? = null) {
 		HttpUrl.parse(thingId)?.let {
-			fetch(it) {
+			fetch(it, credentials) {
 				if (scenario != null) {
 					this.scenario = scenario
 				}
@@ -95,6 +96,7 @@ class ThingScreenlet @JvmOverloads constructor(
 				onComplete?.invoke(this)
 			}
 		}
+
 	}
 
 	private fun getLayoutIdFor(thing: Thing?): Int? {
