@@ -44,4 +44,5 @@ class DetailActivity : AppCompatActivity(), ScreenletEvents {
 	override fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing) = View.OnClickListener {
 		startActivity<DetailActivity>("id" to thing.id)
 	}
+
 }
