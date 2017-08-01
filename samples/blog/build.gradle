@@ -20,19 +20,19 @@ android {
 }
 
 dependencies {
-	compile fileTree(dir: 'libs', include: ['*.jar'])
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
 
 	compile project(':vulcan-consumer-android')
 
-	compile libraries.appCompat
-	compile libraries.cardView
+	implementation libraries.appCompat
+	implementation libraries.cardView
 
-	compile libraries.okhttp
+	implementation libraries.okhttp
 
-	compile libraries.result
-	compile libraries.anko_commons
+	implementation libraries.result
+	implementation libraries.anko_commons
 
-	compile libraries.kotlin
+	implementation libraries.kotlin
 }
 
 repositories {

@@ -23,37 +23,43 @@ import com.liferay.vulcan.consumer.extensions.inflate
 import com.liferay.vulcan.consumer.fetch
 import com.liferay.vulcan.consumer.model.Collection
 import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.screens.views.BaseView
+import com.liferay.vulcan.consumer.screens.views.Scenario
 import okhttp3.HttpUrl
 
 class ThingAdapter(collection: Collection, val listener: Listener) :
 	Adapter<ThingViewHolder>(), ThingViewHolder.Listener {
+
+	override fun onLayoutRow(view: BaseView?, thing: Thing, scenario: Scenario) =
+		listener.onLayoutRow(view, thing, scenario)
 
 	override fun onClickedRow(view: View, thing: Thing): View.OnClickListener? = listener.onClickedRow(view, thing)
 
 	val totalItems = collection.totalItems
 	val members = collection.members?.toMutableList() ?: mutableListOf()
 
-	//TODO How do we want to model this?
 	val nextPage = collection.pages?.next
 
 	override fun onBindViewHolder(holder: ThingViewHolder?, position: Int) {
-		//TODO architect add index? per page? page?
 		if (members.size > position) {
 			holder?.thing = members[position]
 		} else {
 			nextPage.let {
-				fetch(HttpUrl.parse(nextPage)!!) {
-					it.fold(
-						success = {
-							convert<Collection>(it)?.let {
-								val moreMembers = it.members
-								merge(members, moreMembers)
-								notifyDataSetChanged()
-							}
-						},
-						failure = {}
-					)
+				HttpUrl.parse(nextPage)?.let {
+					fetch(it) {
+						it.fold(
+							success = {
+								convert<Collection>(it)?.let {
+									val moreMembers = it.members
+									merge(members, moreMembers)
+									notifyDataSetChanged()
+								}
+							},
+							failure = {}
+						)
+					}
 				}
+
 			}
 		}
 	}
@@ -76,5 +82,6 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 
 	interface Listener {
 		fun onClickedRow(view: View, thing: Thing): View.OnClickListener?
+		fun onLayoutRow(view: BaseView?, thing: Thing, scenario: Scenario): Int?
 	}
 }

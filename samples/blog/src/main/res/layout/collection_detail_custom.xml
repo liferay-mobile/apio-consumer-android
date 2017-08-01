@@ -9,9 +9,9 @@
         android:id="@+id/collection_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         android:paddingBottom="15dp"
         android:paddingTop="15dp"
-        android:clipToPadding="false"
         />
 
 </com.liferay.vulcan.consumer.screens.views.detail.CollectionDetailView>

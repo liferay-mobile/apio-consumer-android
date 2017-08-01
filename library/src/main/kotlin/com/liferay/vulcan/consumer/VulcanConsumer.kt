@@ -24,7 +24,6 @@ import com.liferay.vulcan.consumer.model.contextFrom
 import com.liferay.vulcan.consumer.model.isId
 import com.liferay.vulcan.consumer.model.merge
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -32,41 +31,47 @@ import okhttp3.Credentials
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
 import kotlin.collections.Map.Entry
 import kotlin.collections.set
 
 fun fetch(
-	url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
+	url: HttpUrl, credentials: String? = null, fields: Map<String, List<String>> = emptyMap(),
+	embedded: List<String> = emptyList(),
 	onComplete: (Result<Thing, Exception>) -> Unit) {
 
-	//FIXME event oriented
 	launch(UI) {
-		asyncTask {
-			val httpUrl = createUrl(url, fields, embedded)
-
-			val credential = createAuthentication()
-
-			val request = createRequest(httpUrl, credential)
-
-			val response = OkHttpClient().newCall(request).execute()
-
-			response.body()?.let {
-				val (thing, embeddedThings) = parse(it.string())
-
-				val nodes = embeddedThings.map { (id, embeddedThing) ->
-					val previousThing = graph[id]?.value
-
-					val newThing = embeddedThing?.merge(previousThing) ?: previousThing
-
-					id to Node(id, newThing)
-				}
-
-				graph.putAll(nodes)
-
-				Result.of(thing)
-			} ?: Result.of { throw VulcanException("Not Found") }
+		async(CommonPool) {
+			requestParseWaitLoop(url, fields, embedded, credentials)
 		}.await().let(onComplete)
 	}
+}
+
+public fun requestParseWaitLoop(url: HttpUrl,
+	fields: Map<String, List<String>>,
+	embedded: List<String>,
+	credentials: String?): Result<Thing, Exception> {
+	try {
+		val response = request(url, fields, embedded, credentials)
+		return parse(response)
+	} catch (e: IOException) {
+		return Result.error(e)
+	}
+}
+
+private fun request(url: HttpUrl,
+	fields: Map<String, List<String>>,
+	embedded: List<String>, credentials: String?): Response {
+	val httpUrl = createUrl(url, fields, embedded)
+
+	if (credentials != null) {
+		credential = credentials
+	}
+
+	val request = createRequest(httpUrl, credential)
+
+	return OkHttpClient().newCall(request).execute()
 }
 
 private fun createRequest(httpUrl: HttpUrl?, credential: String?): Request =
@@ -76,23 +81,42 @@ private fun createRequest(httpUrl: HttpUrl?, credential: String?): Request =
 		.addHeader("Accept", "application/ld+json")
 		.build()
 
-private fun createUrl(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>): HttpUrl = url
-	.newBuilder()
-	.apply {
-		fields.forEach { (type, values) ->
-			val types = values.joinToString(separator = ",")
+private fun createUrl(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>): HttpUrl =
+	url
+		.newBuilder()
+		.apply {
+			fields.forEach { (type, values) ->
+				val types = values.joinToString(separator = ",")
 
-			this.addQueryParameter("fields[$type]", types)
+				this.addQueryParameter("fields[$type]", types)
+			}
 		}
-	}
-	.addQueryParameter("embedded", embedded.joinToString(","))
-	.build()
+		.addQueryParameter("embedded", embedded.joinToString(","))
+		.build()
+
+private fun parse(
+	response: Response): Result<Thing, Exception> =
+	response.body()?.let {
+		val (thing, embeddedThings) = parse(it.string())
+
+		val nodes = embeddedThings.map { (id, embeddedThing) ->
+			val previousThing = graph[id]?.value
+
+			val newThing = embeddedThing?.merge(previousThing) ?: previousThing
+
+			id to Node(id, newThing)
+		}
+
+		graph.putAll(nodes)
+
+		Result.of(thing)
+	} ?: Result.of { throw VulcanException("Not Found") }
 
 class Node(val id: String, var value: Thing? = null)
 
 var graph: MutableMap<String, Node> = mutableMapOf()
 
-fun createAuthentication(): String? = Credentials.basic("test@liferay.com", "test")
+var credential: String = Credentials.basic("test@liferay.com", "test")
 
 fun parse(json: String): Pair<Thing, Map<String, Thing?>> {
 	val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
@@ -105,7 +129,7 @@ fun parse(json: String): Pair<Thing, Map<String, Thing?>> {
 private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair<Thing, Map<String, Thing?>> {
 	val id = jsonObject["@id"] as String
 
-	val types = jsonObject["@type"] as List<String>
+	val types = jsonObject["@type"] as? List<String> ?: listOf()
 
 	val context = contextFrom(jsonObject["@context"] as? Map<String, Any>, parentContext)
 
@@ -165,6 +189,3 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 
 class VulcanException(s: String) : Throwable(s)
 
-fun <T : Any> asyncTask(function: () -> Result<T, Exception>): Deferred<Result<T, Exception>> = async(CommonPool) {
-	function()
-}
