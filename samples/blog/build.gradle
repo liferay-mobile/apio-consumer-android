@@ -22,7 +22,7 @@ android {
 dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-	implementation project(':liferay-vulcan-consumer')
+	compile project(':vulcan-consumer-android')
 
 	implementation libraries.appCompat
 	implementation libraries.cardView

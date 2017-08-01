@@ -13,6 +13,7 @@ buildscript {
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 		classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
 		classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 	}
 }
 
@@ -44,11 +45,15 @@ ext {
 	buildToolsVersion = '25.0.2'
 
 	versionCode = 1
-	versionName = '1.0'
+	versionName = '0.0.1'
 
 	publishedGroupId = 'com.liferay.mobile'
 	libraryName = 'Liferay Vulcan Consumer for Android'
 	libraryDescription = 'Liferay Vulcan Consumer for Android includes the library and a sample project'
+
+	bintrayRepo = 'liferay-mobile'
+	bintrayOrg = ''
+	bintrayOrg = 'liferay'
 
 	siteUrl = 'https://github.com/liferay-mobile/vulcan-consumer-android'
 	gitUrl = 'https://github.com/liferay-mobile/vulcan-consumer-android'
