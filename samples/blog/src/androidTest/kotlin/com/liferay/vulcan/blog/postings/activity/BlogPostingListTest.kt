@@ -38,10 +38,6 @@ class BlogPostingListTest {
 	@JvmField
 	val activityRule = ActivityTestRule(MainActivity::class.java)
 
-	@Before
-	fun init() {
-	}
-
 	@Test
 	fun thingScreenletRenderingBlogsShowsResultsTest() {
 		val view = withId(R.id.thing_screenlet_activity)
@@ -53,7 +49,7 @@ class BlogPostingListTest {
 		val view = ViewMatchers.withId(R.id.thing_screenlet_activity)
 
 		onView(withId(R.id.headline))
-			.check(matches(withText("New Blog")));
+			.check(matches(withText("New Blog")))
 
 		var onView = Espresso.onView(view)
 //		onView.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -62,6 +58,5 @@ class BlogPostingListTest {
 //		onView.check(ViewMatchers.withId(R.id.thing_screenlet))
 //			.check(matches(withText("Chiu-Ki Chan")));
 	}
-
 
 }
