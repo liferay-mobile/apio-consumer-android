@@ -14,7 +14,6 @@
 
 package com.liferay.vulcan.blog.postings.activity
 
-import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.assertion.ViewAssertions.matches
@@ -25,7 +24,6 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.liferay.vulcan.blog.postings.R
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,24 +37,19 @@ class BlogPostingListTest {
 	val activityRule = ActivityTestRule(MainActivity::class.java)
 
 	@Test
-	fun thingScreenletRenderingBlogsShowsResultsTest() {
+	fun appRendersLayoutTest() {
+
 		val view = withId(R.id.thing_screenlet_activity)
+
 		onView(view).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 	}
 
 	@Test
-	fun thingScreenletRenderingBlogsShowsResultsWithTextTest() {
-		val view = ViewMatchers.withId(R.id.thing_screenlet_activity)
+	fun collectionRendersOneBlogItemTest() {
 
-		onView(withId(R.id.headline))
-			.check(matches(withText("New Blog")))
+		val headline = withId(R.id.headline)
 
-		var onView = Espresso.onView(view)
-//		onView.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-//		onView.check(
-//			ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.thing_screenlet))))
-//		onView.check(ViewMatchers.withId(R.id.thing_screenlet))
-//			.check(matches(withText("Chiu-Ki Chan")));
+		onView(headline).check(matches(withText("My Title")))
 	}
 
 }
