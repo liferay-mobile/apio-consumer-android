@@ -12,10 +12,17 @@ android {
 		versionCode rootProject.ext.versionCode
 		versionName rootProject.ext.versionName
 		applicationId 'com.liferay.vulcan.consumer.blog.postings'
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 
 	sourceSets {
 		main.java.srcDirs += 'src/main/kotlin'
+		test.java.srcDirs += 'src/test/kotlin'
+		androidTest.java.srcDirs += 'src/androidTest/kotlin'
+	}
+
+	testOptions {
+		unitTests.returnDefaultValues = true
 	}
 }
 
