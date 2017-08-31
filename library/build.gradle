@@ -15,9 +15,14 @@ android {
 
 	sourceSets {
 		main.java.srcDirs += 'src/main/kotlin'
+		debug.java.srcDirs += 'src/debug/kotlin'
+		release.java.srcDirs += 'src/release/kotlin'
 		main {
-			res.srcDirs =
-				['src/main/res/layouts/detail', 'src/main/res/layouts/custom', 'src/main/res/layouts/row', 'src/main/res/layouts/thing', 'src/main/res']
+			res.srcDirs = ['src/main/res/layouts/detail',
+			               'src/main/res/layouts/custom',
+			               'src/main/res/layouts/row',
+			               'src/main/res/layouts/thing',
+			               'src/main/res']
 		}
 	}
 
