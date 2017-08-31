@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.thing_screenlet_activity)
 
-		val id = "http://screens.liferay.org.es/o/api/p/blogs?id=20143&filterName=groupId"
+		val id = "http://screens.liferay.org.es/o/api/p/blogs?id=57459&filterName=groupId"
 
-		thingScreenlet.load(id, Credentials.basic("test@liferay.com", "test1"))
+		thingScreenlet.load(id, Credentials.basic("vulcan@liferay.com", "vulcan"))
 
 		thingScreenlet.screenletEvents = this
 	}
