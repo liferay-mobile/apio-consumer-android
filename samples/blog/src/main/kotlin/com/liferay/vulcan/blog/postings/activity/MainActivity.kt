@@ -30,13 +30,13 @@ import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity(), ScreenletEvents {
 
-	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
+	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet_activity)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.thing_screenlet_activity)
 
-		val id = "http://docker-engine-web1:9008/o/api/group/20143/p/blogs"
+		val id = "http://screens.liferay.org.es/o/api/p/blogs?id=20143&filterName=groupId"
 
 		thingScreenlet.load(id, Credentials.basic("test@liferay.com", "test1"))
 
