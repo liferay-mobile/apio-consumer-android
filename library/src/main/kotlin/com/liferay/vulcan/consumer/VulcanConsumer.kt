@@ -14,9 +14,11 @@
 
 package com.liferay.vulcan.consumer
 
+import android.support.test.espresso.IdlingRegistry
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.jakewharton.espresso.OkHttp3IdlingResource
 import com.liferay.vulcan.consumer.model.Context
 import com.liferay.vulcan.consumer.model.Relation
 import com.liferay.vulcan.consumer.model.Thing
@@ -71,7 +73,16 @@ private fun request(url: HttpUrl,
 
 	val request = createRequest(httpUrl, credential)
 
-	return OkHttpClient().newCall(request).execute()
+	val okHttpClient = OkHttpClient()
+	if (BuildConfig.DEBUG) {
+		IdlingResources.registerOkHttp(okHttpClient);
+	}
+
+	val execute = okHttpClient.newCall(request).execute()
+	if (BuildConfig.DEBUG) {
+		IdlingResources.unregisterOkHttp(okHttpClient);
+	}
+	return execute
 }
 
 private fun createRequest(httpUrl: HttpUrl?, credential: String?): Request =
@@ -189,3 +200,13 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 
 class VulcanException(s: String) : Throwable(s)
 
+object IdlingResources {
+	fun registerOkHttp(okHttpClient: OkHttpClient) {
+		val create = OkHttp3IdlingResource.create("okhttp", okHttpClient)
+		IdlingRegistry.getInstance().register(create)
+	}
+
+	fun unregisterOkHttp(okHttpClient: OkHttpClient) {
+//		IdlingRegistry.getInstance().unregister(OkHttp3IdlingResource.create("okhttp", okHttpClient))
+	}
+}
