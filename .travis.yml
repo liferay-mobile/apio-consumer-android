@@ -20,6 +20,7 @@ android:
     - tools
     - build-tools-25.0.0
     - platform-tools
+    - android-21
     - android-25
     - extra-google-m2repository
     - extra-android-m2repository
@@ -29,7 +30,7 @@ android:
     - '.+'
 
 before_script:
-  - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
