@@ -20,6 +20,10 @@ android {
 				['src/main/res/layouts/detail', 'src/main/res/layouts/custom', 'src/main/res/layouts/row', 'src/main/res/layouts/thing', 'src/main/res']
 		}
 	}
+
+	lintOptions {
+		disable 'InvalidPackage'
+	}
 }
 
 dependencies {
