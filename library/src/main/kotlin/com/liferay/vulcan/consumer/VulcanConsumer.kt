@@ -78,11 +78,7 @@ private fun request(url: HttpUrl,
 		IdlingResources.registerOkHttp(okHttpClient);
 	}
 
-	val execute = okHttpClient.newCall(request).execute()
-	if (BuildConfig.DEBUG) {
-		IdlingResources.unregisterOkHttp(okHttpClient);
-	}
-	return execute
+	return okHttpClient.newCall(request).execute()
 }
 
 private fun createRequest(httpUrl: HttpUrl?, credential: String?): Request =
@@ -204,9 +200,5 @@ object IdlingResources {
 	fun registerOkHttp(okHttpClient: OkHttpClient) {
 		val create = OkHttp3IdlingResource.create("okhttp", okHttpClient)
 		IdlingRegistry.getInstance().register(create)
-	}
-
-	fun unregisterOkHttp(okHttpClient: OkHttpClient) {
-//		IdlingRegistry.getInstance().unregister(OkHttp3IdlingResource.create("okhttp", okHttpClient))
 	}
 }
