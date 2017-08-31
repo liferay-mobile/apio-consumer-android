@@ -40,16 +40,18 @@ dependencies {
 	implementation libraries.kotlin
 	implementation libraries.coroutines_core
 	implementation libraries.coroutines_android
-}
 
-apply from: '../install.gradle'
-apply from: '../bintray.gradle'
+	testImplementation libraries.junit
+	testImplementation libraries.mockito
 
-repositories {
-	jcenter()
-	maven { url 'https://maven.google.com' }
+	debugImplementation libraries.espresso
+	debugImplementation libraries.espresso_idling
+	debugImplementation libraries.okhttp_idling
 }
 
 kotlin {
 	experimental { coroutines 'enable' }
 }
+
+apply from: '../install.gradle'
+apply from: '../bintray.gradle'

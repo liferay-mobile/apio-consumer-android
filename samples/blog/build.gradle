@@ -33,9 +33,9 @@ dependencies {
 	implementation libraries.anko_commons
 
 	implementation libraries.kotlin
-}
 
-repositories {
-	jcenter()
-	maven { url 'https://maven.google.com' }
+	testImplementation libraries.junit
+	testImplementation libraries.mockito
+	androidTestImplementation libraries.espresso
+	androidTestImplementation libraries.espresso_idling
 }
