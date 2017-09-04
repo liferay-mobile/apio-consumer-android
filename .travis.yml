@@ -20,17 +20,18 @@ android:
     - tools
     - build-tools-25.0.0
     - platform-tools
-    - android-21
     - android-25
+    - android-22
     - extra-google-m2repository
     - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-22
 
   licenses:
     - android-sdk-license-.+
     - '.+'
 
 before_script:
-  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
@@ -39,3 +40,12 @@ script:
   - ./gradlew build testDebug && ./gradlew assembleRelease
   - ./gradlew detektCheck
   - ./gradlew cAT
+
+
+#  sys-img-arm64-v8a-android-24
+#  sys-img-arm64-v8a-google_apis-24
+#  sys-img-arm64-v8a-google_apis-25
+#  sys-img-armeabi-v7a-android-22
+#  sys-img-armeabi-v7a-android-24
+#  sys-img-armeabi-v7a-google_apis-24
+#  sys-img-armeabi-v7a-google_apis-25
