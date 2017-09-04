@@ -1,27 +1,33 @@
 package com.liferay.vulcan.consumer
 
+import android.support.test.espresso.IdlingPolicies
 import android.support.test.espresso.IdlingRegistry
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 
 object IdlingResources {
 
-	private val idlingResource: VulcanIdlingResources = VulcanIdlingResources()
-
-	private val idlingRegistry = IdlingRegistry.getInstance()
-
 	fun registerOkHttp(okHttpClient: OkHttpClient, name: String) {
-		val create = OkHttp3IdlingResource.create(name, okHttpClient)
-		idlingRegistry.register(create)
+		val create = OkHttp3IdlingResource.create("_", okHttpClient)
+		IdlingRegistry.getInstance().register(create)
 	}
 
-	fun register() {
-		idlingRegistry.register(idlingResource)
-		idlingResource.idle = false
+	fun unregisterOkHttp(okHttpClient: OkHttpClient, name: String) {
+		val create = OkHttp3IdlingResource.create("_", okHttpClient)
+		IdlingRegistry.getInstance().unregister(create)
 	}
 
-	fun unregister() {
-		idlingResource.resourceCallback?.onTransitionToIdle()
-		idlingResource.idle = true
+	private var idlingResource: VulcanIdlingResources? = null
+
+	fun getServer() {
+
 	}
+
+	fun setPolicy() {
+		val l: Long = 5
+		IdlingPolicies.setIdlingResourceTimeout(l, TimeUnit.MINUTES)
+		IdlingPolicies.setMasterPolicyTimeout(l, TimeUnit.MINUTES)
+	}
+
 }

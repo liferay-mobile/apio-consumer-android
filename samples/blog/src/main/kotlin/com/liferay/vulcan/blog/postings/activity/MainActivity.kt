@@ -18,6 +18,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.liferay.vulcan.blog.postings.R
+import com.liferay.vulcan.consumer.IdlingResources
 import com.liferay.vulcan.consumer.delegates.bindNonNull
 import com.liferay.vulcan.consumer.model.Thing
 import com.liferay.vulcan.consumer.model.get
@@ -27,6 +28,7 @@ import com.liferay.vulcan.consumer.screens.views.BaseView
 import com.liferay.vulcan.consumer.screens.views.Scenario
 import okhttp3.Credentials
 import org.jetbrains.anko.startActivity
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), ScreenletEvents {
 
@@ -35,6 +37,8 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.thing_screenlet_activity)
+
+		IdlingResources.setPolicy()
 
 		val id = "http://screens.liferay.org.es/o/api/p/blogs?id=57459&filterName=groupId"
 

@@ -34,7 +34,6 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 import kotlin.collections.Map.Entry
-import kotlin.collections.set
 
 fun fetch(
 	url: HttpUrl, credentials: String? = null, fields: Map<String, List<String>> = emptyMap(),
@@ -76,7 +75,13 @@ private fun request(url: HttpUrl,
 		IdlingResources.registerOkHttp(okHttpClient, httpUrl.toString())
 	}
 
-	return okHttpClient.newCall(request).execute()
+	val execute = okHttpClient.newCall(request).execute()
+
+	if (BuildConfig.DEBUG) {
+		IdlingResources.unregisterOkHttp(okHttpClient, httpUrl.toString())
+	}
+
+	return execute
 }
 
 private fun createRequest(httpUrl: HttpUrl?, credential: String?): Request =

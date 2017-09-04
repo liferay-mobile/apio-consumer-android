@@ -4,10 +4,10 @@ import android.support.test.espresso.IdlingResource
 
 class VulcanIdlingResources : IdlingResource {
 
-	var idle: Boolean = true
+	var idle = true
 	var resourceCallback: IdlingResource.ResourceCallback? = null
 
-	override fun getName() = VulcanIdlingResources::class.java.name
+	override fun getName() = "VulcanIdlingResources"
 
 	override fun registerIdleTransitionCallback(
 		resourceCallback: IdlingResource.ResourceCallback) {
@@ -15,7 +15,7 @@ class VulcanIdlingResources : IdlingResource {
 	}
 
 	override fun isIdleNow(): Boolean {
-		if (idle) {
+		if (idle && resourceCallback != null) {
 			resourceCallback?.onTransitionToIdle()
 		}
 		return idle

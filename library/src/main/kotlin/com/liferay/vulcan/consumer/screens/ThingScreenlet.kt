@@ -86,10 +86,6 @@ class ThingScreenlet @JvmOverloads constructor(
 	fun load(thingId: String, credentials: String? = null, scenario: Scenario? = null,
 		onComplete: ((ThingScreenlet) -> Unit)? = null) {
 
-		if (BuildConfig.DEBUG) {
-			IdlingResources.register()
-		}
-
 		HttpUrl.parse(thingId)?.let {
 			fetch(it, credentials) {
 
@@ -102,10 +98,6 @@ class ThingScreenlet @JvmOverloads constructor(
 				it.failure { baseView?.showError(it.message) }
 
 				onComplete?.invoke(this)
-
-				if (BuildConfig.DEBUG) {
-					IdlingResources.unregister()
-				}
 			}
 		}
 

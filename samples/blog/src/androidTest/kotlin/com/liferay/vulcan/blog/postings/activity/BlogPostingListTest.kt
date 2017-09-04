@@ -25,6 +25,10 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.liferay.vulcan.blog.postings.R
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,6 +40,23 @@ class BlogPostingListTest {
 	@Rule
 	@JvmField
 	val activityRule = ActivityTestRule(MainActivity::class.java)
+
+	var server = MockWebServer()
+
+	@Before
+	fun setUp() {
+
+		val response = MockResponse()
+			.addHeader("Content-Type", "application/json; charset=utf-8")
+			.addHeader("Cache-Control", "no-cache")
+			.setBody("{}")
+//		response.throttleBody(1024, 1, TimeUnit.SECONDS);
+
+//		server = MockWebServer()
+//
+//		server.enqueue(MockResponse().setBody("hello, world!"))
+//		server.start();
+	}
 
 	@Test
 	fun appRendersLayoutTest() {
@@ -51,6 +72,11 @@ class BlogPostingListTest {
 		onView(withId(R.id.headline))
 			.check(matches(isDisplayed()))
 			.check(matches(withText("My Title")))
+	}
+
+	@After
+	fun clean() {
+		server.shutdown();
 	}
 
 }
