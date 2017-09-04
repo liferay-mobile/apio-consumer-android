@@ -48,15 +48,15 @@ fun fetch(
 	}
 }
 
-public fun requestParseWaitLoop(url: HttpUrl,
+fun requestParseWaitLoop(url: HttpUrl,
 	fields: Map<String, List<String>>,
 	embedded: List<String>,
 	credentials: String?): Result<Thing, Exception> {
-	try {
+	return try {
 		val response = request(url, fields, embedded, credentials)
-		return parse(response)
+		parse(response)
 	} catch (e: IOException) {
-		return Result.error(e)
+		Result.error(e)
 	}
 }
 
