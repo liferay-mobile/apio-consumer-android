@@ -9,7 +9,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.0.0-beta3'
+		classpath 'com.android.tools.build:gradle:3.0.0-beta4'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 		classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
 
@@ -86,5 +86,6 @@ ext.libraries = [appCompat         : 'com.android.support:appcompat-v7:' + suppo
                  junit             : 'junit:junit:4.12',
                  mockito           : 'org.mockito:mockito-core:1.9.5',
                  espresso          : 'com.android.support.test.espresso:espresso-core:3.0.1',
+                 espresso_contrib  : 'com.android.support.test.espresso:espresso-contrib:3.0.1',
                  espresso_idling   : 'com.android.support.test.espresso.idling:idling-concurrent:3.0.1',
                  okhttp_idling     : 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0',]

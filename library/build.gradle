@@ -17,6 +17,7 @@ android {
 		main.java.srcDirs += 'src/main/kotlin'
 		debug.java.srcDirs += 'src/debug/kotlin'
 		release.java.srcDirs += 'src/release/kotlin'
+		test.java.srcDirs += 'src/test/kotlin'
 		main {
 			res.srcDirs = ['src/main/res/layouts/detail',
 			               'src/main/res/layouts/custom',
