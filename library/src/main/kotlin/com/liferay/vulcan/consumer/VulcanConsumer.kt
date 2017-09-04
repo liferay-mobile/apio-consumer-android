@@ -73,7 +73,7 @@ private fun request(url: HttpUrl,
 
 	val okHttpClient = OkHttpClient()
 	if (BuildConfig.DEBUG) {
-		IdlingResources.registerOkHttp(okHttpClient)
+		IdlingResources.registerOkHttp(okHttpClient, httpUrl.toString())
 	}
 
 	return okHttpClient.newCall(request).execute()

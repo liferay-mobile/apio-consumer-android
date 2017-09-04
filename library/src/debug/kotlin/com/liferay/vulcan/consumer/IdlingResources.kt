@@ -5,8 +5,12 @@ import com.jakewharton.espresso.OkHttp3IdlingResource
 import okhttp3.OkHttpClient
 
 object IdlingResources {
-	fun registerOkHttp(okHttpClient: OkHttpClient) {
-		val create = OkHttp3IdlingResource.create("okhttp", okHttpClient)
-		IdlingRegistry.getInstance().register(create)
+
+	private val idlingRegistry = IdlingRegistry.getInstance()
+
+	fun registerOkHttp(okHttpClient: OkHttpClient, name: String) {
+		val create = OkHttp3IdlingResource.create(name, okHttpClient)
+		idlingRegistry.register(create)
+	}
 	}
 }
