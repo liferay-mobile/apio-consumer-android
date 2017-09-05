@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.thing_screenlet_activity)
 
-		IdlingResources.setPolicy()
-
 		val id = "http://screens.liferay.org.es/o/api/p/blogs?id=57459&filterName=groupId"
 
 		thingScreenlet.load(id, Credentials.basic("vulcan@liferay.com", "vulcan"))

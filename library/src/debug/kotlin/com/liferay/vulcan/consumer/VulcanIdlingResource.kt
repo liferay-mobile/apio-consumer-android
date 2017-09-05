@@ -2,12 +2,12 @@ package com.liferay.vulcan.consumer
 
 import android.support.test.espresso.IdlingResource
 
-class VulcanIdlingResources : IdlingResource {
+object VulcanIdlingResources : IdlingResource {
 
 	var idle = true
 	var resourceCallback: IdlingResource.ResourceCallback? = null
 
-	override fun getName() = "VulcanIdlingResources"
+	override fun getName() = VulcanIdlingResources::class.java.name
 
 	override fun registerIdleTransitionCallback(
 		resourceCallback: IdlingResource.ResourceCallback) {

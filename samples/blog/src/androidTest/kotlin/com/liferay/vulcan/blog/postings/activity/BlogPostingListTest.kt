@@ -24,11 +24,13 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import com.github.kittinunf.result.Result
 import com.liferay.vulcan.blog.postings.R
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
-import org.junit.Before
+import com.liferay.vulcan.consumer.model.Thing
+import com.liferay.vulcan.consumer.requestParseWaitLoop
+import okhttp3.Credentials
+import okhttp3.HttpUrl
+import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,22 +43,7 @@ class BlogPostingListTest {
 	@JvmField
 	val activityRule = ActivityTestRule(MainActivity::class.java)
 
-	var server = MockWebServer()
-
-	@Before
-	fun setUp() {
-
-		val response = MockResponse()
-			.addHeader("Content-Type", "application/json; charset=utf-8")
-			.addHeader("Cache-Control", "no-cache")
-			.setBody("{}")
-//		response.throttleBody(1024, 1, TimeUnit.SECONDS);
-
-//		server = MockWebServer()
-//
-//		server.enqueue(MockResponse().setBody("hello, world!"))
-//		server.start();
-	}
+	val credentials = Credentials.basic("vulcan@liferay.com", "vulcan")
 
 	@Test
 	fun appRendersLayoutTest() {
@@ -67,16 +54,22 @@ class BlogPostingListTest {
 	}
 
 	@Test
+	fun requestABlogFilteredByGroupId() {
+
+		val url = HttpUrl.parse("http://screens.liferay.org.es/o/api/p/blogs?id=57459&filterName=groupId")
+
+		val result: Result<Thing, Exception> = requestParseWaitLoop(url!!, mapOf(), listOf(), credentials)
+
+		Assert.assertNotNull(result.component1())
+		Assert.assertEquals("http://screens.liferay.org.es/o/api/p/blogs", result.component1()!!.id)
+	}
+
+	@Test
 	fun thingScreenletRenderingBlogsShowsResultsWithTextTest() {
 
 		onView(withId(R.id.headline))
 			.check(matches(isDisplayed()))
 			.check(matches(withText("My Title")))
-	}
-
-	@After
-	fun clean() {
-		server.shutdown();
 	}
 
 }

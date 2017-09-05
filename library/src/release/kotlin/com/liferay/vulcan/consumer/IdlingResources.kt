@@ -11,15 +11,4 @@ object IdlingResources {
 		println("unregisterOkHttp empty implementation")
 	}
 
-	fun register() {
-		println("register empty implementation")
-	}
-
-	fun unregister() {
-		println("unregister empty implementation")
-	}
-
-	fun setPolicy() {
-		println("setPolicy empty implementation")
-	}
 }
