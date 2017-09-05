@@ -58,10 +58,15 @@ class BlogPostingListTest {
 
 		val url = HttpUrl.parse("http://screens.liferay.org.es/o/api/p/blogs?id=57459&filterName=groupId")
 
-		val result: Result<Thing, Exception> = requestParseWaitLoop(url!!, mapOf(), listOf(), credentials)
+		url?.let {
+			val result: Result<Thing, Exception> = requestParseWaitLoop(url, mapOf(), listOf(), credentials)
 
-		Assert.assertNotNull(result.component1())
-		Assert.assertEquals("http://screens.liferay.org.es/o/api/p/blogs", result.component1()!!.id)
+			Assert.assertNotNull(result.component1())
+
+			result.fold(success = {
+				Assert.assertEquals("http://screens.liferay.org.es/o/api/p/blogs", it.id)
+			}, failure = { Assert.fail() });
+		}
 	}
 
 	@Test
