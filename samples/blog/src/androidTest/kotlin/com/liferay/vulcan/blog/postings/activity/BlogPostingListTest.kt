@@ -69,7 +69,7 @@ class BlogPostingListTest {
 		}
 	}
 
-	@Test
+//	@Test
 	fun thingScreenletRenderingBlogsShowsResultsWithTextTest() {
 
 		onView(withId(R.id.headline))

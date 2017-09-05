@@ -12,8 +12,8 @@ object IdlingResources {
 	}
 
 	fun unregisterOkHttp(okHttpClient: OkHttpClient, name: String) {
-		val create = OkHttp3IdlingResource.create("_", okHttpClient)
-		IdlingRegistry.getInstance().unregister(create)
+//		val create = OkHttp3IdlingResource.create("_", okHttpClient)
+//		IdlingRegistry.getInstance().unregister(create)
 	}
 
 }
