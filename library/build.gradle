@@ -53,6 +53,7 @@ dependencies {
 
 	testImplementation libraries.junit
 	testImplementation libraries.mockito
+	testImplementation libraries.mockwebserver
 
 	debugImplementation libraries.espresso
 	debugImplementation libraries.espresso_idling

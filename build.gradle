@@ -88,4 +88,5 @@ ext.libraries = [appCompat         : 'com.android.support:appcompat-v7:' + suppo
                  espresso          : 'com.android.support.test.espresso:espresso-core:3.0.1',
                  espresso_contrib  : 'com.android.support.test.espresso:espresso-contrib:3.0.1',
                  espresso_idling   : 'com.android.support.test.espresso.idling:idling-concurrent:3.0.1',
-                 okhttp_idling     : 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0',]
+                 okhttp_idling     : 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0',
+                 mockwebserver     : 'com.squareup.okhttp3:mockwebserver:3.9.0']
