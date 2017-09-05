@@ -42,4 +42,4 @@ before_script:
 script:
   - ./gradlew build testDebug && ./gradlew assembleRelease
   - ./gradlew detektCheck
-  - ./gradlew clean assembleAndroidTest && ./gradlew cAT
+  - ./gradlew clean aADT && ./gradlew cADT
