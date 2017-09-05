@@ -17,17 +17,15 @@ package com.liferay.vulcan.consumer
 import com.github.kittinunf.result.Result
 import com.liferay.vulcan.consumer.model.Relation
 import com.liferay.vulcan.consumer.model.Thing
-import okhttp3.Credentials
-import okhttp3.HttpUrl
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Before
 import org.junit.Test
 
 class VulcanConsumerTest {
 
 	val blogCollection = "{\"totalItems\":1,\"view\":{\"last\":\"http://screens.liferay.org.es/o/api/p/blogs?page=1&per_page=30\",\"@type\":[\"PartialCollectionView\"],\"@id\":\"http://screens.liferay.org.es/o/api/p/blogs?page=1&per_page=30\",\"first\":\"http://screens.liferay.org.es/o/api/p/blogs?page=1&per_page=30\"},\"numberOfItems\":1,\"@type\":[\"Collection\"],\"members\":[{\"creator\":\"http://screens.liferay.org.es/o/api/p/people/57457\",\"articleBody\":\"<p>My Content<\\/p>\",\"@type\":[\"BlogPosting\"],\"author\":\"http://screens.liferay.org.es/o/api/p/people/57457\",\"@context\":{\"creator\":{\"@type\":\"@id\"},\"author\":{\"@type\":\"@id\"},\"comment\":{\"@type\":\"@id\"},\"aggregateRating\":{\"@type\":\"@id\"},\"group\":{\"@type\":\"@id\"}},\"alternativeHeadline\":\"My Subtitle\",\"license\":\"https://creativecommons.org/licenses/by/4.0\",\"modifiedDate\":\"2017-08-31T18:39:52+00:00\",\"comment\":\"http://screens.liferay.org.es/o/api/p/comments?id=57499&type=blogs&filterName=assetType_id\",\"@id\":\"http://screens.liferay.org.es/o/api/p/blogs/57499\",\"aggregateRating\":\"http://screens.liferay.org.es/o/api/p/aggregate-ratings/com.liferay.vulcan.liferay.portal.identifier.ClassNameClassPKIdentifier@4d2042ba\",\"headline\":\"My Title\",\"fileFormat\":\"text/html\",\"createDate\":\"2017-08-31T18:39:52+00:00\",\"group\":\"http://screens.liferay.org.es/o/api/p/groups/57459\"}],\"@id\":\"http://screens.liferay.org.es/o/api/p/blogs\",\"@context\":{\"@vocab\":\"http://schema.org\",\"Collection\":\"http://www.w3.org/ns/hydra/pagination.jsonld\"}}"
-	val credentials = Credentials.basic("vulcan@liferay.com", "vulcan")
 
 	@Test
 	fun parseCreatesPairsWithRelationsTest() {
@@ -52,12 +50,21 @@ class VulcanConsumerTest {
 	@Test
 	fun requestABlogFilteredByGroupId() {
 
-		val url = HttpUrl.parse("http://screens.liferay.org.es/o/api/p/blogs?id=57459&filterName=groupId")
+		val mockWebServer = MockWebServer()
+		val body = MockResponse()
+			.addHeader("Content-Type", "application/json; charset=utf-8")
+			.addHeader("Cache-Control", "no-cache")
+			.setBody(blogCollection)
+		mockWebServer.enqueue(body)
 
-		val result: Result<Thing, Exception> = requestParseWaitLoop(url!!, mapOf(), listOf(), credentials)
+		val url = mockWebServer.url("o/api/p/blogs?id=57459&filterName=groupId")
+
+		val result: Result<Thing, Exception> = requestParseWaitLoop(url!!, mapOf(), listOf(), null)
 
 		assertNotNull(result.component1())
 		assertEquals("http://screens.liferay.org.es/o/api/p/blogs", result.component1()!!.id)
+
+		mockWebServer.shutdown()
 	}
 
 }
