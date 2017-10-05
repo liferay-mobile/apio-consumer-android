@@ -107,19 +107,22 @@ private fun createUrl(url: HttpUrl, fields: Map<String, List<String>>, embedded:
 private fun parse(
 	response: Response): Result<Thing, Exception> =
 	response.body()?.let {
-		val (thing, embeddedThings) = parse(it.string())
+		val result = parse(it.string())
 
-		val nodes = embeddedThings.map { (id, embeddedThing) ->
-			val previousThing = graph[id]?.value
+		result?.let {
+			val (thing, embeddedThings) = it;
+			val nodes = embeddedThings.map { (id, embeddedThing) ->
+				val previousThing = graph[id]?.value
 
-			val newThing = embeddedThing?.merge(previousThing) ?: previousThing
+				val newThing = embeddedThing?.merge(previousThing) ?: previousThing
 
-			id to Node(id, newThing)
+				id to Node(id, newThing)
+			}
+
+			graph.putAll(nodes)
+
+			Result.of(thing)
 		}
-
-		graph.putAll(nodes)
-
-		Result.of(thing)
 	} ?: Result.of { throw VulcanException("Not Found") }
 
 class Node(val id: String, var value: Thing? = null)
@@ -128,7 +131,7 @@ var graph: MutableMap<String, Node> = mutableMapOf()
 
 var credential: String = Credentials.basic("test@liferay.com", "test")
 
-fun parse(json: String): Pair<Thing, Map<String, Thing?>> {
+fun parse(json: String): Pair<Thing, Map<String, Thing?>>? {
 	val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
 
 	val jsonObject = Gson().fromJson<Map<String, Any>>(json, mapType)
@@ -136,21 +139,25 @@ fun parse(json: String): Pair<Thing, Map<String, Thing?>> {
 	return flatten(jsonObject, null)
 }
 
-private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair<Thing, Map<String, Thing?>> {
-	val id = jsonObject["@id"] as String
+private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair<Thing, Map<String, Thing?>>? {
 
-	val types = jsonObject["@type"] as? List<String> ?: listOf()
+	if (!jsonObject.containsKey("statusCode")) {
+		val id = jsonObject["@id"] as String
 
-	val context = contextFrom(jsonObject["@context"] as? Map<String, Any>, parentContext)
+		val types = jsonObject["@type"] as? List<String> ?: listOf()
 
-	val (attributes, things) = jsonObject
-		.filter { it.key !in listOf("@id", "@type", "@context") }
-		.entries
-		.fold(mutableMapOf<String, Any>() to mutableMapOf<String, Thing?>(), foldEntry(context))
+		val context = contextFrom(jsonObject["@context"] as? Map<String, Any>, parentContext)
 
-	val thing = Thing(id, types, attributes)
+		val (attributes, things) = jsonObject
+			.filter { it.key !in listOf("@id", "@type", "@context") }
+			.entries
+			.fold(mutableMapOf<String, Any>() to mutableMapOf<String, Thing?>(), foldEntry(context))
 
-	return thing to things
+		val thing = Thing(id, types, attributes)
+
+		return thing to things
+	}
+	return null;
 }
 
 typealias FoldedAttributes = Pair<MutableMap<String, Any>, MutableMap<String, Thing?>>
@@ -163,16 +170,19 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 
 	when {
 		value is Map<*, *> -> (value as? Map<String, Any>)?.apply {
-			val (thing, embeddedThings) = flatten(this, context)
+			val result = flatten(this, context)
 
-			attributes[key] = Relation(thing.id)
+			result?.let {
+				val (thing, embeddedThings) = it;
+				attributes[key] = Relation(thing.id)
 
-			things.put(thing.id, thing)
+				things.put(thing.id, thing)
 
-			things.putAll(embeddedThings)
+				things.putAll(embeddedThings)
+			}
 		}
 		value is List<*> -> (value as? List<Map<String, Any>>)?.apply {
-			val list = this.map { flatten(it, context) }
+			val list = this.map { flatten(it, context)!! }
 
 			val mutableList = mutableListOf<Relation>()
 
