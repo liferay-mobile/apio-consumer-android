@@ -17,6 +17,7 @@ package com.liferay.vulcan.blog.postings.view
 import android.content.Context
 import android.text.Html
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.liferay.vulcan.blog.postings.R
@@ -41,6 +42,7 @@ class BlogPostingDetailCustom @JvmOverloads constructor(
 	val creatorDetail by bindNonNull<ThingScreenlet>(R.id.creator_detail)
 	val articleBody by bindNonNull<TextView>(R.id.article_body)
 	val createDate by bindNonNull<TextView>(R.id.create_date)
+	val by by bindNonNull<TextView>(R.id.by)
 
 	override var thing: Thing? by converter<BlogPosting> {
 		headline.text = it.headline
@@ -60,6 +62,14 @@ class BlogPostingDetailCustom @JvmOverloads constructor(
 			}
 
 			creatorDetail.load(it.id)
+		}
+
+		if (it.creator == null) {
+			by.visibility = View.GONE
+		}
+
+		if (it.createDate == null) {
+			createDate.visibility = View.GONE
 		}
 
 		createDate.text = it.createDate?.fullFormat()

@@ -35,6 +35,7 @@ class BlogPostingApplication : Application() {
 		Person.DEFAULT_VIEWS[Custom("portrait")] = R.layout.person_portrait_custom
 		Person.DEFAULT_VIEWS[DetailSmall] = R.layout.person_detail_small
 		Person.DEFAULT_VIEWS[Detail] = R.layout.person_detail_custom
+		Person.DEFAULT_VIEWS[Custom("portrait_small")] = R.layout.person_portrait_small
 
 		BlogPosting.DEFAULT_VIEWS[Row] = R.layout.blog_posting_row_custom
 		BlogPosting.DEFAULT_VIEWS[Detail] = R.layout.blog_posting_detail_custom

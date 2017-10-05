@@ -44,6 +44,12 @@ class BlogPostingRowView @JvmOverloads constructor(
 			creator.load(it.id)
 		}
 
-		createDate.text = it.createDate?.fullFormat()
+		it.createDate?.also {
+			createDate.text = it.fullFormat()
+		}
+
+		if (it.createDate == null) {
+			createDate.visibility = GONE
+		}
 	}
 }
