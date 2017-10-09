@@ -85,8 +85,10 @@ class BlogPostingListTest {
 		}
 	}
 
-	//	@Test
+//	@Test
 	fun thingScreenletRenderingBlogsShowsResultsWithTextTest() {
+
+		appRendersLayoutTest();
 
 		onView(withId(R.id.headline))
 			.check(matches(isDisplayed()))
