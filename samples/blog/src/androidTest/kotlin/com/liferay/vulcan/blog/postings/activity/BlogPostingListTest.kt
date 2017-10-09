@@ -37,6 +37,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+const val TEST_DOMAIN = "http://screens.liferay.org.es/o/api/p/"
+
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class BlogPostingListTest {
@@ -45,7 +47,7 @@ class BlogPostingListTest {
 	@JvmField
 	val activityRule = ActivityTestRule(MainActivity::class.java)
 
-	val credentials = Credentials.basic("vulcan@liferay.com", "vulcan")
+	private val credentials = Credentials.basic("vulcan@liferay.com", "vulcan")
 
 	@Before
 	fun unlockScreen() {
@@ -78,7 +80,7 @@ class BlogPostingListTest {
 			Assert.assertNotNull(result.component1())
 
 			result.fold(success = {
-				Assert.assertEquals("http://screens.liferay.org.es/o/api/p/blogs", it.id)
+				Assert.assertEquals(TEST_DOMAIN + "groups/57459/blogs", it.id)
 			}, failure = { Assert.fail() });
 		}
 	}
