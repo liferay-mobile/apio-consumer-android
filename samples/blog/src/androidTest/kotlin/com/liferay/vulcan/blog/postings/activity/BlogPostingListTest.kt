@@ -70,7 +70,7 @@ class BlogPostingListTest {
 	@Test
 	fun requestABlogFilteredByGroupId() {
 
-		val url = HttpUrl.parse("http://screens.liferay.org.es/o/api/p/blogs?id=57459&filterName=groupId")
+		val url = HttpUrl.parse("http://screens.liferay.org.es/o/api/p/groups/57459/blogs")
 
 		url?.let {
 			val result: Result<Thing, Exception> = requestParseWaitLoop(url, mapOf(), listOf(), credentials)
