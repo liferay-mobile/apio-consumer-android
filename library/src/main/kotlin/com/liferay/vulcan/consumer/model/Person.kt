@@ -20,7 +20,9 @@ import com.liferay.vulcan.consumer.screens.views.Detail
 import com.liferay.vulcan.consumer.screens.views.Scenario
 import java.util.Date
 
-data class Person(val name: String?, val email: String?, val jobTitle: String?, val birthDate: Date?) {
+data class Person(
+	val name: String?, val email: String?, val jobTitle: String?, val birthDate: Date?, val image: String?) {
+	
 	companion object {
 		val DEFAULT_VIEWS: MutableMap<Scenario, Int> =
 			mutableMapOf(

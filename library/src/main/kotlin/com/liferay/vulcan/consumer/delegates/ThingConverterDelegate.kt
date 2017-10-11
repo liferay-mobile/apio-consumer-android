@@ -89,6 +89,8 @@ private val converters: Map<String, (Thing) -> Any> = mapOf(
 
 		val birthDate = (it["birthDate"] as? String)?.asDate()
 
-		Person(name, email, jobTitle, birthDate)
+		val image = it["image"] as? String
+
+		Person(name, email, jobTitle, birthDate, image)
 	}
 )

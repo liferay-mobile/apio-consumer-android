@@ -38,14 +38,16 @@ class PersonPortraitView @JvmOverloads constructor(
 	val imageView by bindNonNull<ImageView>(R.id.image_view)
 
 	override var thing: Thing? by converter<Person> {
-		it.email
+		val url = it.image
+			?: it.email
 			?.trim()
 			?.toLowerCase()
 			?.md5()
 			?.let { "https://www.gravatar.com/avatar/$it?d=retro" }
-			?.also {
-				Picasso.with(context).load(it).into(imageView)
-			}
+
+		url?.also {
+			Picasso.with(context).load(it).into(imageView)
+		}
 	}
 
 	private fun String.md5(): String {
