@@ -12,19 +12,27 @@ android {
 		versionCode rootProject.ext.versionCode
 		versionName rootProject.ext.versionName
 		applicationId 'com.liferay.vulcan.consumer.blog.postings'
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 
 	sourceSets {
 		main.java.srcDirs += 'src/main/kotlin'
+		test.java.srcDirs += 'src/test/kotlin'
+		androidTest.java.srcDirs += 'src/androidTest/kotlin'
+	}
+
+	testOptions {
+		unitTests.returnDefaultValues = true
 	}
 }
 
 dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-	compile project(':vulcan-consumer-android')
+	implementation project(':vulcan-consumer-android')
 
 	implementation libraries.appCompat
+	implementation libraries.recyclerView
 	implementation libraries.cardView
 
 	implementation libraries.okhttp
@@ -33,9 +41,19 @@ dependencies {
 	implementation libraries.anko_commons
 
 	implementation libraries.kotlin
-}
 
-repositories {
-	jcenter()
-	maven { url 'https://maven.google.com' }
+	testImplementation libraries.junit
+	testImplementation libraries.mockito
+	androidTestImplementation libraries.espresso
+	androidTestImplementation libraries.espresso_idling
+
+
+	androidTestImplementation(libraries.espresso_contrib) {
+		exclude group: 'com.android.support', module: 'appcompat'
+		exclude group: 'com.android.support', module: 'support-v4'
+		exclude group: 'com.android.support', module: 'support-v7'
+		exclude group: 'com.android.support', module: 'design'
+		exclude module: 'support-annotations'
+		exclude module: 'recyclerview-v7'
+	}
 }

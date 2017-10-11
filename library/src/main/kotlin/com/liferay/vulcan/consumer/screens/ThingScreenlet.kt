@@ -19,6 +19,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import com.github.kittinunf.result.failure
+import com.liferay.vulcan.consumer.BuildConfig
+import com.liferay.vulcan.consumer.IdlingResources
 import com.liferay.vulcan.consumer.R
 import com.liferay.vulcan.consumer.delegates.observe
 import com.liferay.vulcan.consumer.extensions.inflate
@@ -83,8 +85,10 @@ class ThingScreenlet @JvmOverloads constructor(
 
 	fun load(thingId: String, credentials: String? = null, scenario: Scenario? = null,
 		onComplete: ((ThingScreenlet) -> Unit)? = null) {
+
 		HttpUrl.parse(thingId)?.let {
 			fetch(it, credentials) {
+
 				if (scenario != null) {
 					this.scenario = scenario
 				}

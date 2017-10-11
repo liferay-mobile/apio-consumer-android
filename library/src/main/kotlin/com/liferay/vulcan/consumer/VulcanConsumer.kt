@@ -34,7 +34,6 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 import kotlin.collections.Map.Entry
-import kotlin.collections.set
 
 fun fetch(
 	url: HttpUrl, credentials: String? = null, fields: Map<String, List<String>> = emptyMap(),
@@ -48,15 +47,15 @@ fun fetch(
 	}
 }
 
-public fun requestParseWaitLoop(url: HttpUrl,
+fun requestParseWaitLoop(url: HttpUrl,
 	fields: Map<String, List<String>>,
 	embedded: List<String>,
 	credentials: String?): Result<Thing, Exception> {
-	try {
+	return try {
 		val response = request(url, fields, embedded, credentials)
-		return parse(response)
+		parse(response)
 	} catch (e: IOException) {
-		return Result.error(e)
+		Result.error(e)
 	}
 }
 
@@ -71,7 +70,18 @@ private fun request(url: HttpUrl,
 
 	val request = createRequest(httpUrl, credential)
 
-	return OkHttpClient().newCall(request).execute()
+	val okHttpClient = OkHttpClient()
+	if (BuildConfig.DEBUG) {
+		IdlingResources.registerOkHttp(okHttpClient, httpUrl.toString())
+	}
+
+	val execute = okHttpClient.newCall(request).execute()
+
+	if (BuildConfig.DEBUG) {
+		IdlingResources.unregisterOkHttp(okHttpClient, httpUrl.toString())
+	}
+
+	return execute
 }
 
 private fun createRequest(httpUrl: HttpUrl?, credential: String?): Request =
@@ -188,4 +198,3 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 }
 
 class VulcanException(s: String) : Throwable(s)
-

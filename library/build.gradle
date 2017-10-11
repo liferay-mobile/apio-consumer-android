@@ -15,10 +15,20 @@ android {
 
 	sourceSets {
 		main.java.srcDirs += 'src/main/kotlin'
+		debug.java.srcDirs += 'src/debug/kotlin'
+		release.java.srcDirs += 'src/release/kotlin'
+		test.java.srcDirs += 'src/test/kotlin'
 		main {
-			res.srcDirs =
-				['src/main/res/layouts/detail', 'src/main/res/layouts/custom', 'src/main/res/layouts/row', 'src/main/res/layouts/thing', 'src/main/res']
+			res.srcDirs = ['src/main/res/layouts/detail',
+			               'src/main/res/layouts/custom',
+			               'src/main/res/layouts/row',
+			               'src/main/res/layouts/thing',
+			               'src/main/res']
 		}
+	}
+
+	lintOptions {
+		disable 'InvalidPackage'
 	}
 }
 
@@ -40,16 +50,19 @@ dependencies {
 	implementation libraries.kotlin
 	implementation libraries.coroutines_core
 	implementation libraries.coroutines_android
-}
 
-apply from: '../install.gradle'
-apply from: '../bintray.gradle'
+	testImplementation libraries.junit
+	testImplementation libraries.mockito
+	testImplementation libraries.mockwebserver
 
-repositories {
-	jcenter()
-	maven { url 'https://maven.google.com' }
+	debugImplementation libraries.espresso
+	debugImplementation libraries.espresso_idling
+	debugImplementation libraries.okhttp_idling
 }
 
 kotlin {
 	experimental { coroutines 'enable' }
 }
+
+apply from: '../install.gradle'
+apply from: '../bintray.gradle'
