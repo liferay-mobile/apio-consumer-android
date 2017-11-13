@@ -44,7 +44,7 @@ class PersonDetailCustom @JvmOverloads constructor(
 	override var thing: Thing? by converter<Person> {
 		avatar.thing = thing
 		name.text = it.name
-		email.text = Html.fromHtml("<a href=\"mailto:${it.email}\">${it.email}</a>", Html.FROM_HTML_MODE_COMPACT)
+		email.text = Html.fromHtml("<a href=\"mailto:${it.email}\">${it.email}</a>")
 		email.linksClickable = true
 		email.movementMethod = LinkMovementMethod.getInstance()
 		jobTitle.text = it.jobTitle

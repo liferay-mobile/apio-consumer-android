@@ -28,7 +28,7 @@ import org.jetbrains.anko.startActivity
 
 class DetailActivity : AppCompatActivity(), ScreenletEvents {
 
-	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet)
+	val thingScreenlet by bindNonNull<ThingScreenlet>(R.id.thing_screenlet_activity)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

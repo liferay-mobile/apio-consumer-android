@@ -27,8 +27,8 @@
 
             <com.liferay.vulcan.consumer.screens.ThingScreenlet
                 android:id="@+id/creator_avatar"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:scenario="portrait"
                 />
 

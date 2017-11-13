@@ -32,21 +32,24 @@ class VulcanConsumerTest {
 	@Test
 	fun parseCreatesPairsWithRelationsTest() {
 
-		val blogs: Pair<Thing, Map<String, Thing?>> = parse(blogCollection)
+		val blogs: Pair<Thing, Map<String, Thing?>>? = parse(blogCollection)
 
 		assertNotNull(blogs)
-		assertNotNull(blogs.first)
-		assertEquals(listOf("Collection"), blogs.first.type)
 
-		val attributes = blogs.first.attributes
-		assertEquals(1.0, attributes["totalItems"])
+		blogs?.let {
+			assertNotNull(blogs.first)
+			assertEquals(listOf("Collection"), blogs.first.type)
 
-		val member = ((attributes["members"] as ArrayList<*>)[0]) as Relation
-		assertEquals(TEST_DOMAIN + "blogs/57499", member.id)
-		assertEquals(TEST_DOMAIN + "blogs?page=1&per_page=30",
-			(attributes["view"] as Relation).id)
+			val attributes = blogs.first.attributes
+			assertEquals(1.0, attributes["totalItems"])
 
-		assertEquals("<p>My Content</p>", (blogs.second[member.id] as Thing).attributes["articleBody"])
+			val member = ((attributes["members"] as ArrayList<*>)[0]) as Relation
+			assertEquals(TEST_DOMAIN + "blogs/57499", member.id)
+			assertEquals(TEST_DOMAIN + "blogs?page=1&per_page=30",
+				(attributes["view"] as Relation).id)
+
+			assertEquals("<p>My Content</p>", (blogs.second[member.id] as Thing).attributes["articleBody"])
+		}
 	}
 
 	@Test
