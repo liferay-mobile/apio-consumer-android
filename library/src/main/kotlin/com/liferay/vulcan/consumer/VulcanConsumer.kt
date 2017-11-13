@@ -110,7 +110,7 @@ private fun parse(
 		val result = parse(it.string())
 
 		result?.let {
-			val (thing, embeddedThings) = it;
+			val (thing, embeddedThings) = it
 			val nodes = embeddedThings.map { (id, embeddedThing) ->
 				val previousThing = graph[id]?.value
 
@@ -157,7 +157,7 @@ private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair
 
 		return thing to things
 	}
-	return null;
+	return null
 }
 
 typealias FoldedAttributes = Pair<MutableMap<String, Any>, MutableMap<String, Thing?>>
@@ -173,7 +173,7 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 			val result = flatten(this, context)
 
 			result?.let {
-				val (thing, embeddedThings) = it;
+				val (thing, embeddedThings) = it
 				attributes[key] = Relation(thing.id)
 
 				things.put(thing.id, thing)
