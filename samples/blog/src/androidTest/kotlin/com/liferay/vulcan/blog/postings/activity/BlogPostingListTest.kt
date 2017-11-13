@@ -81,14 +81,14 @@ class BlogPostingListTest {
 
 			result.fold(success = {
 				Assert.assertEquals(TEST_DOMAIN + "groups/57459/blogs", it.id)
-			}, failure = { Assert.fail() });
+			}, failure = { Assert.fail() })
 		}
 	}
 
 //	@Test
 	fun thingScreenletRenderingBlogsShowsResultsWithTextTest() {
 
-		appRendersLayoutTest();
+		appRendersLayoutTest()
 
 		onView(withId(R.id.headline))
 			.check(matches(isDisplayed()))
