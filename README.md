@@ -1,5 +1,3 @@
-# Vulcan Consumer for Android
-
 <div align="center">
     <a style="text-decoration: none" href="https://travis-ci.org/liferay-mobile/vulcan-consumer-android">
         <img src="https://travis-ci.org/liferay-mobile/vulcan-consumer-android.svg?branch=master" alt="Travis CI" />
@@ -10,19 +8,21 @@
 </div>
 
 
+# Vulcan Consumer for Android
+
 **Vulcan Consumer for Android** is part of the [Vulcan project](#the-vulcan-project), which aims to promote the creation of APIs designed to evolve over time. The Vulcan Consumer is a client-side library to facilitate the creation of consumers of any hypermedia API.
 
-The project serves as the consumer of APIs developed with [Vulcan Architect](https://github.com/liferay/com-liferay-vulcan) and is heavily opinionated to reduce the amount of code API developers have to write. This is also achieved by out-of-the-box support for well known patterns in hypermedia and REST APIs, such as the Collection Pattern.
+The project serves as the consumer of APIs developed with [Vulcan Architect](https://github.com/liferay/com-liferay-vulcan) and is heavily opinionated to reduce the amount of code API developers have to write. This is also achieved by out-of-the-box support for well-known patterns in hypermedia and REST APIs, such as the Collection Pattern.
 
 It also has "smart" functionality, like the the ability to automatically create a local graph to facilitate the construction of offline support.
 
 The consumer can control what the response includes (e.g., fields, embedded resources, etc.), and decide which hypermedia format best fits its needs (e.g., HAL, JSON-LD, etc.).
 
-The main objective behind Vulcan Consumer is to consume APIs that follow REST principles and implement an hypermedia format without much effort.
+The main objective behind Vulcan Consumer is to consume APIs that follow REST principles and implement a hypermedia format without much effort.
 
 ## Why should I use it?
 
-When consuming an Hypermedia API, you must consider things like link traversing, caching, JSON parsing and so on. Because of this, we built Vulcan Consumer as a library that facilitates consuming Hypermedia APIs that follow all the principles, leaving you to worry only about your internal logic.
+When consuming a Hypermedia API, you must consider things like link traversing, caching, JSON parsing and so on. Because of this, we built Vulcan Consumer as a library that facilitates consuming Hypermedia APIs that follow all the principles, leaving you to worry only about your internal logic.
 
 Therefore, you can focus on creating beautiful APIs that stand the test of time and leave the act of consuming them for the Vulcan Consumer.
 
@@ -30,12 +30,12 @@ Therefore, you can focus on creating beautiful APIs that stand the test of time 
 
 Vulcan Consumer helps you by providing the following:
 
-- Default visualization for some popular [schema.org](http://schema.org) models like BlogPosting, Person or DigitalDocument. Vulcan Consumer will render those models with a default xml layout that can be customized.
+- Default visualization for some popular [schema.org](http://schema.org) models like BlogPosting, Person or DigitalDocument. Vulcan Consumer will render those models with a default XML layout that can be customized at will.
 - Support for JSON+LD, Vulcan Consumer can parse JSON documents in that format and return the model with all the information.
 - Integration with [Liferay Screens](http://github.com/liferay/liferay-screens), that provides a Screenlet called *LoginScreenlet* that is able to render any supported models just by passing the URL of the resource.
 - A representation of your data in a local graph that allows you to traverse the information away from a network connection.
-- An easy mechanism for customization of the layouts, called *scenarios*, that lets you pass another xml layout that applies when you are representing the resource inside a list (a *row* scenario), a detail view or the full resource.
-- An straight way of consuming your hypermedia API :D
+- An easy mechanism for customization of the layouts called *scenarios*, that lets you pass another XML layout that applies when you are representing the resource inside a list (a *row* scenario), a detail view or the full resource.
+- A straight way of consuming your hypermedia API :D
 
 By using Vulcan Consumer you can represent your API in fewer minutes than it takes to eat a delicious pie!
 
@@ -43,7 +43,7 @@ By using Vulcan Consumer you can represent your API in fewer minutes than it tak
 
 Absolutely! 
 
-Just launch the example application by importing it in Android Studio (import  and check all the power of Vulcan Consumer against a sample API.
+Just launch the example application by importing it into Android Studio (import  and check all the power of Vulcan Consumer against a sample API.
 
 You can check out that the code that powers the demo application is just a *ThingScreenlet* with some customization.
 
@@ -56,7 +56,7 @@ Simply use your favorite REST-request client to make a GET request to:
 
     http://vulcan-vulcansample.wedeploy.io
 
-To use Vulcan Architect APIs, you must specify an `accept` HTTP header. If you want to try a Hypermedia representation format, you can start with the following to order JSON-LD:
+To use the API, you must specify an `accept` HTTP header. If you want to try a Hypermedia representation format, you can start with the following to order JSON-LD:
 
     accept: application/ld+json
 
