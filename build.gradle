@@ -50,15 +50,15 @@ ext {
 	versionName = '0.0.1'
 
 	publishedGroupId = 'com.liferay.mobile'
-	libraryName = 'Liferay Vulcan Consumer for Android'
-	libraryDescription = 'Liferay Vulcan Consumer for Android includes the library and a sample project'
+	libraryName = 'Apio Consumer for Android'
+	libraryDescription = 'Apio Consumer for Android includes the library and a sample project'
 
 	bintrayRepo = 'liferay-mobile'
 	bintrayOrg = ''
 	bintrayOrg = 'liferay'
 
-	siteUrl = 'https://github.com/liferay-mobile/vulcan-consumer-android'
-	gitUrl = 'https://github.com/liferay-mobile/vulcan-consumer-android'
+	siteUrl = 'https://github.com/liferay-mobile/apio-consumer-android'
+	gitUrl = 'https://github.com/liferay-mobile/apio-consumer-android'
 
 	developerId = 'nhpatt'
 	developerName = 'Javier Gamarra'
