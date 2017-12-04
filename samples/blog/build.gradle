@@ -11,7 +11,7 @@ android {
 		targetSdkVersion rootProject.ext.targetSdkVersion
 		versionCode rootProject.ext.versionCode
 		versionName rootProject.ext.versionName
-		applicationId 'com.liferay.vulcan.consumer.blog.postings'
+		applicationId 'com.liferay.apio.consumer.blog.postings'
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 
@@ -30,7 +30,7 @@ android {
 dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-	implementation project(':vulcan-consumer-android')
+	implementation project(':apio-consumer-android')
 
 	implementation libraries.appCompat
 	implementation libraries.recyclerView

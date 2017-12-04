@@ -1,6 +1,6 @@
-include 'liferay-vulcan-consumer'
-project(':liferay-vulcan-consumer').projectDir = new File(settingsDir, '/library')
-project(':liferay-vulcan-consumer').name = 'vulcan-consumer-android'
+include 'apio-consumer-android'
+project(':apio-consumer-android').projectDir = new File(settingsDir, '/library')
+project(':apio-consumer-android').name = 'apio-consumer-android'
 
 include ':blog-postings'
 project(':blog-postings').projectDir = new File(settingsDir, '/samples/blog')

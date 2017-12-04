@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     >
 
-    <com.liferay.vulcan.consumer.screens.ThingScreenlet
+    <com.liferay.apio.consumer.screens.ThingScreenlet
         android:id="@+id/thing_screenlet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
