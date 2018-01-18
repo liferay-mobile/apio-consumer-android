@@ -12,7 +12,7 @@
 
 **Apio Consumer for Android** is part of the [Apio project](#the-apio-project), which aims to promote the creation of APIs designed to evolve over time. The Apio Consumer is a client-side library to facilitate the creation of consumers of any hypermedia API.
 
-The project serves as the consumer of APIs developed with [Apio Architect](https://github.com/liferay/com-liferay-apio) and is heavily opinionated to reduce the amount of code API developers have to write. This is also achieved by out-of-the-box support for well-known patterns in hypermedia and REST APIs, such as the Collection Pattern.
+The project serves as the consumer of APIs developed with [Apio Architect](https://github.com/liferay/com-liferay-apio-architect) and is heavily opinionated to reduce the amount of code API developers have to write. This is also achieved by out-of-the-box support for well-known patterns in hypermedia and REST APIs, such as the Collection Pattern.
 
 It also has "smart" functionality, like the the ability to automatically create a local graph to facilitate the construction of offline support.
 
@@ -62,7 +62,7 @@ To use the API, you must specify an `accept` HTTP header. If you want to try a H
 
 If you want to develop an API from an example, we also got you covered! All you need is an OSGi container with JAX-RS.
 
-To try all this quickly, you can use our [docker image](https://hub.docker.com/r/ahdezma/Apio-whiteboard/). Simply run this on your terminal, specifying the folder in which module hot-deploy occurs:
+To try all this quickly, you can use our [docker image](https://hub.docker.com/r/ahdezma/apio-whiteboard/). Simply run this on your terminal, specifying the folder in which module hot-deploy occurs:
 
     docker run -p 8080:8080 -v "/Users/YOUR_USER/deploy:/deploy" -d ahdezma/apio-whiteboard
 
@@ -76,11 +76,11 @@ Now you're ready to start surfing the Hypermedia world!
 
 The Apio project provides a set of guidelines and software to build evolvable APIs and consumers.
 
-### [Apio Architect](https://github.com/liferay/com-liferay-apio)
+### [Apio Architect](https://github.com/liferay/com-liferay-apio-architect)
 
 The best way of developing hypermedia powered APIs without having to worry about formats, writing tons of code or learning the best practices.
 
-### [Apio Guidelines](https://apio.wedeploy.io/guidelines/)
+### [Apio Guidelines](https://evolvable-apis.org/)
 
 An opinionated way to do RESTful APIs for *evolvability* and *discoverability*. 
 
