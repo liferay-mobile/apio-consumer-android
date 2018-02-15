@@ -7,6 +7,8 @@ before_install:
   - echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
   - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-license"
   - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+  - echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - yes | sdkmanager "platforms;android-27"
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -20,9 +22,9 @@ cache:
 android:
   components:
     - tools
-    - build-tools-26.0.2
+    - build-tools-27.0.3
     - platform-tools
-    - android-26
+    - android-27
     - android-22
     - extra-google-m2repository
     - extra-android-m2repository
