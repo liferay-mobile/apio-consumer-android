@@ -38,6 +38,8 @@ dependencies {
 
 	implementation libraries.appCompat
 	implementation libraries.recyclerView
+	implementation libraries.support_annotations
+	implementation libraries.exifinterface
 
 	implementation libraries.gson
 	implementation libraries.okhttp
