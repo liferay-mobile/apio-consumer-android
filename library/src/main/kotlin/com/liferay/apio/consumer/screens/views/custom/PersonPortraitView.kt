@@ -48,7 +48,7 @@ class PersonPortraitView @JvmOverloads constructor(
 			?.let { "https://www.gravatar.com/avatar/$it?d=retro" }
 
 		url?.also {
-			Picasso.with(context).load(it).into(imageView)
+			Picasso.get().load(it).into(imageView)
 		}
 	}
 
