@@ -27,9 +27,9 @@ detekt {
 		output = './library/reports/report.xml'
 	}
 	idea {
-		path = '/Applications/Android Studio 2.app/Contents'
-		codeStyleScheme = "$projectDir/VulcanCodeConvention.xml"
-		inspectionsProfile = "$projectDir/VulcanCodeFormatting.xml"
+		path = '/Applications/IntelliJ IDEA.app/Contents'
+		codeStyleScheme = "$projectDir/ApioCodeConvention.xml"
+		inspectionsProfile = "$projectDir/ApioCodeFormatting.xml"
 		report = './library/reports'
 		mask = '*.kt,'
 	}
