@@ -23,13 +23,23 @@ data class Relation(val id: String)
 
 data class Context(val vocab: String, val attributeContext: Map<String, Any>)
 
-fun contextFrom(jsonObject: Map<String, Any>?, parentContext: Context?): Context? {
+fun contextFrom(jsonObject: List<Any>?, parentContext: Context?): Context? {
 	return jsonObject?.let {
-		val vocab = (it["@vocab"] as? String)
-			?: parentContext?.vocab
-			?: throw ApioException("Empty Vocab")
+		val vocab =
+			it.find { it is Map<*, *> && it["@vocab"] is String }
+				.let { (it as? Map<*, *>)?.get("@vocab") as? String }
+				?: parentContext?.vocab
+				?: throw ApioException("Empty Vocab")
 
-		val attributeContexts = it.filterKeys { it != "@vocab" }
+		val attributeContexts = HashMap<String, Any>()
+
+		it
+			.filter { it is Map<*, *> }
+			.forEach({
+				(it as? Map<String, Any>)?.filterKeys { it != "@vocab" }?.let {
+					attributeContexts.putAll(it)
+				}
+			})
 
 		Context(vocab, attributeContexts)
 	}

@@ -36,9 +36,8 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.thing_screenlet_activity)
 
-//		val id = "http://screens.liferay.org.es/o/api/p/groups/57459/blogs"
-		val id = "http://172.19.235.68:8080/o/api/p/web-sites/20135/blog-postings"
-//		val id = "http://localhost:8080/o/api/p/web-sites/20144/blog-postings"
+//		val id = "http://192.168.56.1:8080/p/blog-postings"
+		val id = "https://apiosample.wedeploy.io/p/blog-postings"
 
 		thingScreenlet.load(id, Credentials.basic("test@liferay.com", "test"))
 
