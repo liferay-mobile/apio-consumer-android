@@ -181,7 +181,7 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 				things.putAll(embeddedThings)
 			}
 		}
-		value is List<*> -> (value as? List<Map<String, Any>>)?.apply {
+		value is List<*> && !value.filterIsInstance<Map<String, Any>>().isEmpty() -> (value as? List<Map<String, Any>>)?.apply {
 			val list = this.map { flatten(it, context)!! }
 
 			val mutableList = mutableListOf<Relation>()
