@@ -40,7 +40,7 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 
 	val nextPage = collection.pages?.next
 
-	override fun onBindViewHolder(holder: ThingViewHolder?, position: Int) {
+	override fun onBindViewHolder(holder: ThingViewHolder, position: Int) {
 		if (members.size > position) {
 			holder?.thing = members[position]
 		} else {
@@ -74,7 +74,7 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 
 	override fun getItemCount(): Int = totalItems ?: 0
 
-	override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ThingViewHolder? {
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThingViewHolder {
 		return parent?.inflate(R.layout.thing_viewholder_default)?.let {
 			ThingViewHolder(it, this)
 		}
