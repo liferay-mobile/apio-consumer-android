@@ -76,24 +76,26 @@ ext {
 	allLicenses = ['LGPL-2.1']
 }
 
-def supportLibsVersion = '27.0.2'
+def supportLibsVersion = '27.1.1'
 
-ext.libraries = [appCompat         : 'com.android.support:appcompat-v7:' + supportLibsVersion,
-                 recyclerView      : 'com.android.support:recyclerview-v7:' + supportLibsVersion,
-                 cardView          : 'com.android.support:cardview-v7:' + supportLibsVersion,
-                 gson              : 'com.google.code.gson:gson:2.8.2',
-                 okhttp            : 'com.squareup.okhttp3:okhttp:3.10.0',
-                 result            : 'com.github.kittinunf.result:result:1.3.0',
-                 anko_commons      : 'org.jetbrains.anko:anko-commons:0.10.4',
-                 picasso           : 'com.squareup.picasso:picasso:2.71828',
-                 circle_image_view : 'de.hdodenhof:circleimageview:2.2.0',
-                 kotlin            : 'org.jetbrains.kotlin:kotlin-stdlib-jre7:' + ext.kotlin_version,
-                 coroutines_core   : 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5',
-                 coroutines_android: 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.5',
-                 junit             : 'junit:junit:4.12',
-                 mockito           : 'org.mockito:mockito-core:2.13.0',
-                 espresso          : 'com.android.support.test.espresso:espresso-core:3.0.1',
-                 espresso_contrib  : 'com.android.support.test.espresso:espresso-contrib:3.0.1',
-                 espresso_idling   : 'com.android.support.test.espresso.idling:idling-concurrent:3.0.1',
-                 okhttp_idling     : 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0',
-                 mockwebserver     : 'com.squareup.okhttp3:mockwebserver:3.9.1']
+ext.libraries = [appCompat          : 'com.android.support:appcompat-v7:' + supportLibsVersion,
+                 recyclerView       : 'com.android.support:recyclerview-v7:' + supportLibsVersion,
+                 cardView           : 'com.android.support:cardview-v7:' + supportLibsVersion,
+                 support_annotations: 'com.android.support:support-annotations:' + supportLibsVersion,
+                 exifinterface      : 'com.android.support:exifinterface:' + supportLibsVersion,
+                 gson               : 'com.google.code.gson:gson:2.8.2',
+                 okhttp             : 'com.squareup.okhttp3:okhttp:3.10.0',
+                 result             : 'com.github.kittinunf.result:result:1.3.0',
+                 anko_commons       : 'org.jetbrains.anko:anko-commons:0.10.4',
+                 picasso            : 'com.squareup.picasso:picasso:2.71828',
+                 circle_image_view  : 'de.hdodenhof:circleimageview:2.2.0',
+                 kotlin             : 'org.jetbrains.kotlin:kotlin-stdlib-jre7:' + ext.kotlin_version,
+                 coroutines_core    : 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5',
+                 coroutines_android : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.5',
+                 junit              : 'junit:junit:4.12',
+                 mockito            : 'org.mockito:mockito-core:2.13.0',
+                 espresso           : 'com.android.support.test.espresso:espresso-core:3.0.1',
+                 espresso_contrib   : 'com.android.support.test.espresso:espresso-contrib:3.0.1',
+                 espresso_idling    : 'com.android.support.test.espresso.idling:idling-concurrent:3.0.1',
+                 okhttp_idling      : 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0',
+                 mockwebserver      : 'com.squareup.okhttp3:mockwebserver:3.9.1']
