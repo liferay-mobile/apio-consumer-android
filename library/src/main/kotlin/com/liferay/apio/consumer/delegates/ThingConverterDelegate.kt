@@ -65,10 +65,10 @@ private val converters: Map<String, (Thing) -> Any> = mapOf(
 	BlogPosting::class.java.name to { it: Thing ->
 		BlogPosting(
 			it["headline"] as? String, it["alternativeHeadline"] as? String, it["articleBody"] as? String,
-			it["creator"] as? Relation, (it["createDate"] as? String)?.asDate())
+			it["creator"] as? Relation, (it["dateCreated"] as? String)?.asDate())
 	},
 	Collection::class.java.name to { it: Thing ->
-		val members = (it["members"] as? List<Relation>)?.map {
+		val member = (it["member"] as? List<Relation>)?.map {
 			graph[it.id]?.value
 		}?.filterNotNull()
 
@@ -78,7 +78,7 @@ private val converters: Map<String, (Thing) -> Any> = mapOf(
 
 		val pages = nextPage?.let(::Pages)
 
-		Collection(members, totalItems, pages)
+		Collection(member, totalItems, pages)
 	},
 	Person::class.java.name to { it: Thing ->
 		val name = it["name"] as? String
