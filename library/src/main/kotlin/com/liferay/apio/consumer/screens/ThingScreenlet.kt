@@ -127,8 +127,8 @@ class ThingScreenlet @JvmOverloads constructor(
 	fun <T> onEventFor(event: Event<T>): T? = when (event) {
 		is Event.Click -> screenletEvents?.onClickEvent(layout as BaseView, event.view, event.thing) as? T
 		is Event.FetchLayout -> {
-			(screenletEvents?.onGetCustomLayout(this, event.view, event.thing, event.scenario) ?:
-				layoutIds[event.thing.type[0]]?.get(event.scenario)) as? T
+			(screenletEvents?.onGetCustomLayout(this, event.view, event.thing, event.scenario)
+				?: layoutIds[event.thing.type[0]]?.get(event.scenario)) as? T
 		}
 	}
 }

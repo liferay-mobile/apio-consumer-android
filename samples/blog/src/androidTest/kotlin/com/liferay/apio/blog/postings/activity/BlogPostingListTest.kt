@@ -85,7 +85,7 @@ class BlogPostingListTest {
 		}
 	}
 
-//	@Test
+	//	@Test
 	fun thingScreenletRenderingBlogsShowsResultsWithTextTest() {
 
 		appRendersLayoutTest()

@@ -42,10 +42,10 @@ class PersonPortraitView @JvmOverloads constructor(
 	override var thing: Thing? by converter<Person> {
 		val url = it.image
 			?: it.email
-			?.trim()
-			?.toLowerCase()
-			?.md5()
-			?.let { "https://www.gravatar.com/avatar/$it?d=retro" }
+				?.trim()
+				?.toLowerCase()
+				?.md5()
+				?.let { "https://www.gravatar.com/avatar/$it?d=retro" }
 
 		url?.also {
 			Picasso.get().load(it).into(imageView)
