@@ -146,12 +146,12 @@ private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair
 
 		val types = jsonObject["@type"] as? List<String> ?: listOf()
 
-		val context = contextFrom(jsonObject["@context"] as? Map<String, Any>, parentContext)
+		val context = contextFrom(jsonObject["@context"] as? List<Any>, parentContext)
 
 		val (attributes, things) = jsonObject
 			.filter { it.key !in listOf("@id", "@type", "@context") }
 			.entries
-			.fold(mutableMapOf<String, Any>() to mutableMapOf<String, Thing?>(), foldEntry(context))
+			.fold(mutableMapOf<String, Any>() to mutableMapOf(), foldEntry(context))
 
 		val thing = Thing(id, types, attributes)
 
