@@ -16,10 +16,21 @@ package com.liferay.apio.consumer.model
 
 import com.liferay.apio.consumer.ApioException
 import com.liferay.apio.consumer.graph
+import com.liferay.apio.consumer.requestProperties
 
-data class Thing(val id: String, val type: List<String>, val attributes: Map<String, Any>, val name: String? = null)
+
+typealias Type = List<String>
+
+data class Thing(val id: String, val type: Type, val attributes: Map<String, Any>, val name: String? = null,
+				 val operations: MutableMap<String, Operation> = mutableMapOf())
 
 data class Relation(val id: String)
+
+data class Operation(val id: String, val target: String, val type: Type, val method: String, var form: OperationForm?)
+
+data class OperationForm(val id: String, var properties: List<Property> = listOf())
+
+data class Property(val type: Type, val name: String, val required: Boolean)
 
 data class Context(val vocab: String, val attributeContext: Map<String, Any>)
 
@@ -56,4 +67,21 @@ operator fun Thing.get(attribute: String): Any? = attributes[attribute]
 operator fun Relation.get(attribute: String): Any? = graph[id]?.value?.get(attribute)
 
 fun Thing.merge(value: Thing?): Thing = value?.let { Thing(id, type, attributes + it.attributes) } ?: this
+
+fun Thing.containsOperation(operationId: String): Boolean = operations.keys.filter { it.contains(operationId) }.isEmpty()
+
+fun Thing.getOperation(operationId: String): Operation? {
+	val key = operations.keys.filter { it.contains(operationId) }.firstOrNull()
+
+	return key?.let { operations[it] }
+}
+
+fun OperationForm.getFormProperties(onComplete: (List<Property>) -> Unit) {
+	requestProperties(id) {
+		this.properties = it
+
+		onComplete(it)
+	}
+}
+
 
