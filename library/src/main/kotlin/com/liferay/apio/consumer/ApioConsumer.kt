@@ -38,6 +38,21 @@ fun fetch(
 	}
 }
 
+fun performOperationAndParse(thingId: String, operationId: String,
+ 	fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() },
+ 	onComplete: (Result<Thing, Exception>) -> Unit) {
+
+	performOperation(thingId, operationId, fillFields) {
+		it.component1()?.let {
+			launch(UI) {
+				async(CommonPool) {
+					parse(it)
+				}.await().let(onComplete)
+			}
+		} ?: onComplete(Result.of(null, { ApioException("No thing returned") }))
+	}
+}
+
 fun performOperation(thingId: String, operationId: String,
 	fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() },
 	onComplete: (Result<Response, Exception>) -> Unit) {
