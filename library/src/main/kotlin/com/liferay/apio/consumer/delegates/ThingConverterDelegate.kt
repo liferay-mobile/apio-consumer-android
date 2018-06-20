@@ -14,15 +14,7 @@
 
 package com.liferay.apio.consumer.delegates
 
-import com.liferay.apio.consumer.extensions.asDate
-import com.liferay.apio.consumer.graph
-import com.liferay.apio.consumer.model.BlogPosting
-import com.liferay.apio.consumer.model.Collection
-import com.liferay.apio.consumer.model.Pages
-import com.liferay.apio.consumer.model.Person
-import com.liferay.apio.consumer.model.Relation
 import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.model.get
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import kotlin.properties.ReadWriteProperty
@@ -61,36 +53,4 @@ fun <T> convert(clazz: Class<T>, thing: Thing): T? {
 	return t
 }
 
-private val converters: Map<String, (Thing) -> Any> = mapOf(
-	BlogPosting::class.java.name to { it: Thing ->
-		BlogPosting(
-			it["headline"] as? String, it["alternativeHeadline"] as? String, it["articleBody"] as? String,
-			it["creator"] as? Relation, (it["dateCreated"] as? String)?.asDate())
-	},
-	Collection::class.java.name to { it: Thing ->
-		val member = (it["member"] as? List<Relation>)?.map {
-			graph[it.id]?.value
-		}?.filterNotNull()
-
-		val totalItems = (it["totalItems"] as? Double)?.toInt()
-
-		val nextPage = (it["view"] as Relation)["next"] as? String
-
-		val pages = nextPage?.let(::Pages)
-
-		Collection(member, totalItems, pages)
-	},
-	Person::class.java.name to { it: Thing ->
-		val name = it["name"] as? String
-
-		val email = it["email"] as? String
-
-		val jobTitle = it["jobTitle"] as? String
-
-		val birthDate = (it["birthDate"] as? String)?.asDate()
-
-		val image = it["image"] as? String
-
-		Person(name, email, jobTitle, birthDate, image)
-	}
-)
+var converters: MutableMap<String, (Thing) -> Any> = mutableMapOf()
