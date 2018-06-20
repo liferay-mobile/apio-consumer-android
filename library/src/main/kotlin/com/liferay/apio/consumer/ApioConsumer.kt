@@ -17,21 +17,12 @@ package com.liferay.apio.consumer
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.liferay.apio.consumer.model.Context
-import com.liferay.apio.consumer.model.Relation
-import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.model.contextFrom
-import com.liferay.apio.consumer.model.isId
-import com.liferay.apio.consumer.model.merge
+import com.liferay.apio.consumer.model.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
-import okhttp3.Credentials
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import java.io.IOException
 import kotlin.collections.Map.Entry
 
@@ -43,6 +34,86 @@ fun fetch(
 	launch(UI) {
 		async(CommonPool) {
 			requestParseWaitLoop(url, fields, embedded, credentials)
+		}.await().let(onComplete)
+	}
+}
+
+fun performOperation(thingId: String, operationId: String,
+	fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() },
+	onComplete: (Result<Response, Exception>) -> Unit) {
+
+	val thing = graph[thingId]?.value
+
+	thing?.let {
+		val operation = thing.operations[operationId]
+
+		operation?.let {
+			operation.form?.let { form ->
+				if (form.properties.isEmpty()) {
+					requestProperties(form.id) {
+						form.properties = it
+						thing.operations[operationId] = operation
+
+						val attributes = fillFields(it)
+
+						performOperationRequest(operation.target, operation.method, attributes, onComplete)
+					}
+				}
+				else {
+					val attributes = fillFields(form.properties)
+
+					performOperationRequest(operation.target, operation.method, attributes, onComplete)
+				}
+			} ?: performOperationRequest(operation.target, operation.method, emptyMap(), onComplete)
+
+		} ?: onComplete(Result.of(null, { ApioException("Thing $it doesn't have the operation $operationId") }))
+
+	} ?: onComplete(Result.of(null, { ApioException("Thing not found") }))
+}
+
+fun performOperationRequest(url: String, method: String, attributes: Map<String, Any>,
+	onComplete: (Result<Response, Exception>) -> Unit) {
+	launch(UI) {
+		async(CommonPool) {
+
+			val json = Gson().toJson(attributes)
+			val request = createRequest(HttpUrl.parse(url), credential).newBuilder()
+				.method(method, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
+				.build()
+
+			val okHttpClient = OkHttpClient()
+
+			try {
+				Result.of(okHttpClient.newCall(request).execute())
+			} catch (e: Exception) {
+				Result.error(e)
+			}
+		}.await().let(onComplete)
+	}
+}
+
+fun requestProperties(url: String, onComplete: (List<Property>) -> Unit) {
+	val request = createRequest(HttpUrl.parse(url), credential)
+
+	launch(UI) {
+		async(CommonPool) {
+			val okHttpClient = OkHttpClient()
+			val response = okHttpClient.newCall(request).execute()
+
+			val json = response.body()?.string()
+
+			val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
+
+			val jsonObject = Gson().fromJson<Map<String, Any>>(json, mapType)
+
+			val supportedProperties = jsonObject["supportedProperty"] as List<Map<String, Any>>
+
+			supportedProperties.map {
+				val type = parseType(it["@type"])
+				val name = it["property"] as String
+				val required = it["required"] as Boolean
+				Property(type, name, required)
+			}
 		}.await().let(onComplete)
 	}
 }
@@ -71,15 +142,8 @@ private fun request(url: HttpUrl,
 	val request = createRequest(httpUrl, credential)
 
 	val okHttpClient = OkHttpClient()
-	if (BuildConfig.DEBUG) {
-		IdlingResources.registerOkHttp(okHttpClient, httpUrl.toString())
-	}
 
 	val execute = okHttpClient.newCall(request).execute()
-
-	if (BuildConfig.DEBUG) {
-		IdlingResources.unregisterOkHttp(okHttpClient, httpUrl.toString())
-	}
 
 	return execute
 }
@@ -119,11 +183,12 @@ private fun parse(
 				id to Node(id, newThing)
 			}
 
+			graph.put(thing.id, Node(thing.id, thing))
 			graph.putAll(nodes)
 
-			Result.of(thing)
-		}
-	} ?: Result.of { throw ApioException("Not Found") }
+            Result.of(thing)
+        }
+    } ?: Result.of(null, { ApioException("Not Found") })
 
 class Node(val id: String, var value: Thing? = null)
 
@@ -144,21 +209,51 @@ private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair
 	if (!jsonObject.containsKey("statusCode")) {
 		val id = jsonObject["@id"] as String
 
-		val types = jsonObject["@type"] as? List<String> ?: listOf()
+		val types = parseType(jsonObject["@type"])
 
 		val context = contextFrom(jsonObject["@context"] as? List<Any>, parentContext)
 
-		val (attributes, things) = jsonObject
-			.filter { it.key !in listOf("@id", "@type", "@context") }
-			.entries
-			.fold(mutableMapOf<String, Any>() to mutableMapOf(), foldEntry(context))
+		val (attributes, things) = foldTree(jsonObject, context)
 
-		val thing = Thing(id, types, attributes)
+		val operations = parseOperations(jsonObject)
+
+		val thing = Thing(id, types, attributes, operations =  operations)
 
 		return thing to things
 	}
 	return null
 }
+
+private fun parseOperations(jsonObject: Map<String, Any>): MutableMap<String, Operation> {
+	val operationsJson = jsonObject["operation"] as? List<Map<String, Any>> ?: listOf()
+
+	return operationsJson.map {
+		val id = it["@id"] as String
+		val target = it["target"] as String
+		val method = it["method"] as String
+		val expects = it["expects"] as? String
+		val type = parseType(it["@type"])
+
+		val form = expects?.let { OperationForm(it) }
+
+		id to Operation(id, target, type, method, form)
+	}.toMap().toMutableMap()
+}
+
+private fun parseType(type: Any?): List<String> {
+	return (type as? String)?.let { listOf(it) } ?:
+	type as? List<String> ?: listOf()
+}
+
+
+private fun foldTree(jsonObject: Map<String, Any>,
+	context: Context?): Pair<MutableMap<String, Any>, MutableMap<String, Thing?>> {
+	return jsonObject
+		.filter { it.key !in listOf("@id", "@type", "@context") }
+		.entries
+		.fold(mutableMapOf<String, Any>() to mutableMapOf(), foldEntry(context))
+}
+
 
 typealias FoldedAttributes = Pair<MutableMap<String, Any>, MutableMap<String, Thing?>>
 
@@ -170,32 +265,56 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 
 	when {
 		value is Map<*, *> -> (value as? Map<String, Any>)?.apply {
-			val result = flatten(this, context)
+			if (this.containsKey("@id")) {
+				val result = flatten(this, context)
 
-			result?.let {
-				val (thing, embeddedThings) = it
-				attributes[key] = Relation(thing.id)
-
-				things.put(thing.id, thing)
-
-				things.putAll(embeddedThings)
-			}
-		}
-		value is List<*> && !value.filterIsInstance<Map<String, Any>>().isEmpty() ->
-			(value as? List<Map<String, Any>>)?.apply {
-				val list = this.map { flatten(it, context)!! }
-
-				val mutableList = mutableListOf<Relation>()
-
-				for ((thing, embeddedThings) in list) {
-					mutableList.add(Relation(thing.id))
+				result?.let {
+					val (thing, embeddedThings) = it
+					attributes[key] = Relation(thing.id)
 
 					things.put(thing.id, thing)
 
 					things.putAll(embeddedThings)
 				}
+			}
+			else {
+				val (attr, embeddedThings) = foldTree(this, context)
 
-				attributes[key] = mutableList
+				things.putAll(embeddedThings)
+				attributes[key] = attr
+			}
+		}
+		value is List<*> && !value.filterIsInstance<Map<String, Any>>().isEmpty() ->
+			(value as? List<Map<String, Any>>)?.apply {
+
+				if (this.first().containsKey("@id")) {
+					val list = this.map { flatten(it, context)!! }
+					val mutableList = mutableListOf<Relation>()
+
+					for ((thing, embeddedThings) in list) {
+						mutableList.add(Relation(thing.id))
+
+						things.put(thing.id, thing)
+
+						things.putAll(embeddedThings)
+					}
+
+					attributes[key] = mutableList
+				}
+				else {
+					val pairsList = this.map { foldTree(it, context) }
+
+					val foldedList = mutableListOf<Map<String, Any>>()
+
+					for ((list, embeddedThings) in pairsList) {
+						foldedList.add(list)
+
+						things.putAll(embeddedThings)
+					}
+
+					attributes[key] = foldedList
+				}
+
 			}
 		context != null && context.isId(key) -> with(value as String) {
 			things[this] = null
@@ -208,4 +327,4 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 	attributes to things
 }
 
-class ApioException(s: String) : Throwable(s)
+class ApioException(s: String) : Exception(s)
