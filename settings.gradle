@@ -1,7 +1,5 @@
-include 'apio-consumer-android'
-project(':apio-consumer-android').projectDir = new File(settingsDir, '/library')
-project(':apio-consumer-android').name = 'apio-consumer-android'
+rootProject.name='apio-consumer-android'
 
-include ':blog-postings'
-project(':blog-postings').projectDir = new File(settingsDir, '/samples/blog')
-project(':blog-postings').name = 'sample-blog-postings'
+include ':apio-consumer'
+
+include ':sample-app'

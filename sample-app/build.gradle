@@ -30,7 +30,7 @@ android {
 dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-	implementation project(':apio-consumer-android')
+	implementation project(':apio-consumer')
 
 	implementation libraries.appCompat
 	implementation libraries.recyclerView
