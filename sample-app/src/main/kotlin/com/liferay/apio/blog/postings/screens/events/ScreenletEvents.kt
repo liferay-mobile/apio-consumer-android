@@ -12,29 +12,17 @@
  * details.
  */
 
-package com.liferay.apio.blog.postings.view
+package com.liferay.apio.blog.postings.screens.events
 
-import android.content.Context
-import android.util.AttributeSet
-import android.widget.RelativeLayout
-import android.widget.TextView
-import com.liferay.apio.blog.postings.R
-import com.liferay.apio.blog.postings.delegates.bindNonNull
-import com.liferay.apio.consumer.delegates.converter
-import com.liferay.apio.blog.postings.model.BlogPosting
+import android.view.View
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.blog.postings.screens.ThingScreenlet
 import com.liferay.apio.blog.postings.screens.views.BaseView
+import com.liferay.apio.blog.postings.screens.views.Scenario
 
-class BlogPostingRowByIdView @JvmOverloads constructor(
-	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : BaseView,
-	RelativeLayout(context, attrs, defStyleAttr) {
+interface ScreenletEvents {
+	fun <T : BaseView> onClickEvent(baseView: T, view: View, thing: Thing): View.OnClickListener? = null
 
-	override var screenlet: ThingScreenlet? = null
-
-	val headline by bindNonNull<TextView>(R.id.headline)
-
-	override var thing: Thing? by converter<BlogPosting> {
-		headline.text = it.headline
-	}
+	fun <T : BaseView> onGetCustomLayout(
+            screenlet: ThingScreenlet, parentView: T?, thing: Thing, scenario: Scenario): Int? = null
 }

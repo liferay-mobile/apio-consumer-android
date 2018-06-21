@@ -18,7 +18,6 @@ import com.liferay.apio.consumer.ApioException
 import com.liferay.apio.consumer.graph
 import com.liferay.apio.consumer.requestProperties
 
-
 typealias Type = List<String>
 
 data class Thing(val id: String, val type: Type, val attributes: Map<String, Any>, val name: String? = null,
@@ -37,30 +36,30 @@ data class Context(val vocab: String, val attributeContext: Map<String, Any>)
 fun contextFrom(jsonObject: List<Any>?, parentContext: Context?): Context? {
 	return jsonObject?.let {
 		val vocab =
-			it.find { it is Map<*, *> && it["@vocab"] is String }
-				.let { (it as? Map<*, *>)?.get("@vocab") as? String }
-				?: parentContext?.vocab
-				?: throw ApioException("Empty Vocab")
+				it.find { it is Map<*, *> && it["@vocab"] is String }
+						.let { (it as? Map<*, *>)?.get("@vocab") as? String }
+						?: parentContext?.vocab
+						?: throw ApioException("Empty Vocab")
 
 		val attributeContexts = HashMap<String, Any>()
 
 		it
-			.filter { it is Map<*, *> }
-			.forEach({
-				(it as? Map<String, Any>)?.filterKeys { it != "@vocab" }?.let {
-					attributeContexts.putAll(it)
-				}
-			})
+				.filter { it is Map<*, *> }
+				.forEach({
+					(it as? Map<String, Any>)?.filterKeys { it != "@vocab" }?.let {
+						attributeContexts.putAll(it)
+					}
+				})
 
 		Context(vocab, attributeContexts)
 	}
 }
 
 fun Context.isId(attributeName: String): Boolean =
-	(attributeContext[attributeName] as? Map<String, Any>)
-		?.let { it["@type"] }
-		?.let { it == "@id" }
-		?: false
+		(attributeContext[attributeName] as? Map<String, Any>)
+				?.let { it["@type"] }
+				?.let { it == "@id" }
+				?: false
 
 operator fun Thing.get(attribute: String): Any? = attributes[attribute]
 
@@ -83,5 +82,6 @@ fun OperationForm.getFormProperties(onComplete: (List<Property>) -> Unit) {
 		onComplete(it)
 	}
 }
+
 
 

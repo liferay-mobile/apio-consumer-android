@@ -21,14 +21,14 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.liferay.apio.blog.postings.R
-import com.liferay.apio.consumer.delegates.bindNonNull
+import com.liferay.apio.blog.postings.delegates.bindNonNull
 import com.liferay.apio.consumer.delegates.converter
 import com.liferay.apio.consumer.extensions.fullFormat
-import com.liferay.apio.consumer.model.BlogPosting
+import com.liferay.apio.blog.postings.model.BlogPosting
 import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.screens.ThingScreenlet
-import com.liferay.apio.consumer.screens.events.Event
-import com.liferay.apio.consumer.screens.views.BaseView
+import com.liferay.apio.blog.postings.screens.ThingScreenlet
+import com.liferay.apio.blog.postings.screens.events.Event
+import com.liferay.apio.blog.postings.screens.views.BaseView
 
 class BlogPostingDetailCustom @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,

@@ -18,13 +18,6 @@ android {
 		debug.java.srcDirs += 'src/debug/kotlin'
 		release.java.srcDirs += 'src/release/kotlin'
 		test.java.srcDirs += 'src/test/kotlin'
-		main {
-			res.srcDirs = ['src/main/res/layouts/detail',
-			               'src/main/res/layouts/custom',
-			               'src/main/res/layouts/row',
-			               'src/main/res/layouts/thing',
-			               'src/main/res']
-		}
 	}
 
 	lintOptions {
@@ -39,16 +32,12 @@ dependencies {
 	implementation libraries.appCompat
 	implementation libraries.recyclerView
 	implementation libraries.support_annotations
-	implementation libraries.exifinterface
 
 	implementation libraries.gson
 	implementation libraries.okhttp
 
 	implementation libraries.result
 	implementation libraries.anko_commons
-
-	implementation libraries.picasso
-	implementation libraries.circle_image_view
 
 	implementation libraries.kotlin
 	implementation libraries.coroutines_core

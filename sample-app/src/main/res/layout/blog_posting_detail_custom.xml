@@ -27,7 +27,7 @@
 				android:textStyle="bold"
 				/>
 
-			<com.liferay.apio.consumer.screens.ThingScreenlet
+			<com.liferay.apio.blog.postings.screens.ThingScreenlet
 				android:id="@+id/creator_avatar"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
 				android:textSize="18sp"
 				/>
 
-			<com.liferay.apio.consumer.screens.ThingScreenlet
+			<com.liferay.apio.blog.postings.screens.ThingScreenlet
 				android:id="@+id/creator_detail"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

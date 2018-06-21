@@ -21,13 +21,13 @@ import android.util.AttributeSet
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.liferay.apio.blog.postings.R
-import com.liferay.apio.consumer.delegates.bindNonNull
+import com.liferay.apio.blog.postings.delegates.bindNonNull
+import com.liferay.apio.blog.postings.model.Person
 import com.liferay.apio.consumer.delegates.converter
-import com.liferay.apio.consumer.extensions.mediumFormat
-import com.liferay.apio.consumer.model.Person
 import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.screens.ThingScreenlet
-import com.liferay.apio.consumer.screens.views.BaseView
+import com.liferay.apio.blog.postings.screens.ThingScreenlet
+import com.liferay.apio.blog.postings.screens.views.BaseView
+import com.liferay.apio.consumer.extensions.mediumFormat
 
 class PersonDetailCustom @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : BaseView,

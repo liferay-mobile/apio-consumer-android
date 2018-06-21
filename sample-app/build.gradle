@@ -3,58 +3,62 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-	compileSdkVersion rootProject.ext.compileSdkVersion
-	buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
-	defaultConfig {
-		minSdkVersion rootProject.ext.minSdkVersion
-		targetSdkVersion rootProject.ext.targetSdkVersion
-		versionCode rootProject.ext.versionCode
-		versionName rootProject.ext.versionName
-		applicationId 'com.liferay.apio.consumer.blog.postings'
-		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-	}
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        applicationId 'com.liferay.apio.consumer.blog.postings'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
 
-	sourceSets {
-		main.java.srcDirs += 'src/main/kotlin'
-		test.java.srcDirs += 'src/test/kotlin'
-		androidTest.java.srcDirs += 'src/androidTest/kotlin'
-	}
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
 
-	testOptions {
-		unitTests.returnDefaultValues = true
-	}
-	buildToolsVersion '27.0.3'
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
-	implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-	implementation project(':apio-consumer')
+    implementation project(':apio-consumer')
 
-	implementation libraries.appCompat
-	implementation libraries.recyclerView
-	implementation libraries.cardView
+    implementation libraries.appCompat
+    implementation libraries.recyclerView
+    implementation libraries.cardView
+    implementation libraries.exifinterface
 
-	implementation libraries.okhttp
+    implementation libraries.okhttp
 
-	implementation libraries.result
-	implementation libraries.anko_commons
+    implementation libraries.result
+    implementation libraries.anko_commons
 
-	implementation libraries.kotlin
+    implementation libraries.kotlin
 
-	testImplementation libraries.junit
-	testImplementation libraries.mockito
-	androidTestImplementation libraries.espresso
-	androidTestImplementation libraries.espresso_idling
+    implementation libraries.circle_image_view
+    implementation libraries.picasso
 
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    testImplementation libraries.junit
+    testImplementation libraries.mockito
+    androidTestImplementation libraries.espresso
+    androidTestImplementation libraries.espresso_idling
 
-	androidTestImplementation(libraries.espresso_contrib) {
-		exclude group: 'com.android.support', module: 'appcompat'
-		exclude group: 'com.android.support', module: 'support-v4'
-		exclude group: 'com.android.support', module: 'support-v7'
-		exclude group: 'com.android.support', module: 'design'
-		exclude module: 'support-annotations'
-		exclude module: 'recyclerview-v7'
-	}
+    androidTestImplementation(libraries.espresso_contrib) {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'support-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+    }
 }

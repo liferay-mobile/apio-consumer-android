@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.liferay.apio.consumer.screens.views.custom.PersonPortraitView
+<com.liferay.apio.blog.postings.screens.views.PersonPortraitView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/image_view"
     android:layout_width="30dp"

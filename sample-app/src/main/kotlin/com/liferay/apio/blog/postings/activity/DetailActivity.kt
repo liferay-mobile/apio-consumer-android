@@ -18,12 +18,12 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.liferay.apio.blog.postings.R
-import com.liferay.apio.consumer.delegates.bindNonNull
+import com.liferay.apio.blog.postings.delegates.bindNonNull
 import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.screens.ThingScreenlet
-import com.liferay.apio.consumer.screens.events.ScreenletEvents
-import com.liferay.apio.consumer.screens.views.BaseView
-import com.liferay.apio.consumer.screens.views.Detail
+import com.liferay.apio.blog.postings.screens.ThingScreenlet
+import com.liferay.apio.blog.postings.screens.events.ScreenletEvents
+import com.liferay.apio.blog.postings.screens.views.BaseView
+import com.liferay.apio.blog.postings.screens.views.Detail
 import org.jetbrains.anko.startActivity
 
 class DetailActivity : AppCompatActivity(), ScreenletEvents {

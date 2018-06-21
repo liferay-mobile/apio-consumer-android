@@ -15,18 +15,21 @@
 package com.liferay.apio.blog.postings
 
 import android.app.Application
-import com.liferay.apio.consumer.model.BlogPosting
-import com.liferay.apio.consumer.model.Collection
-import com.liferay.apio.consumer.model.Person
-import com.liferay.apio.consumer.screens.views.Custom
-import com.liferay.apio.consumer.screens.views.Detail
-import com.liferay.apio.consumer.screens.views.Row
-import com.liferay.apio.consumer.screens.views.Scenario
+import com.liferay.apio.blog.postings.delegates.ConverterDelegate
+import com.liferay.apio.blog.postings.model.BlogPosting
+import com.liferay.apio.blog.postings.model.Collection
+import com.liferay.apio.blog.postings.model.Person
+import com.liferay.apio.blog.postings.screens.views.Custom
+import com.liferay.apio.blog.postings.screens.views.Detail
+import com.liferay.apio.blog.postings.screens.views.Row
+import com.liferay.apio.blog.postings.screens.views.Scenario
 
 class BlogPostingApplication : Application() {
 
 	override fun onCreate() {
 		super.onCreate()
+
+		ConverterDelegate.initializeConverter()
 
 		Scenario.stringToScenario = {
 			if (it == "detail-small") DetailSmall else null

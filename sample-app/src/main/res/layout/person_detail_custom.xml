@@ -9,7 +9,7 @@
     android:paddingTop="15dp"
     >
 
-    <com.liferay.apio.consumer.screens.ThingScreenlet
+    <com.liferay.apio.blog.postings.screens.ThingScreenlet
         android:id="@+id/person_avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
