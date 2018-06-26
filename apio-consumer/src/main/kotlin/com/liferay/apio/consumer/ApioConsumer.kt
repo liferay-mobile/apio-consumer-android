@@ -255,9 +255,10 @@ private fun parseOperations(jsonObject: Map<String, Any>): MutableMap<String, Op
 	}.toMap().toMutableMap()
 }
 
-private fun parseType(type: Any?): List<String> {
-	return (type as? String)?.let { listOf(it) } ?:
-	type as? List<String> ?: listOf()
+private fun parseType(type: Any?): Type {
+	return (type as? String)?.let { listOf(it) }
+		?: type as? Type
+		?: listOf()
 }
 
 
