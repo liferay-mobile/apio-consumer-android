@@ -261,7 +261,6 @@ private fun parseType(type: Any?): ThingType {
 		?: listOf()
 }
 
-
 private fun foldTree(jsonObject: Map<String, Any>,
 	context: Context?): Pair<MutableMap<String, Any>, MutableMap<String, Thing?>> {
 	return jsonObject
@@ -270,7 +269,8 @@ private fun foldTree(jsonObject: Map<String, Any>,
 		.fold(mutableMapOf<String, Any>() to mutableMapOf(), foldEntry(context))
 }
 
-
+typealias Embedded<T, U> = Map<T, U>
+typealias EmbeddedList<T> = List<T>
 typealias FoldedAttributes = Pair<MutableMap<String, Any>, MutableMap<String, Thing?>>
 
 private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry<String, Any> ->
@@ -280,61 +280,11 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 	val value = entry.value
 
 	when {
-		value is Map<*, *> -> (value as? Map<String, Any>)?.apply {
-			if (this.containsKey("@id")) {
-				val result = flatten(this, context)
-
-				result?.let {
-					val (thing, embeddedThings) = it
-					attributes[key] = Relation(thing.id)
-
-					things.put(thing.id, thing)
-
-					things.putAll(embeddedThings)
-				}
-			}
-			else {
-				val (attr, embeddedThings) = foldTree(this, context)
-
-				things.putAll(embeddedThings)
-				attributes[key] = attr
-			}
-		}
-		value is List<*> && !value.filterIsInstance<Map<String, Any>>().isEmpty() ->
-			(value as? List<Map<String, Any>>)?.apply {
-
-				if (this.first().containsKey("@id")) {
-					val list = this.map { flatten(it, context)!! }
-					val mutableList = mutableListOf<Relation>()
-
-					for ((thing, embeddedThings) in list) {
-						mutableList.add(Relation(thing.id))
-
-						things.put(thing.id, thing)
-
-						things.putAll(embeddedThings)
-					}
-
-					attributes[key] = mutableList
-				}
-				else {
-					val pairsList = this.map { foldTree(it, context) }
-
-					val foldedList = mutableListOf<Map<String, Any>>()
-
-					for ((list, embeddedThings) in pairsList) {
-						foldedList.add(list)
-
-						things.putAll(embeddedThings)
-					}
-
-					attributes[key] = foldedList
-				}
-
-			}
+		value is Embedded<*, *> -> value.parse(context, things, attributes, key)
+		value is EmbeddedList<*> && value.hasMapInstances() ->
+			value.parse(context, things, attributes, key)
 		context != null && context.isId(key) -> with(value as String) {
 			things[this] = null
-
 			attributes[key] = Relation(this)
 		}
 		else -> attributes[key] = value
@@ -342,5 +292,65 @@ private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Entry
 
 	attributes to things
 }
+
+private fun Embedded<*, *>.parse(context: Context?, things: MutableMap<String, Thing?>,
+								 attributes: MutableMap<String, Any>, key: String) {
+
+	(this as? Embedded<String, Any>)?.apply {
+		if (this.containsKey("@id")) {
+			val result = flatten(this, context)
+
+			result?.let {
+				val (thing, embeddedThings) = it
+				attributes[key] = Relation(thing.id)
+
+				things.put(thing.id, thing)
+
+				things.putAll(embeddedThings)
+			}
+		} else {
+			val (attr, embeddedThings) = foldTree(this, context)
+
+			things.putAll(embeddedThings)
+			attributes[key] = attr
+		}
+	}
+}
+
+private fun EmbeddedList<*>.parse(context: Context?, things: MutableMap<String, Thing?>,
+								  attributes: MutableMap<String, Any>, key: String) {
+
+	(this as? EmbeddedList<Embedded<String, Any>>)?.apply {
+		if (this.first().containsKey("@id")) {
+			val list = this.map { flatten(it, context)!! }
+			val mutableList = mutableListOf<Relation>()
+
+			for ((thing, embeddedThings) in list) {
+				mutableList.add(Relation(thing.id))
+
+				things.put(thing.id, thing)
+
+				things.putAll(embeddedThings)
+			}
+
+			attributes[key] = mutableList
+		} else {
+			val pairsList = this.map { foldTree(it, context) }
+
+			val foldedList = mutableListOf<Map<String, Any>>()
+
+			for ((list, embeddedThings) in pairsList) {
+				foldedList.add(list)
+
+				things.putAll(embeddedThings)
+			}
+
+			attributes[key] = foldedList
+		}
+
+	}
+}
+
+private fun EmbeddedList<*>.hasMapInstances() = !this.filterIsInstance<Map<String, Any>>().isEmpty()
 
 class ApioException(s: String) : Exception(s)
