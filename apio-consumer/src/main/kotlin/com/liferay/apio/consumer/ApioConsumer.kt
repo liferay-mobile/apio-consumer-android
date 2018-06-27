@@ -92,7 +92,7 @@ fun performOperationRequest(url: String, method: String, attributes: Map<String,
 		async(CommonPool) {
 
 			val json = Gson().toJson(attributes)
-			val request = createRequest(HttpUrl.parse(url), credential).newBuilder()
+			val request = createRequest(HttpUrl.parse(url), credentials).newBuilder()
 				.method(method, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
 				.build()
 
@@ -108,7 +108,7 @@ fun performOperationRequest(url: String, method: String, attributes: Map<String,
 }
 
 fun requestProperties(url: String, onComplete: (List<Property>) -> Unit) {
-	val request = createRequest(HttpUrl.parse(url), credential)
+	val request = createRequest(HttpUrl.parse(url), credentials)
 
 	launch(UI) {
 		async(CommonPool) {
@@ -147,14 +147,14 @@ fun requestParseWaitLoop(url: HttpUrl,
 
 private fun request(url: HttpUrl,
 	fields: Map<String, List<String>>,
-	embedded: List<String>, credentials: String?): Response {
+	embedded: List<String>, newCredentials: String?): Response {
 	val httpUrl = createUrl(url, fields, embedded)
 
-	if (credentials != null) {
-		credential = credentials
+	if (newCredentials != null) {
+		credentials = newCredentials
 	}
 
-	val request = createRequest(httpUrl, credential)
+	val request = createRequest(httpUrl, credentials)
 
 	val okHttpClient = OkHttpClient()
 
@@ -209,7 +209,7 @@ class Node(val id: String, var value: Thing? = null)
 
 var graph: MutableMap<String, Node> = mutableMapOf()
 
-var credential: String = Credentials.basic("test@liferay.com", "test")
+var credentials: String = Credentials.basic("test@liferay.com", "test")
 
 fun parse(json: String): Pair<Thing, Map<String, Thing?>>? {
 	val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
