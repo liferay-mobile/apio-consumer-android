@@ -18,18 +18,18 @@ import com.liferay.apio.consumer.ApioException
 import com.liferay.apio.consumer.graph
 import com.liferay.apio.consumer.requestProperties
 
-typealias Type = List<String>
+typealias ThingType = List<String>
 
-data class Thing(val id: String, val type: Type, val attributes: Map<String, Any>, val name: String? = null,
+data class Thing(val id: String, val type: ThingType, val attributes: Map<String, Any>, val name: String? = null,
 				 val operations: MutableMap<String, Operation> = mutableMapOf())
 
 data class Relation(val id: String)
 
-data class Operation(val id: String, val target: String, val type: Type, val method: String, var form: OperationForm?)
+data class Operation(val id: String, val target: String, val type: ThingType, val method: String, var form: OperationForm?)
 
 data class OperationForm(val id: String, var properties: List<Property> = listOf())
 
-data class Property(val type: Type, val name: String, val required: Boolean)
+data class Property(val type: ThingType, val name: String, val required: Boolean)
 
 data class Context(val vocab: String, val attributeContext: Map<String, Any>)
 
