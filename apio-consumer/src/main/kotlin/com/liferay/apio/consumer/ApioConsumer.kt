@@ -38,7 +38,7 @@ fun fetch(
 	}
 }
 
-fun performOperationAndParse(thingId: String, operationId: String,
+fun performParseOperation(thingId: String, operationId: String,
  	fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() },
  	onComplete: (Result<Thing, Exception>) -> Unit) {
 
