@@ -23,7 +23,10 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import okhttp3.*
+import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.io.InputStream
+import java.net.URLConnection
 import kotlin.collections.Map.Entry
 
 fun fetch(
@@ -86,14 +89,13 @@ fun performOperation(thingId: String, operationId: String,
 	} ?: onComplete(Result.of(null, { ApioException("Thing not found") }))
 }
 
-fun performOperationRequest(url: String, method: String, attributes: Map<String, Any>,
+private fun performOperationRequest(url: String, method: String, attributes: Map<String, Any>,
 	onComplete: (Result<Response, Exception>) -> Unit) {
 	launch(UI) {
 		async(CommonPool) {
 
-			val json = Gson().toJson(attributes)
 			val request = createRequest(HttpUrl.parse(url), credentials).newBuilder()
-				.method(method, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
+				.method(method, getRequestBody(attributes))
 				.build()
 
 			val okHttpClient = OkHttpClient()
@@ -105,6 +107,52 @@ fun performOperationRequest(url: String, method: String, attributes: Map<String,
 			}
 		}.await().let(onComplete)
 	}
+}
+
+private fun getRequestBody(attributes: Map<String, Any>): RequestBody {
+	if (attributes.values.none { it is InputStream }) {
+		val json = Gson().toJson(attributes)
+
+		return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+	}
+	else {
+		val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+
+		for ((key, value) in attributes) {
+			if (value is InputStream) {
+				val byteArray = getByteArrayFromInputStream(value)
+                val contentType = getContentType(attributes, value)
+                val body = RequestBody.create(MediaType.parse(contentType), byteArray)
+
+				builder.addFormDataPart(key, key, body)
+			}
+			else {
+				builder.addFormDataPart(key, value as String)
+			}
+		}
+
+		return builder.build()
+	}
+}
+
+private fun getByteArrayFromInputStream(inputStream: InputStream): ByteArray {
+	val byteBuffer = ByteArrayOutputStream()
+
+	inputStream.use { input ->
+		byteBuffer.use {  output ->
+			input.copyTo(output)
+		}
+	}
+
+	return byteBuffer.toByteArray()
+}
+
+private fun getContentType(attributes: Map<String, Any>, inputStream: InputStream): String {
+	val name = attributes["name"] as? String
+
+	return URLConnection.guessContentTypeFromStream(inputStream)
+			?: URLConnection.guessContentTypeFromName(name)
+			?: "application/*"
 }
 
 fun requestProperties(url: String, onComplete: (List<Property>) -> Unit) {
