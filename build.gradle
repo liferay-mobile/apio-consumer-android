@@ -56,11 +56,10 @@ ext {
 	versionName = '0.0.3'
 
 	publishedGroupId = 'com.liferay.mobile'
-	libraryName = 'Apio Consumer for Android'
+	libraryName = 'apio-consumer-android'
 	libraryDescription = 'Apio Consumer for Android includes the library and a sample project'
 
 	bintrayRepo = 'liferay-mobile'
-	bintrayOrg = ''
 	bintrayOrg = 'liferay'
 
 	siteUrl = 'https://github.com/liferay-mobile/apio-consumer-android'
