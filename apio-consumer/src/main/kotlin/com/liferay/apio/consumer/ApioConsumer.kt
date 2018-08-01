@@ -46,13 +46,32 @@ fun performParseOperation(thingId: String, operationId: String,
  	onComplete: (Result<Thing, Exception>) -> Unit) {
 
 	performOperation(thingId, operationId, fillFields) {
-		it.component1()?.let {
+		val (response, exception) = it
+
+		response?.let {
 			launch(UI) {
 				async(CommonPool) {
-					parse(it)
+					val (thing, _) = parse(response)
+
+					if (response.isSuccessful) {
+						Result.of(thing)
+					} else {
+						val error = thing?.let { it["title"] as? String }
+								?: let {
+									if(response.message().isNotEmpty()) {
+										response.message()
+									} else {
+										NO_THING_FOUND
+									}
+								}
+
+						Result.error(ApioException(error))
+					}
 				}.await().let(onComplete)
 			}
-		} ?: onComplete(Result.of(null, { ApioException("No thing returned") }))
+		} ?: exception?.let {
+			onComplete(Result.error(it))
+		} ?: onComplete(Result.error(ApioException(NO_THING_FOUND)))
 	}
 }
 
@@ -402,3 +421,5 @@ private fun EmbeddedList<*>.parse(context: Context?, things: MutableMap<String, 
 private fun EmbeddedList<*>.hasMapInstances() = !this.filterIsInstance<Map<String, Any>>().isEmpty()
 
 class ApioException(s: String) : Exception(s)
+
+private const val NO_THING_FOUND = "No thing found"
