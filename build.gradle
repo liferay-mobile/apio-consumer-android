@@ -37,6 +37,7 @@ detekt {
 
 allprojects {
 	repositories {
+		mavenCentral()
 		jcenter()
 		google()
 	}
