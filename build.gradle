@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = '1.2.40'
+	ext.kotlin_version = '1.2.51'
 
 	repositories {
 		jcenter()
@@ -88,8 +88,8 @@ ext.libraries = [appCompat          : 'com.android.support:appcompat-v7:' + supp
                  picasso            : 'com.squareup.picasso:picasso:2.71828',
                  circle_image_view  : 'de.hdodenhof:circleimageview:2.2.0',
                  kotlin             : 'org.jetbrains.kotlin:kotlin-stdlib-jre7:' + ext.kotlin_version,
-                 coroutines_core    : 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5',
-                 coroutines_android : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.5',
+                 coroutines_core    : 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0',
+                 coroutines_android : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.24.0',
                  junit              : 'junit:junit:4.12',
                  mockito            : 'org.mockito:mockito-core:2.13.0',
                  espresso           : 'com.android.support.test.espresso:espresso-core:3.0.1',
