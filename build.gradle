@@ -54,7 +54,7 @@ ext {
 	buildToolsVersion = '27.0.3'
 
 	versionCode = 1
-	versionName = '0.0.5'
+	versionName = '0.0.6'
 
 	publishedGroupId = 'com.liferay.mobile'
 	libraryName = 'apio-consumer-android'
