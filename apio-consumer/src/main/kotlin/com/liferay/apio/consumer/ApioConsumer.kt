@@ -48,30 +48,15 @@ fun performParseOperation(thingId: String, operationId: String,
 	performOperation(thingId, operationId, fillFields) {
 		val (response, exception) = it
 
-		response?.let {
-			launch(UI) {
-				async(CommonPool) {
-					val (thing, _) = parse(response)
-
-					if (response.isSuccessful) {
-						Result.of(thing)
-					} else {
-						val error = thing?.let { it["title"] as? String }
-								?: let {
-									if(response.message().isNotEmpty()) {
-										response.message()
-									} else {
-										NO_THING_FOUND
-									}
-								}
-
-						Result.error(ApioException(error))
-					}
-				}.await().let(onComplete)
-			}
-		} ?: exception?.let {
-			onComplete(Result.error(it))
-		} ?: onComplete(Result.error(ApioException(NO_THING_FOUND)))
+		launch(UI) {
+			async(CommonPool) {
+				response?.let {
+					parse(response)
+				} ?: (exception ?: ApioException(NO_THING_FOUND)).let {
+					Result.error(it)
+				}
+			}.await().let(onComplete)
+		}
 	}
 }
 
@@ -105,7 +90,7 @@ fun performOperation(thingId: String, operationId: String,
 
 		} ?: onComplete(Result.of(null, { ApioException("Thing $it doesn't have the operation $operationId") }))
 
-	} ?: onComplete(Result.of(null, { ApioException("Thing not found") }))
+	} ?: onComplete(Result.of(null, { ApioException(NO_THING_FOUND) }))
 }
 
 private fun performOperationRequest(url: String, method: String, attributes: Map<String, Any>,
@@ -250,27 +235,47 @@ private fun createUrl(url: HttpUrl, fields: Map<String, List<String>>, embedded:
 		.addQueryParameter("embedded", embedded.joinToString(","))
 		.build()
 
-private fun parse(
-	response: Response): Result<Thing, Exception> =
-	response.body()?.let {
-		val result = parse(it.string())
+private fun parse(response: Response): Result<Thing, Exception> {
+	return response.body()?.let {
+		parse(it.string())
+	}?.let {
+		val (thing, embeddedThings) = it
+		updateNodes(thing, embeddedThings)
 
-		result?.let {
-			val (thing, embeddedThings) = it
-			val nodes = embeddedThings.map { (id, embeddedThing) ->
-				val previousThing = graph[id]?.value
+		if (!response.isSuccessful) {
+			return Result.error(getResponseException(thing, response))
+		}
 
-				val newThing = embeddedThing?.merge(previousThing) ?: previousThing
+		Result.of(thing)
+	} ?: Result.error(ApioException(NO_THING_FOUND))
+}
 
-				id to Node(id, newThing)
-			}
+private fun updateNodes(thing: Thing, embeddedThings: Map<String, Thing?>) {
+	val nodes = embeddedThings.map { (id, embeddedThing) ->
+		val previousThing = graph[id]?.value
 
-			graph.put(thing.id, Node(thing.id, thing))
-			graph.putAll(nodes)
+		val newThing = embeddedThing?.merge(previousThing) ?: previousThing
 
-            Result.of(thing)
-        }
-    } ?: Result.of(null, { ApioException("Not Found") })
+		id to Node(id, newThing)
+	}
+
+	graph[thing.id] = Node(thing.id, thing)
+	graph.putAll(nodes)
+}
+
+private fun getResponseException(thing: Thing, response: Response): Exception {
+	val error = thing.let {
+		it["title"] as? String
+	} ?: run {
+		if(response.message().isNotEmpty()) {
+			response.message()
+		} else {
+			NO_THING_FOUND
+		}
+	}
+
+	return ApioException(error)
+}
 
 class Node(val id: String, var value: Thing? = null)
 
