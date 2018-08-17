@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = '1.2.51'
+	ext.kotlin_version = '1.2.60'
 
 	repositories {
 		jcenter()
@@ -54,7 +54,7 @@ ext {
 	buildToolsVersion = '27.0.3'
 
 	versionCode = 1
-	versionName = '0.0.6'
+	versionName = 'beta-0.0.7'
 
 	publishedGroupId = 'com.liferay.mobile'
 	libraryName = 'apio-consumer-android'

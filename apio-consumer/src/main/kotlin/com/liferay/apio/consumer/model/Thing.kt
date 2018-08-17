@@ -14,6 +14,8 @@
 
 package com.liferay.apio.consumer.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.liferay.apio.consumer.ApioException
 import com.liferay.apio.consumer.graph
 import com.liferay.apio.consumer.requestProperties
@@ -21,15 +23,128 @@ import com.liferay.apio.consumer.requestProperties
 typealias ThingType = List<String>
 
 data class Thing(val id: String, val type: ThingType, val attributes: Map<String, Any>, val name: String? = null,
-				 val operations: MutableMap<String, Operation> = mutableMapOf())
+    val operations: MutableMap<String, Operation> = mutableMapOf()) : Parcelable {
+
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.createStringArrayList(),
+        mutableMapOf(),
+        parcel.readString(),
+        mutableMapOf()) {
+
+        parcel.readMap(attributes, Any::class.java.classLoader)
+        parcel.readMap(operations, Operation::class.java.classLoader)
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeStringList(type)
+        parcel.writeMap(attributes)
+        parcel.writeString(name)
+        parcel.writeMap(operations)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Thing> {
+        override fun createFromParcel(parcel: Parcel): Thing {
+            return Thing(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Thing?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 data class Relation(val id: String)
 
-data class Operation(val id: String, val target: String, val type: ThingType, val method: String, var form: OperationForm?)
+data class Operation(val id: String, val target: String, val type: ThingType, val method: String,
+    var form: OperationForm?) : Parcelable {
 
-data class OperationForm(val id: String, var properties: List<Property> = listOf())
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readString(),
+        parcel.createStringArrayList(),
+        parcel.readString(),
+        parcel.readParcelable(OperationForm::class.java.classLoader))
 
-data class Property(val type: ThingType, val name: String, val required: Boolean)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeString(target)
+        parcel.writeStringList(type)
+        parcel.writeString(method)
+        parcel.writeParcelable(form, flags)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Operation> {
+        override fun createFromParcel(parcel: Parcel): Operation {
+            return Operation(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Operation?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+data class OperationForm(val id: String, var properties: List<Property> = listOf()) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.createTypedArrayList(Property))
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeTypedList(properties)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<OperationForm> {
+        override fun createFromParcel(parcel: Parcel): OperationForm {
+            return OperationForm(parcel)
+        }
+
+        override fun newArray(size: Int): Array<OperationForm?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+data class Property(val type: ThingType, val name: String, val required: Boolean) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.createStringArrayList(),
+        parcel.readString(),
+        parcel.readByte() != 0.toByte())
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeStringList(type)
+        parcel.writeString(name)
+        parcel.writeByte(if (required) 1 else 0)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Property> {
+        override fun createFromParcel(parcel: Parcel): Property {
+            return Property(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Property?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 data class Context(val vocab: String, val attributeContext: Map<String, Any>)
 
