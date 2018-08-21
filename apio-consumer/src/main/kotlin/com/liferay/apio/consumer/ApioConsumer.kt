@@ -16,6 +16,8 @@ package com.liferay.apio.consumer
 
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
+import com.google.gson.JsonParseException
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import com.liferay.apio.consumer.model.*
 import kotlinx.coroutines.experimental.CommonPool
@@ -236,18 +238,21 @@ private fun createUrl(url: HttpUrl, fields: Map<String, List<String>>, embedded:
 		.build()
 
 private fun parse(response: Response): Result<Thing, Exception> {
-	return response.body()?.let {
-		parse(it.string())
-	}?.let {
-		val (thing, embeddedThings) = it
-		updateNodes(thing, embeddedThings)
+    return try { response.body()?.let {
+			parse(it.string())
+		}?.let {
+			val (thing, embeddedThings) = it
+			updateNodes(thing, embeddedThings)
 
-		if (!response.isSuccessful) {
-			return Result.error(getResponseException(thing, response))
-		}
+			if (!response.isSuccessful) {
+				return Result.error(getResponseException(thing, response))
+			}
 
-		Result.of(thing)
-	} ?: Result.error(ApioException(NO_THING_FOUND))
+			Result.of(thing)
+		} ?: Result.error(ApioException(NO_THING_FOUND))
+	} catch (e: Exception) {
+		Result.error(e)
+	}
 }
 
 private fun updateNodes(thing: Thing, embeddedThings: Map<String, Thing?>) {
@@ -283,6 +288,7 @@ var graph: MutableMap<String, Node> = mutableMapOf()
 
 var credentials: String = Credentials.basic("test@liferay.com", "test")
 
+@Throws(JsonParseException::class, JsonSyntaxException::class)
 fun parse(json: String): Pair<Thing, Map<String, Thing?>>? {
 	val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
 
