@@ -25,6 +25,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import okhttp3.*
+import okhttp3.internal.http.HttpMethod
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -100,8 +101,16 @@ private fun performOperationRequest(url: String, method: String, attributes: Map
 	launch(UI) {
 		async(CommonPool) {
 
+			val requestBody = attributes.let {
+				if(attributes.isEmpty() && !HttpMethod.permitsRequestBody(method)) {
+					null
+				} else {
+					getRequestBody(attributes)
+				}
+			}
+
 			val request = createRequest(HttpUrl.parse(url), credentials).newBuilder()
-				.method(method, getRequestBody(attributes))
+				.method(method, requestBody)
 				.build()
 
 			val okHttpClient = OkHttpClient()
