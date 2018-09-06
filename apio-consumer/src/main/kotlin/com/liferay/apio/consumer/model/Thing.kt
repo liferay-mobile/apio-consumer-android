@@ -59,7 +59,27 @@ data class Thing(val id: String, val type: ThingType, val attributes: Map<String
     }
 }
 
-data class Relation(val id: String)
+data class Relation(val id: String) : Parcelable {
+    constructor(parcel: Parcel) : this(parcel.readString())
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Relation> {
+        override fun createFromParcel(parcel: Parcel): Relation {
+            return Relation(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Relation?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 data class Operation(val id: String, val target: String, val type: ThingType, val method: String,
     var form: OperationForm?) : Parcelable {
