@@ -20,11 +20,11 @@ import android.view.ViewGroup
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.delegates.convert
 import com.liferay.apio.blog.postings.extensions.inflate
-import com.liferay.apio.consumer.fetch
 import com.liferay.apio.blog.postings.model.Collection
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.blog.postings.screens.views.BaseView
 import com.liferay.apio.blog.postings.screens.views.Scenario
+import com.liferay.apio.consumer.ApioConsumer
 import okhttp3.HttpUrl
 
 class ThingAdapter(collection: Collection, val listener: Listener) :
@@ -46,18 +46,13 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 		} else {
 			nextPage.let {
 				HttpUrl.parse(nextPage)?.let {
-					fetch(it) {
-						it.fold(
-							success = {
-								convert<Collection>(it)?.let {
-									val moreMembers = it.members
-									merge(members, moreMembers)
-									notifyDataSetChanged()
-								}
-							},
-							failure = {}
-						)
-					}
+					ApioConsumer().fetch(it, onSuccess =  {
+						convert<Collection>(it)?.let {
+							val moreMembers = it.members
+							merge(members, moreMembers)
+							notifyDataSetChanged()
+						}
+					}) { }
 				}
 
 			}
