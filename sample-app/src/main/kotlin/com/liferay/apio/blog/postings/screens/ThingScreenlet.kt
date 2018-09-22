@@ -18,11 +18,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import com.github.kittinunf.result.failure
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.delegates.observe
 import com.liferay.apio.blog.postings.extensions.inflate
-import com.liferay.apio.consumer.fetch
 import com.liferay.apio.blog.postings.model.BlogPosting
 import com.liferay.apio.blog.postings.model.Collection
 import com.liferay.apio.blog.postings.model.Person
@@ -34,6 +32,8 @@ import com.liferay.apio.blog.postings.screens.views.Custom
 import com.liferay.apio.blog.postings.screens.views.Detail
 import com.liferay.apio.blog.postings.screens.views.Row
 import com.liferay.apio.blog.postings.screens.views.Scenario
+import com.liferay.apio.consumer.ApioConsumer
+import com.liferay.apio.consumer.request.BasicAuthenticator
 import okhttp3.HttpUrl
 
 open class BaseScreenlet @JvmOverloads constructor(
@@ -84,16 +84,19 @@ class ThingScreenlet @JvmOverloads constructor(
 	fun load(thingId: String, credentials: String? = null, scenario: Scenario? = null,
              onComplete: ((ThingScreenlet) -> Unit)? = null) {
 
-		HttpUrl.parse(thingId)?.let {
-			fetch(it, credentials) {
+		val apioConsumer = ApioConsumer(BasicAuthenticator(credentials))
 
+		HttpUrl.parse(thingId)?.let {
+			apioConsumer.fetch(it, onSuccess = {
 				if (scenario != null) {
 					this.scenario = scenario
 				}
 
-				thing = it.component1()
+				thing = it
 
-				it.failure { baseView?.showError(it.message) }
+				onComplete?.invoke(this)
+			}) {
+				baseView?.showError(it.message)
 
 				onComplete?.invoke(this)
 			}
