@@ -25,10 +25,9 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.WindowManager
-import com.github.kittinunf.result.Result
 import com.liferay.apio.blog.postings.R
-import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.requestParseWaitLoop
+import com.liferay.apio.consumer.ApioConsumer
+import com.liferay.apio.consumer.request.BasicAuthenticator
 import okhttp3.Credentials
 import okhttp3.HttpUrl
 import org.junit.Assert
@@ -75,13 +74,12 @@ class BlogPostingListTest {
 		val url = HttpUrl.parse("http://screens.liferay.org.es/o/api/p/groups/57459/blogs")
 
 		url?.let {
-			val result: Result<Thing, Exception> = requestParseWaitLoop(url, mapOf(), listOf(), credentials)
-
-			Assert.assertNotNull(result.component1())
-
-			result.fold(success = {
+			ApioConsumer(BasicAuthenticator(credentials)).fetch(url, mapOf(), listOf(), {
+				Assert.assertNotNull(it)
 				Assert.assertEquals(TEST_DOMAIN + "groups/57459/blogs", it.id)
-			}, failure = { Assert.fail() })
+			}) {
+				Assert.fail()
+			}
 		}
 	}
 

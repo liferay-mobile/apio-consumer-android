@@ -14,9 +14,10 @@
 
 package com.liferay.apio.consumer
 
-import com.github.kittinunf.result.Result
 import com.liferay.apio.consumer.model.Relation
 import com.liferay.apio.consumer.model.Thing
+import com.liferay.apio.consumer.parser.ThingParser
+import com.liferay.apio.consumer.request.RequestExecutor
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert.assertEquals
@@ -32,7 +33,7 @@ class ApioConsumerTest {
 	@Test
 	fun parseCreatesPairsWithRelationsTest() {
 
-		val blogs: Pair<Thing, Map<String, Thing?>>? = parse(blogCollection)
+		val blogs: Pair<Thing, Map<String, Thing?>>? = ThingParser.parse(blogCollection)
 
 		assertNotNull(blogs)
 
@@ -64,10 +65,10 @@ class ApioConsumerTest {
 
 		val url = mockWebServer.url("o/api/p/blogs?id=57459&filterName=groupId")
 
-		val result: Result<Thing, Exception> = requestParseWaitLoop(url!!, mapOf(), listOf(), null)
+		val thing = RequestExecutor.requestThing(url!!, mapOf(), listOf())
 
-		assertNotNull(result.component1())
-		assertEquals(TEST_DOMAIN + "blogs", result.component1()!!.id)
+		assertNotNull(thing)
+		assertEquals(TEST_DOMAIN + "blogs", thing.id)
 
 		mockWebServer.shutdown()
 	}
