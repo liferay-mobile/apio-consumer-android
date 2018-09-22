@@ -15,11 +15,12 @@
 package com.liferay.apio.consumer.model
 
 import android.os.Parcelable
-import com.liferay.apio.consumer.ApioException
-import com.liferay.apio.consumer.graph
-import com.liferay.apio.consumer.requestProperties
+import com.liferay.apio.consumer.ApioConsumer
+import com.liferay.apio.consumer.exception.ApioException
+import com.liferay.apio.consumer.graph.ApioGraph
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
+import java.lang.Exception
 
 typealias ThingType = List<String>
 
@@ -72,24 +73,24 @@ fun Context.isId(attributeName: String): Boolean =
 
 operator fun Thing.get(attribute: String): Any? = attributes[attribute]
 
-operator fun Relation.get(attribute: String): Any? = graph[id]?.value?.get(attribute)
+operator fun Relation.get(attribute: String): Any? = ApioGraph.graph[id]?.value?.get(attribute)
 
 fun Thing.merge(value: Thing?): Thing = value?.let { Thing(id, type, attributes + it.attributes) } ?: this
 
-fun Thing.containsOperation(operationId: String): Boolean = operations.keys.filter { it.contains(operationId) }.isEmpty()
+fun Thing.containsOperation(operationId: String): Boolean = operations.keys.none { it.contains(operationId) }
 
 fun Thing.getOperation(operationId: String): Operation? {
-	val key = operations.keys.filter { it.contains(operationId) }.firstOrNull()
+	val key = operations.keys.firstOrNull { it.contains(operationId) }
 
 	return key?.let { operations[it] }
 }
 
-fun OperationForm.getFormProperties(onComplete: (List<Property>) -> Unit) {
-	requestProperties(id) {
+fun OperationForm.getFormProperties(onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
+	ApioConsumer().requestProperties(id, {
 		this.properties = it
 
-		onComplete(it)
-	}
+        onSuccess(it)
+	}, onError)
 }
 
 
