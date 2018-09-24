@@ -12,18 +12,17 @@
  * details.
  */
 
-package com.liferay.apio.consumer.request
+package com.liferay.apio.consumer.authenticator
 
-import okhttp3.*
+import okhttp3.Request
 
 /**
  * @author Paulo Cruz
  */
-class BasicAuthenticator(private val credentials: String?) : Authenticator {
+class BasicAuthenticator(private val credentials: String?) : ApioAuthenticator {
 
-    override fun authenticate(route: Route, response: Response): Request? {
-        return response.request()
-            .newBuilder()
+    override fun authenticate(request: Request): Request {
+        return request.newBuilder()
             .addHeader(AUTHORIZATION_KEY, credentials)
             .build()
     }

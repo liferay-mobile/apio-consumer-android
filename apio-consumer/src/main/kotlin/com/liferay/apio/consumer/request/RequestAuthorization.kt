@@ -14,12 +14,12 @@
 
 package com.liferay.apio.consumer.request
 
-import okhttp3.*
+import com.liferay.apio.consumer.authenticator.ApioAuthenticator
 
 /**
  * @author Paulo Cruz
  */
 internal object RequestAuthorization {
-    var authenticator: Authenticator? = null
+    var authenticator: ApioAuthenticator? = null
 }
 

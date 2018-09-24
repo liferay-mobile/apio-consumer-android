@@ -15,23 +15,22 @@
 package com.liferay.apio.consumer
 
 import com.github.kittinunf.result.Result
+import com.liferay.apio.consumer.authenticator.ApioAuthenticator
 import com.liferay.apio.consumer.request.RequestAuthorization
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.request.RequestExecutor
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
-import okhttp3.Authenticator
 import okhttp3.HttpUrl
 import java.lang.Exception
 
 /**
  * @author Paulo Cruz
  */
-class ApioConsumer @JvmOverloads constructor(authenticator: Authenticator? = null) {
+class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? = null) {
     init {
         RequestAuthorization.authenticator = authenticator
     }
@@ -68,7 +67,7 @@ class ApioConsumer @JvmOverloads constructor(authenticator: Authenticator? = nul
     }
 
     @JvmOverloads
-    fun setAuthenticator(authenticator: Authenticator? = null) {
+    fun setAuthenticator(authenticator: ApioAuthenticator? = null) {
         RequestAuthorization.authenticator = authenticator
     }
 
