@@ -16,6 +16,7 @@ package com.liferay.apio.consumer.request
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.liferay.apio.consumer.authenticator.ApioAuthenticator
 import com.liferay.apio.consumer.exception.CantParseToThingException
 import com.liferay.apio.consumer.exception.InvalidRequestUrlException
 import com.liferay.apio.consumer.exception.ThingNotFoundException
@@ -95,16 +96,11 @@ internal class RequestExecutor {
         }
 
         @Throws(IOException::class)
-        private fun execute(request: Request, authenticator: Authenticator?): Response {
-            val builder = OkHttpClient.Builder()
+        private fun execute(request: Request, authenticator: ApioAuthenticator?): Response {
+            val authenticatedRequest = authenticator?.authenticate(request) ?: request
+            val okHttpClient = OkHttpClient.Builder().build()
 
-            authenticator?.run {
-                builder.authenticator(this)
-            }
-
-            val okHttpClient = builder.build()
-
-            return okHttpClient.newCall(request).execute()
+            return okHttpClient.newCall(authenticatedRequest).execute()
         }
 
         @Throws(IOException::class)
