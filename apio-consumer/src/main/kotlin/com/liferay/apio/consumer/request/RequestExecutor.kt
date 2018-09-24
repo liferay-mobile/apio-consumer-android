@@ -96,18 +96,17 @@ internal class RequestExecutor {
         }
 
         @Throws(IOException::class)
-        private fun execute(request: Request, authenticator: ApioAuthenticator?): Response {
-            val authenticatedRequest = authenticator?.authenticate(request) ?: request
+        private fun execute(request: Request): Response {
             val okHttpClient = OkHttpClient.Builder().build()
 
-            return okHttpClient.newCall(authenticatedRequest).execute()
+            return okHttpClient.newCall(request).execute()
         }
 
         @Throws(IOException::class)
         private fun request(httpUrl: HttpUrl): Response {
-            val request = RequestUtil.createRequest(httpUrl)
+            val request = RequestUtil.createRequest(httpUrl, RequestAuthorization.authenticator)
 
-            return execute(request, RequestAuthorization.authenticator)
+            return execute(request)
         }
 
         @Throws(IOException::class)
@@ -122,9 +121,10 @@ internal class RequestExecutor {
                 }
             }
 
-            val request = RequestUtil.createRequest(HttpUrl.parse(url), method, requestBody)
+            val request =
+                RequestUtil.createRequest(HttpUrl.parse(url), method, requestBody, RequestAuthorization.authenticator)
 
-            return RequestExecutor.execute(request, RequestAuthorization.authenticator)
+            return RequestExecutor.execute(request)
         }
     }
 
