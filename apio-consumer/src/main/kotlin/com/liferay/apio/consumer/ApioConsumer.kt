@@ -56,7 +56,7 @@ class ApioConsumer @JvmOverloads constructor(authenticator: Authenticator? = nul
         fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() },
         onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit) {
 
-        launch {
+        launch(UI) {
             withContext(CommonPool) {
                 try {
                     Result.of(RequestExecutor.performOperation(thingId, operationId, fillFields))
@@ -74,7 +74,7 @@ class ApioConsumer @JvmOverloads constructor(authenticator: Authenticator? = nul
 
     internal fun requestProperties(url: String, onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
         launch(UI) {
-            withContext(UI) {
+            withContext(CommonPool) {
                 try {
                     Result.of(RequestExecutor.requestProperties(url))
                 } catch (e: Exception) {
