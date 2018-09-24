@@ -15,6 +15,7 @@
 package com.liferay.apio.consumer.util
 
 import com.google.gson.Gson
+import com.liferay.apio.consumer.authenticator.ApioAuthenticator
 import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.exception.ThingNotFoundException
 import com.liferay.apio.consumer.model.Thing
@@ -31,15 +32,19 @@ import java.net.URLConnection
 class RequestUtil {
 
     companion object {
-        fun createRequest(httpUrl: HttpUrl?): Request {
-            return Request.Builder()
+        fun createRequest(httpUrl: HttpUrl?, authenticator: ApioAuthenticator?): Request {
+            val request = Request.Builder()
                 .url(httpUrl!!)
                 .addHeader("Accept", "application/ld+json")
                 .build()
+
+            return authenticator?.authenticate(request) ?: request
         }
 
-        fun createRequest(httpUrl: HttpUrl?, method: String, requestBody: RequestBody?): Request {
-            return createRequest(httpUrl)
+        fun createRequest(httpUrl: HttpUrl?, method: String, requestBody: RequestBody?,
+            authenticator: ApioAuthenticator?): Request {
+
+            return createRequest(httpUrl, authenticator)
                 .newBuilder()
                 .method(method, requestBody)
                 .build()
