@@ -33,7 +33,7 @@ import com.liferay.apio.blog.postings.screens.views.Detail
 import com.liferay.apio.blog.postings.screens.views.Row
 import com.liferay.apio.blog.postings.screens.views.Scenario
 import com.liferay.apio.consumer.ApioConsumer
-import com.liferay.apio.consumer.request.BasicAuthenticator
+import com.liferay.apio.consumer.authenticator.BasicAuthenticator
 import okhttp3.HttpUrl
 
 open class BaseScreenlet @JvmOverloads constructor(

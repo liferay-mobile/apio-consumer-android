@@ -27,7 +27,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.view.WindowManager
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.ApioConsumer
-import com.liferay.apio.consumer.request.BasicAuthenticator
+import com.liferay.apio.consumer.authenticator.BasicAuthenticator
 import okhttp3.Credentials
 import okhttp3.HttpUrl
 import org.junit.Assert
