@@ -37,7 +37,7 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 
     @JvmOverloads
     fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
-        onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit) {
+        onSuccess: (Thing) -> Unit = emptyOnSuccess(), onError: (Exception) -> Unit = emptyOnError()) {
 
         launch(UI) {
             withContext(CommonPool) {
@@ -52,8 +52,8 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 
     @JvmOverloads
     fun performOperation(thingId: String, operationId: String,
-        fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() },
-        onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit) {
+        fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
+        onSuccess: (Thing) -> Unit = emptyOnSuccess(), onError: (Exception) -> Unit = emptyOnError()) {
 
         launch(UI) {
             withContext(CommonPool) {
@@ -82,4 +82,8 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
             }.fold(onSuccess, onError)
         }
     }
+
+    private fun emptyOnError() = { _: Exception -> }
+    private fun emptyFillFields() = { _: List<Property> -> emptyMap<String, Any>() }
+    private fun emptyOnSuccess() = { _: Thing -> }
 }
