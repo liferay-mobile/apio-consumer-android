@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-beta01'
+		classpath 'com.android.tools.build:gradle:3.2.0'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
 		classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
@@ -51,7 +51,7 @@ ext {
 	minSdkVersion = 15
 	compileSdkVersion = 27
 	targetSdkVersion = compileSdkVersion
-	buildToolsVersion = '27.0.3'
+	buildToolsVersion = '28.0.2'
 
 	versionCode = 1
 	versionName = 'beta-0.0.8'
