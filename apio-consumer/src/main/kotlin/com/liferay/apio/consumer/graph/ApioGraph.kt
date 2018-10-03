@@ -39,6 +39,10 @@ object ApioGraph {
         graph[thing.id] = Node(thing.id, thing)
         graph.putAll(nodes)
     }
+
+    fun clearGraph() {
+        graph.clear()
+    }
 }
 
 class Node(val id: String, var value: Thing? = null)
