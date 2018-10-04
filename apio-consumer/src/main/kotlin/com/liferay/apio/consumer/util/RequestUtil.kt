@@ -23,7 +23,6 @@ import com.liferay.apio.consumer.model.get
 import okhttp3.*
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import java.lang.Exception
 import java.net.URLConnection
 
 /**
@@ -68,8 +67,7 @@ class RequestUtil {
                 val json = Gson().toJson(attributes)
 
                 return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
-            }
-            else {
+            } else {
                 val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
                 for ((key, value) in attributes) {
@@ -79,8 +77,7 @@ class RequestUtil {
                         val body = RequestBody.create(MediaType.parse(contentType), byteArray)
 
                         builder.addFormDataPart(key, key, body)
-                    }
-                    else {
+                    } else {
                         builder.addFormDataPart(key, value as String)
                     }
                 }
@@ -95,7 +92,7 @@ class RequestUtil {
             }?.let {
                 ApioException(it)
             } ?: run {
-                if(response.message().isNotEmpty()) {
+                if (response.message().isNotEmpty()) {
                     ApioException(response.message())
                 } else {
                     ThingNotFoundException()
@@ -107,7 +104,7 @@ class RequestUtil {
             val byteBuffer = ByteArrayOutputStream()
 
             inputStream.use { input ->
-                byteBuffer.use {  output ->
+                byteBuffer.use { output ->
                     input.copyTo(output)
                 }
             }

@@ -21,9 +21,7 @@ import com.google.gson.reflect.TypeToken
 import com.liferay.apio.consumer.exception.CantParseToThingException
 import com.liferay.apio.consumer.graph.ApioGraph
 import com.liferay.apio.consumer.model.*
-import com.liferay.apio.consumer.util.RequestUtil
 import okhttp3.Response
-import java.lang.Exception
 
 /**
  * @author Paulo Cruz
@@ -74,7 +72,7 @@ class ThingParser {
 
                 val operations = parseOperations(jsonObject)
 
-                val thing = Thing(id, types, attributes, operations =  operations)
+                val thing = Thing(id, types, attributes, operations = operations)
 
                 return thing to things
             }

@@ -16,7 +16,6 @@ package com.liferay.apio.consumer.request
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.liferay.apio.consumer.authenticator.ApioAuthenticator
 import com.liferay.apio.consumer.exception.CantParseToThingException
 import com.liferay.apio.consumer.exception.InvalidRequestUrlException
 import com.liferay.apio.consumer.exception.ThingNotFoundException
@@ -26,10 +25,12 @@ import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.parser.ThingParser
 import com.liferay.apio.consumer.util.RequestUtil
-import okhttp3.*
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import okhttp3.internal.http.HttpMethod
 import java.io.IOException
-import java.lang.Exception
 
 /**
  * @author Paulo Cruz
@@ -50,7 +51,7 @@ internal class RequestExecutor {
 
             var attributes = emptyMap<String, Any>()
 
-            if(operation.form != null) {
+            if (operation.form != null) {
                 val form = operation.form!!
 
                 if (form.properties.isEmpty()) {
@@ -114,7 +115,7 @@ internal class RequestExecutor {
             : Response {
 
             val requestBody = attributes.let {
-                if(attributes.isEmpty() && !HttpMethod.permitsRequestBody(method)) {
+                if (attributes.isEmpty() && !HttpMethod.permitsRequestBody(method)) {
                     null
                 } else {
                     RequestUtil.getRequestBody(attributes)

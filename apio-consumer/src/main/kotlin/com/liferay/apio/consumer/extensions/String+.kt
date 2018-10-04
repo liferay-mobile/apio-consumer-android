@@ -16,12 +16,11 @@ package com.liferay.apio.consumer.extensions
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 fun String.asDate(format: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US)): Date? =
-	try {
-		format.parse(this)
-	} catch (parseException: ParseException) {
-		null
-	}
+    try {
+        format.parse(this)
+    } catch (parseException: ParseException) {
+        null
+    }

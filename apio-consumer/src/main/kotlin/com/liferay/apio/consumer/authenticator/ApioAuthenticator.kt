@@ -15,7 +15,6 @@ package com.liferay.apio.consumer.authenticator
 
 import okhttp3.Request
 
-
 /**
  * @author Paulo Cruz
  */

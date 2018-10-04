@@ -14,8 +14,6 @@
 
 package com.liferay.apio.consumer.exception
 
-import java.lang.Exception
-
 /**
  * @author Paulo Cruz
  */

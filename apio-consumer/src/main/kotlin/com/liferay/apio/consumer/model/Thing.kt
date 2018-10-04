@@ -20,7 +20,6 @@ import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.graph.ApioGraph
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
-import java.lang.Exception
 
 typealias ThingType = List<String>
 
@@ -80,17 +79,17 @@ fun Thing.merge(value: Thing?): Thing = value?.let { Thing(id, type, attributes 
 fun Thing.containsOperation(operationId: String): Boolean = operations.keys.none { it.contains(operationId) }
 
 fun Thing.getOperation(operationId: String): Operation? {
-	val key = operations.keys.firstOrNull { it.contains(operationId) }
+    val key = operations.keys.firstOrNull { it.contains(operationId) }
 
-	return key?.let { operations[it] }
+    return key?.let { operations[it] }
 }
 
 fun OperationForm.getFormProperties(onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
-	ApioConsumer.requestProperties(id, {
-		this.properties = it
+    ApioConsumer.requestProperties(id, {
+        this.properties = it
 
         onSuccess(it)
-	}, onError)
+    }, onError)
 }
 
 

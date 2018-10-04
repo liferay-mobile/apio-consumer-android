@@ -15,8 +15,7 @@
 package com.liferay.apio.consumer.extensions
 
 import java.text.DateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 fun Date.shortFormat(locale: Locale = Locale.US) = format(DateFormat.getDateInstance(DateFormat.SHORT, locale))
 
