@@ -84,22 +84,24 @@ class ThingScreenlet @JvmOverloads constructor(
 	fun load(thingId: String, credentials: String? = null, scenario: Scenario? = null,
              onComplete: ((ThingScreenlet) -> Unit)? = null) {
 
-		val apioConsumer = ApioConsumer(BasicAuthenticator(credentials))
+		credentials?.let {
+			ApioConsumer.setAuthenticator(BasicAuthenticator(credentials))
+		}
 
 		HttpUrl.parse(thingId)?.let {
-			apioConsumer.fetch(it, onSuccess = {
+			ApioConsumer.fetch(it, onSuccess = { thing ->
 				if (scenario != null) {
 					this.scenario = scenario
 				}
 
-				thing = it
+				this.thing = thing
 
 				onComplete?.invoke(this)
-			}) {
-				baseView?.showError(it.message)
+			}, onError = { exception ->
+				baseView?.showError(exception.message)
 
 				onComplete?.invoke(this)
-			}
+			})
 		}
 
 	}

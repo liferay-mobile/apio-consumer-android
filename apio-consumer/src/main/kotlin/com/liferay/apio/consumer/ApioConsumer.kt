@@ -30,10 +30,7 @@ import java.lang.Exception
 /**
  * @author Paulo Cruz
  */
-class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? = null) {
-    init {
-        RequestAuthorization.authenticator = authenticator
-    }
+object ApioConsumer {
 
     @JvmOverloads
     fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),

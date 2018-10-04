@@ -86,7 +86,7 @@ fun Thing.getOperation(operationId: String): Operation? {
 }
 
 fun OperationForm.getFormProperties(onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
-	ApioConsumer().requestProperties(id, {
+	ApioConsumer.requestProperties(id, {
 		this.properties = it
 
         onSuccess(it)

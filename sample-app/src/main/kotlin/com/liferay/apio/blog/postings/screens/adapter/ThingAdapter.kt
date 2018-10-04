@@ -42,19 +42,19 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 
 	override fun onBindViewHolder(holder: ThingViewHolder, position: Int) {
 		if (members.size > position) {
-			holder?.thing = members[position]
-		} else {
-			nextPage.let {
-				HttpUrl.parse(nextPage)?.let {
-					ApioConsumer().fetch(it, onSuccess =  {
-						convert<Collection>(it)?.let {
-							val moreMembers = it.members
-							merge(members, moreMembers)
-							notifyDataSetChanged()
-						}
-					}) { }
-				}
-
+			holder.thing = members[position]
+		}
+		else {
+			nextPage?.let {
+				HttpUrl.parse(nextPage)
+			}?.also { httpUrl ->
+				ApioConsumer.fetch(httpUrl, onSuccess = { thing ->
+					convert<Collection>(thing)?.let { collection ->
+						val moreMembers = collection.members
+						merge(members, moreMembers)
+						notifyDataSetChanged()
+					}
+				})
 			}
 		}
 	}

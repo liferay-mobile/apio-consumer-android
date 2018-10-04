@@ -19,7 +19,7 @@ import okhttp3.Request
 /**
  * @author Paulo Cruz
  */
-class BasicAuthenticator(private val credentials: String?) : ApioAuthenticator {
+class BasicAuthenticator(private val credentials: String) : ApioAuthenticator {
 
     override fun authenticate(request: Request): Request {
         return request.newBuilder()
