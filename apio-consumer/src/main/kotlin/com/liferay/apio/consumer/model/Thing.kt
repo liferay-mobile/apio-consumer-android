@@ -21,26 +21,25 @@ import com.liferay.apio.consumer.graph.ApioGraph
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 
+/**
+ * @author Javier Gamarra
+ */
 typealias ThingType = List<String>
 
 @Parcelize
 data class Thing(val id: String, val type: ThingType, val attributes: Map<String, @RawValue Any>,
-    val name: String? = null, val operations: MutableMap<String, Operation> = mutableMapOf()) : Parcelable
+    val name: String? = null, val operations: MutableMap<String, Operation> = mutableMapOf()) : Parcelable {
 
-@Parcelize
-data class Relation(val id: String) : Parcelable
+    fun merge(value: Thing?): Thing = value?.let { Thing(id, type, attributes + it.attributes) } ?: this
 
-@Parcelize
-data class Operation(val id: String, val target: String, val type: ThingType, val method: String,
-    var form: OperationForm?) : Parcelable
+    fun containsOperation(operationId: String): Boolean = operations.keys.none { it.contains(operationId) }
 
-@Parcelize
-data class OperationForm(val id: String, var properties: List<Property> = listOf()) : Parcelable
+    fun getOperation(operationId: String): Operation? {
+        val key = operations.keys.firstOrNull { it.contains(operationId) }
 
-@Parcelize
-data class Property(val type: ThingType, val name: String, val required: Boolean) : Parcelable
-
-data class Context(val vocab: String, val attributeContext: Map<String, Any>)
+        return key?.let { operations[it] }
+    }
+}
 
 fun contextFrom(jsonObject: List<Any>?, parentContext: Context?): Context? {
     return jsonObject?.let {
@@ -64,33 +63,4 @@ fun contextFrom(jsonObject: List<Any>?, parentContext: Context?): Context? {
     }
 }
 
-fun Context.isId(attributeName: String): Boolean =
-    (attributeContext[attributeName] as? Map<String, Any>)
-        ?.let { it["@type"] }
-        ?.let { it == "@id" }
-        ?: false
-
 operator fun Thing.get(attribute: String): Any? = attributes[attribute]
-
-operator fun Relation.get(attribute: String): Any? = ApioGraph.graph[id]?.value?.get(attribute)
-
-fun Thing.merge(value: Thing?): Thing = value?.let { Thing(id, type, attributes + it.attributes) } ?: this
-
-fun Thing.containsOperation(operationId: String): Boolean = operations.keys.none { it.contains(operationId) }
-
-fun Thing.getOperation(operationId: String): Operation? {
-    val key = operations.keys.firstOrNull { it.contains(operationId) }
-
-    return key?.let { operations[it] }
-}
-
-fun OperationForm.getFormProperties(onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
-    ApioConsumer.requestProperties(id, {
-        this.properties = it
-
-        onSuccess(it)
-    }, onError)
-}
-
-
-

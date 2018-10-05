@@ -15,10 +15,9 @@
 package com.liferay.apio.consumer.graph
 
 import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.model.merge
 
 /**
- * @author Paulo Cruz
+ * @author Javier Gamarra
  */
 object ApioGraph {
     internal val graph: MutableMap<String, Node> = mutableMapOf()
