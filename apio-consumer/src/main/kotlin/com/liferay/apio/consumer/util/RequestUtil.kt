@@ -26,6 +26,7 @@ import java.io.InputStream
 import java.net.URLConnection
 
 /**
+ * @author Javier Gamarra
  * @author Paulo Cruz
  */
 class RequestUtil {

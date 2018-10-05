@@ -33,7 +33,7 @@ import okhttp3.internal.http.HttpMethod
 import java.io.IOException
 
 /**
- * @author Paulo Cruz
+ * @author Javier Gamarra
  */
 internal class RequestExecutor {
 

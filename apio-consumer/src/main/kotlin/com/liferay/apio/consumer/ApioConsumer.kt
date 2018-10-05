@@ -15,6 +15,8 @@
 package com.liferay.apio.consumer
 
 import com.github.kittinunf.result.Result
+import com.github.kittinunf.result.failure
+import com.github.kittinunf.result.success
 import com.liferay.apio.consumer.authenticator.ApioAuthenticator
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
@@ -27,13 +29,26 @@ import kotlinx.coroutines.experimental.withContext
 import okhttp3.HttpUrl
 
 /**
+ * @author Javier Gamarra
  * @author Paulo Cruz
  */
 object ApioConsumer {
 
+    fun fetch(url: HttpUrl, onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
+        fetch(url, emptyMap(), emptyList(), onSuccess, onError)
+    }
+
+    fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
+        onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
+
+        fetch(url, fields, embedded) {
+            it.fold(onSuccess, onError)
+        }
+    }
+
     @JvmOverloads
     fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
-        onSuccess: (Thing) -> Unit = emptyOnSuccess(), onError: (Exception) -> Unit = emptyOnError()) {
+        onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
 
         launch(UI) {
             withContext(CommonPool) {
@@ -42,14 +57,23 @@ object ApioConsumer {
                 } catch (e: Exception) {
                     Result.error(e)
                 }
-            }.fold(onSuccess, onError)
+            }.also(onComplete)
+        }
+    }
+
+    fun performOperation(thingId: String, operationId: String,
+        fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
+        onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
+
+        performOperation(thingId, operationId, fillFields) {
+            it.fold(onSuccess, onError)
         }
     }
 
     @JvmOverloads
     fun performOperation(thingId: String, operationId: String,
         fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
-        onSuccess: (Thing) -> Unit = emptyOnSuccess(), onError: (Exception) -> Unit = emptyOnError()) {
+        onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
 
         launch(UI) {
             withContext(CommonPool) {
@@ -58,7 +82,7 @@ object ApioConsumer {
                 } catch (e: Exception) {
                     Result.error(e)
                 }
-            }.fold(onSuccess, onError)
+            }.also(onComplete)
         }
     }
 
@@ -67,7 +91,7 @@ object ApioConsumer {
         RequestAuthorization.authenticator = authenticator
     }
 
-    internal fun requestProperties(url: String, onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
+    internal fun requestProperties(url: String, onComplete: (Result<List<Property>, Exception>) -> Unit) {
         launch(UI) {
             withContext(CommonPool) {
                 try {
@@ -75,11 +99,11 @@ object ApioConsumer {
                 } catch (e: Exception) {
                     Result.error(e)
                 }
-            }.fold(onSuccess, onError)
+            }.also(onComplete)
         }
     }
 
+    private fun emptyOnComplete() = { _: Result<Thing, Exception> -> }
     private fun emptyOnError() = { _: Exception -> }
     private fun emptyFillFields() = { _: List<Property> -> emptyMap<String, Any>() }
-    private fun emptyOnSuccess() = { _: Thing -> }
 }

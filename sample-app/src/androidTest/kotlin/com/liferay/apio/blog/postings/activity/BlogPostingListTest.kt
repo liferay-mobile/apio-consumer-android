@@ -76,7 +76,7 @@ class BlogPostingListTest {
 		url?.let {
 			ApioConsumer.setAuthenticator(BasicAuthenticator(credentials))
 
-			ApioConsumer.fetch(url, mapOf(), listOf(), {
+			ApioConsumer.fetch(url, {
 				Assert.assertNotNull(it)
 				Assert.assertEquals(TEST_DOMAIN + "groups/57459/blogs", it.id)
 			}) {

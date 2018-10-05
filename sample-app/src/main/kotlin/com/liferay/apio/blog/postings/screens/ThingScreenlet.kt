@@ -89,7 +89,7 @@ class ThingScreenlet @JvmOverloads constructor(
 		}
 
 		HttpUrl.parse(thingId)?.let {
-			ApioConsumer.fetch(it, onSuccess = { thing ->
+			ApioConsumer.fetch(it, { thing ->
 				if (scenario != null) {
 					this.scenario = scenario
 				}
@@ -97,7 +97,7 @@ class ThingScreenlet @JvmOverloads constructor(
 				this.thing = thing
 
 				onComplete?.invoke(this)
-			}, onError = { exception ->
+			}, { exception ->
 				baseView?.showError(exception.message)
 
 				onComplete?.invoke(this)
