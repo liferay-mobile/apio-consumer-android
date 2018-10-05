@@ -30,6 +30,7 @@ import okhttp3.Response
 class ThingParser {
 
     companion object {
+        @JvmStatic
         @Throws(CantParseToThingException::class)
         fun parse(response: Response): Thing {
             return response.body()?.let {
@@ -46,6 +47,7 @@ class ThingParser {
             } ?: throw CantParseToThingException()
         }
 
+        @JvmStatic
         fun parseType(type: Any?): ThingType {
             return (type as? String)?.let { listOf(it) }
                 ?: type as? ThingType

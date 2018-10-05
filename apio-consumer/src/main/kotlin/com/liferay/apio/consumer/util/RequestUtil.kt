@@ -29,7 +29,7 @@ import java.net.URLConnection
  * @author Javier Gamarra
  * @author Paulo Cruz
  */
-class RequestUtil {
+internal class RequestUtil {
 
     companion object {
         fun createRequest(httpUrl: HttpUrl?, authenticator: ApioAuthenticator?): Request {
