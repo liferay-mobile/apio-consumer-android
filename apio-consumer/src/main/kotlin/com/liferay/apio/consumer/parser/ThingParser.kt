@@ -18,13 +18,14 @@ import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
+import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.exception.CantParseToThingException
 import com.liferay.apio.consumer.graph.ApioGraph
 import com.liferay.apio.consumer.model.*
 import okhttp3.Response
 
 /**
- * @author Paulo Cruz
+ * @author Javier Gamarra
  */
 class ThingParser {
 
@@ -58,6 +59,28 @@ class ThingParser {
             val jsonObject = Gson().fromJson<Map<String, Any>>(json, mapType)
 
             return flatten(jsonObject, null)
+        }
+
+        private fun contextFrom(jsonObject: List<Any>?, parentContext: Context?): Context? {
+            return jsonObject?.let {
+                val vocab =
+                    it.find { it is Map<*, *> && it["@vocab"] is String }
+                        .let { (it as? Map<*, *>)?.get("@vocab") as? String }
+                        ?: parentContext?.vocab
+                        ?: throw ApioException("Empty Vocab")
+
+                val attributeContexts = HashMap<String, Any>()
+
+                it.filter {
+                    it is Map<*, *>
+                }.forEach {
+                    (it as? Map<String, Any>)?.filterKeys { it != "@vocab" }?.let {
+                        attributeContexts.putAll(it)
+                    }
+                }
+
+                Context(vocab, attributeContexts)
+            }
         }
 
         private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair<Thing, Map<String, Thing?>>? {

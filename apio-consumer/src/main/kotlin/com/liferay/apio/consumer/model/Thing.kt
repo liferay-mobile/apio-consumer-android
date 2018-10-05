@@ -41,26 +41,4 @@ data class Thing(val id: String, val type: ThingType, val attributes: Map<String
     }
 }
 
-fun contextFrom(jsonObject: List<Any>?, parentContext: Context?): Context? {
-    return jsonObject?.let {
-        val vocab =
-            it.find { it is Map<*, *> && it["@vocab"] is String }
-                .let { (it as? Map<*, *>)?.get("@vocab") as? String }
-                ?: parentContext?.vocab
-                ?: throw ApioException("Empty Vocab")
-
-        val attributeContexts = HashMap<String, Any>()
-
-        it
-            .filter { it is Map<*, *> }
-            .forEach {
-                (it as? Map<String, Any>)?.filterKeys { it != "@vocab" }?.let {
-                    attributeContexts.putAll(it)
-                }
-            }
-
-        Context(vocab, attributeContexts)
-    }
-}
-
 operator fun Thing.get(attribute: String): Any? = attributes[attribute]
