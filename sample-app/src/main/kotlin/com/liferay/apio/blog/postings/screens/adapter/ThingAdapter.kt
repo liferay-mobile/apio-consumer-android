@@ -47,7 +47,7 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 			nextPage?.let {
 				HttpUrl.parse(nextPage)
 			}?.also { httpUrl ->
-				ApioConsumer.fetch(httpUrl, { thing ->
+				ApioConsumer().fetch(httpUrl, onSuccess = { thing ->
 					convert<Collection>(thing)?.let { collection ->
 						val moreMembers = collection.members
 						merge(members, moreMembers)

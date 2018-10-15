@@ -32,23 +32,28 @@ import okhttp3.HttpUrl
  * @author Javier Gamarra
  * @author Paulo Cruz
  */
-object ApioConsumer {
+class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? = null) {
 
-	fun fetch(url: HttpUrl, onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
-		fetch(url, emptyMap(), emptyList(), onSuccess, onError)
+	init {
+		RequestAuthorization.authenticator = authenticator
 	}
 
-	fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
-		onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
+	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = null, fields: Map<String, List<String>> = emptyMap(),
+		embedded: List<String> = emptyList(), onSuccess: (Thing) -> Unit,
+		onError: (Exception) -> Unit = emptyOnError()) {
 
-		fetch(url, fields, embedded) {
+		fetch(url, authenticator, fields, embedded) {
 			it.fold(onSuccess, onError)
 		}
 	}
 
 	@JvmOverloads
-	fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
-		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
+	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = null, fields: Map<String, List<String>> = emptyMap(),
+		embedded: List<String> = emptyList(), onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
+
+		authenticator?.run {
+			setAuthenticator(authenticator)
+		}
 
 		launch(UI) {
 			withContext(CommonPool) {
@@ -61,19 +66,23 @@ object ApioConsumer {
 		}
 	}
 
-	fun performOperation(thingId: String, operationId: String,
+	fun performOperation(thingId: String, operationId: String, authenticator: ApioAuthenticator? = null,
 		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
 		onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
 
-		performOperation(thingId, operationId, fillFields) {
+		performOperation(thingId, operationId, authenticator, fillFields) {
 			it.fold(onSuccess, onError)
 		}
 	}
 
 	@JvmOverloads
-	fun performOperation(thingId: String, operationId: String,
+	fun performOperation(thingId: String, operationId: String, authenticator: ApioAuthenticator? = null,
 		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
 		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
+
+		authenticator?.run {
+			setAuthenticator(authenticator)
+		}
 
 		launch(UI) {
 			withContext(CommonPool) {

@@ -84,12 +84,14 @@ class ThingScreenlet @JvmOverloads constructor(
 	fun load(thingId: String, credentials: String? = null, scenario: Scenario? = null,
 		onComplete: ((ThingScreenlet) -> Unit)? = null) {
 
-		credentials?.let {
-			ApioConsumer.setAuthenticator(BasicAuthenticator(credentials))
+		val authenticator = credentials?.let {
+			BasicAuthenticator(credentials)
 		}
 
+		val apioConsumer = ApioConsumer(authenticator)
+
 		HttpUrl.parse(thingId)?.let {
-			ApioConsumer.fetch(it, { thing ->
+			apioConsumer.fetch(it, onSuccess = { thing ->
 				if (scenario != null) {
 					this.scenario = scenario
 				}
@@ -97,7 +99,7 @@ class ThingScreenlet @JvmOverloads constructor(
 				this.thing = thing
 
 				onComplete?.invoke(this)
-			}, { exception ->
+			}, onError = { exception ->
 				baseView?.showError(exception.message)
 
 				onComplete?.invoke(this)
@@ -113,7 +115,6 @@ class ThingScreenlet @JvmOverloads constructor(
 			onEventFor(Event.FetchLayout(thing = it, scenario = scenario))
 		}
 	}
-
 	init {
 		val typedArray = attrs?.let { context.theme.obtainStyledAttributes(it, R.styleable.ThingScreenlet, 0, 0) }
 

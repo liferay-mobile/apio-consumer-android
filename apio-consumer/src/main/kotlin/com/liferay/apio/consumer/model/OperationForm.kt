@@ -33,7 +33,7 @@ data class OperationForm(val id: String, var properties: List<Property> = listOf
 	}
 
 	fun getFormProperties(onComplete: (Result<List<Property>, Exception>) -> Unit) {
-		ApioConsumer.requestProperties(id) {
+		ApioConsumer().requestProperties(id) {
 			it.success { properties ->
 				this.properties = properties
 			}

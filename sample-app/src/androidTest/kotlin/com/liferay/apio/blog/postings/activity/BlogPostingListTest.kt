@@ -74,9 +74,9 @@ class BlogPostingListTest {
 		val url = HttpUrl.parse("http://screens.liferay.org.es/o/api/p/groups/57459/blogs")
 
 		url?.let {
-			ApioConsumer.setAuthenticator(BasicAuthenticator(credentials))
+			val apioConsumer = ApioConsumer(BasicAuthenticator(credentials))
 
-			ApioConsumer.fetch(url, {
+			apioConsumer.fetch(url, {
 				Assert.assertNotNull(it)
 				Assert.assertEquals(TEST_DOMAIN + "groups/57459/blogs", it.id)
 			}) {
