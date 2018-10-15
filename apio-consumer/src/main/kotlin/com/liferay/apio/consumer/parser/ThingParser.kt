@@ -22,6 +22,7 @@ import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.exception.CantParseToThingException
 import com.liferay.apio.consumer.cache.ThingsCache
 import com.liferay.apio.consumer.model.*
+import com.liferay.apio.consumer.util.RequestUtil
 import okhttp3.Response
 
 /**
@@ -40,7 +41,7 @@ class ThingParser {
 				ThingsCache.updateNodes(thing, embeddedThings)
 
 				if (!response.isSuccessful) {
-					throw CantParseToThingException()
+					throw RequestUtil.getResponseException(thing, response)
 				}
 
 				thing
