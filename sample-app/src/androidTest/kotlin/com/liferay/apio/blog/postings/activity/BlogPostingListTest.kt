@@ -46,7 +46,7 @@ class BlogPostingListTest {
 	@JvmField
 	val activityRule = ActivityTestRule(MainActivity::class.java)
 
-	private val credentials = Credentials.basic("vulcan@liferay.com", "vulcan")
+	private val credentials = Credentials.basic("apio@liferay.com", "apio")
 
 	@Before
 	fun unlockScreen() {
