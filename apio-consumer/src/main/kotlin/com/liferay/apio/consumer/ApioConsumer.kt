@@ -15,8 +15,6 @@
 package com.liferay.apio.consumer
 
 import com.github.kittinunf.result.Result
-import com.github.kittinunf.result.failure
-import com.github.kittinunf.result.success
 import com.liferay.apio.consumer.authenticator.ApioAuthenticator
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
@@ -38,22 +36,29 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 		RequestAuthorization.authenticator = authenticator
 	}
 
-	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = null, fields: Map<String, List<String>> = emptyMap(),
-		embedded: List<String> = emptyList(), onSuccess: (Thing) -> Unit,
-		onError: (Exception) -> Unit = emptyOnError()) {
+	@JvmOverloads
+	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
+		fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(), callback: ApioCallback) {
+
+		fetch(url, authenticator, fields, embedded, callback::onComplete)
+	}
+
+	@JvmSynthetic
+	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
+		fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
+		onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
 
 		fetch(url, authenticator, fields, embedded) {
 			it.fold(onSuccess, onError)
 		}
 	}
 
-	@JvmOverloads
-	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = null, fields: Map<String, List<String>> = emptyMap(),
-		embedded: List<String> = emptyList(), onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
+	@JvmSynthetic
+	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
+		fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
+		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
 
-		authenticator?.run {
-			setAuthenticator(authenticator)
-		}
+		setAuthenticator(authenticator)
 
 		launch(UI) {
 			withContext(CommonPool) {
@@ -66,7 +71,17 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 		}
 	}
 
-	fun performOperation(thingId: String, operationId: String, authenticator: ApioAuthenticator? = null,
+	@JvmOverloads
+	fun performOperation(thingId: String, operationId: String,
+		authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
+		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(), callback: ApioCallback) {
+
+		performOperation(thingId, operationId, authenticator, fillFields, callback::onComplete)
+	}
+
+	@JvmSynthetic
+	fun performOperation(thingId: String, operationId: String,
+		authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
 		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
 		onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
 
@@ -75,14 +90,13 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 		}
 	}
 
-	@JvmOverloads
-	fun performOperation(thingId: String, operationId: String, authenticator: ApioAuthenticator? = null,
+	@JvmSynthetic
+	fun performOperation(thingId: String, operationId: String,
+		authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
 		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
 		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
 
-		authenticator?.run {
-			setAuthenticator(authenticator)
-		}
+		setAuthenticator(authenticator)
 
 		launch(UI) {
 			withContext(CommonPool) {
@@ -95,7 +109,6 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 		}
 	}
 
-	@JvmOverloads
 	fun setAuthenticator(authenticator: ApioAuthenticator? = null) {
 		RequestAuthorization.authenticator = authenticator
 	}
