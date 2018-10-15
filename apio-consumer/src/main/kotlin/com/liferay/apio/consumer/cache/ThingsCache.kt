@@ -39,6 +39,7 @@ object ThingsCache {
 		thingsCache.putAll(nodes)
 	}
 
+	@JvmStatic
 	fun clearCache() {
 		thingsCache.clear()
 	}
