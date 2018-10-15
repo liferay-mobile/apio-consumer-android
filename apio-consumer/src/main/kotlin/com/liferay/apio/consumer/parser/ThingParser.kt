@@ -20,7 +20,7 @@ import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.exception.CantParseToThingException
-import com.liferay.apio.consumer.graph.ApioGraph
+import com.liferay.apio.consumer.cache.ThingsCache
 import com.liferay.apio.consumer.model.*
 import okhttp3.Response
 
@@ -37,7 +37,7 @@ class ThingParser {
 				parse(it.string())
 			}?.let {
 				val (thing, embeddedThings) = it
-				ApioGraph.updateNodes(thing, embeddedThings)
+				ThingsCache.updateNodes(thing, embeddedThings)
 
 				if (!response.isSuccessful) {
 					throw CantParseToThingException()

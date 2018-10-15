@@ -12,35 +12,35 @@
  * details.
  */
 
-package com.liferay.apio.consumer.graph
+package com.liferay.apio.consumer.cache
 
 import com.liferay.apio.consumer.model.Thing
 
 /**
  * @author Javier Gamarra
  */
-object ApioGraph {
-	internal val graph: MutableMap<String, Node> = mutableMapOf()
+object ThingsCache {
+	private val thingsCache: MutableMap<String, Node> = mutableMapOf()
 
-	operator fun ApioGraph.get(id: String): Node? {
-		return graph[id]
+	operator fun ThingsCache.get(id: String): Node? {
+		return thingsCache[id]
 	}
 
 	internal fun updateNodes(thing: Thing, embeddedThings: Map<String, Thing?>) {
 		val nodes = embeddedThings.map { (id, embeddedThing) ->
-			val previousThing = graph[id]?.value
+			val previousThing = thingsCache[id]?.value
 
 			val newThing = embeddedThing?.merge(previousThing) ?: previousThing
 
 			id to Node(id, newThing)
 		}
 
-		graph[thing.id] = Node(thing.id, thing)
-		graph.putAll(nodes)
+		thingsCache[thing.id] = Node(thing.id, thing)
+		thingsCache.putAll(nodes)
 	}
 
-	fun clearGraph() {
-		graph.clear()
+	fun clearCache() {
+		thingsCache.clear()
 	}
 }
 

@@ -15,7 +15,8 @@
 package com.liferay.apio.consumer.model
 
 import android.os.Parcelable
-import com.liferay.apio.consumer.graph.ApioGraph
+import com.liferay.apio.consumer.cache.ThingsCache
+import com.liferay.apio.consumer.cache.ThingsCache.get
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -24,4 +25,4 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Relation(val id: String) : Parcelable
 
-operator fun Relation.get(attribute: String): Any? = ApioGraph.graph[id]?.value?.get(attribute)
+operator fun Relation.get(attribute: String): Any? = ThingsCache[id]?.value?.get(attribute)

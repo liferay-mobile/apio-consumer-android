@@ -20,7 +20,8 @@ import com.liferay.apio.consumer.exception.CantParseToThingException
 import com.liferay.apio.consumer.exception.InvalidRequestUrlException
 import com.liferay.apio.consumer.exception.ThingNotFoundException
 import com.liferay.apio.consumer.exception.ThingWithoutOperationException
-import com.liferay.apio.consumer.graph.ApioGraph
+import com.liferay.apio.consumer.cache.ThingsCache
+import com.liferay.apio.consumer.cache.ThingsCache.get
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.parser.ThingParser
@@ -43,7 +44,7 @@ internal class RequestExecutor {
 		fun performOperation(thingId: String, operationId: String,
 			fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() }): Thing {
 
-			val thing = ApioGraph.graph[thingId]?.value
+			val thing = ThingsCache[thingId]?.value
 				?: throw ThingNotFoundException()
 
 			val operation = thing.operations[operationId]

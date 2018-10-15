@@ -15,9 +15,6 @@
 package com.liferay.apio.consumer.model
 
 import android.os.Parcelable
-import com.liferay.apio.consumer.ApioConsumer
-import com.liferay.apio.consumer.exception.ApioException
-import com.liferay.apio.consumer.graph.ApioGraph
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 
