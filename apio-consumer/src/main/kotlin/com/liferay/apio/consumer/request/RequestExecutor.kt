@@ -39,8 +39,8 @@ import java.io.IOException
 internal class RequestExecutor {
 
 	companion object {
-		@Throws(CantParseToThingException::class, IOException::class, ThingNotFoundException::class,
-			ThingWithoutOperationException::class)
+		@Throws(CantParseToThingException::class, InvalidRequestUrlException::class, IOException::class,
+			ThingNotFoundException::class, ThingWithoutOperationException::class)
 		fun performOperation(thingId: String, operationId: String,
 			fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() }): Thing {
 
@@ -111,7 +111,7 @@ internal class RequestExecutor {
 			return execute(request)
 		}
 
-		@Throws(IOException::class)
+		@Throws(IOException::class, InvalidRequestUrlException::class)
 		private fun requestOperation(url: String, method: String, attributes: Map<String, Any> = emptyMap())
 			: Response {
 
@@ -123,8 +123,10 @@ internal class RequestExecutor {
 				}
 			}
 
+			val httpUrl = HttpUrl.parse(url) ?: throw InvalidRequestUrlException()
+
 			val request =
-				RequestUtil.createRequest(HttpUrl.parse(url), method, requestBody, RequestAuthorization.authenticator)
+				RequestUtil.createRequest(httpUrl, method, requestBody, RequestAuthorization.authenticator)
 
 			return RequestExecutor.execute(request)
 		}

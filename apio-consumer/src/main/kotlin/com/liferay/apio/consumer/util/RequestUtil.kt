@@ -32,16 +32,16 @@ import java.net.URLConnection
 internal class RequestUtil {
 
 	companion object {
-		fun createRequest(httpUrl: HttpUrl?, authenticator: ApioAuthenticator?): Request {
+		fun createRequest(httpUrl: HttpUrl, authenticator: ApioAuthenticator?): Request {
 			val request = Request.Builder()
-				.url(httpUrl!!)
+				.url(httpUrl)
 				.addHeader("Accept", "application/ld+json")
 				.build()
 
 			return authenticator?.authenticate(request) ?: request
 		}
 
-		fun createRequest(httpUrl: HttpUrl?, method: String, requestBody: RequestBody?,
+		fun createRequest(httpUrl: HttpUrl, method: String, requestBody: RequestBody?,
 			authenticator: ApioAuthenticator?): Request {
 
 			return createRequest(httpUrl, authenticator)
