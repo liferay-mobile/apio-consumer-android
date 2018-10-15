@@ -28,17 +28,17 @@ typealias ThingType = List<String>
 
 @Parcelize
 data class Thing(val id: String, val type: ThingType, val attributes: Map<String, @RawValue Any>,
-    val name: String? = null, val operations: MutableMap<String, Operation> = mutableMapOf()) : Parcelable {
+	val name: String? = null, val operations: MutableMap<String, Operation> = mutableMapOf()) : Parcelable {
 
-    fun merge(value: Thing?): Thing = value?.let { Thing(id, type, attributes + it.attributes) } ?: this
+	fun merge(value: Thing?): Thing = value?.let { Thing(id, type, attributes + it.attributes) } ?: this
 
-    fun containsOperation(operationId: String): Boolean = operations.keys.none { it.contains(operationId) }
+	fun containsOperation(operationId: String): Boolean = operations.keys.none { it.contains(operationId) }
 
-    fun getOperation(operationId: String): Operation? {
-        val key = operations.keys.firstOrNull { it.contains(operationId) }
+	fun getOperation(operationId: String): Operation? {
+		val key = operations.keys.firstOrNull { it.contains(operationId) }
 
-        return key?.let { operations[it] }
-    }
+		return key?.let { operations[it] }
+	}
 }
 
 operator fun Thing.get(attribute: String): Any? = attributes[attribute]

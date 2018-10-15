@@ -20,28 +20,28 @@ import com.liferay.apio.consumer.model.Thing
  * @author Javier Gamarra
  */
 object ApioGraph {
-    internal val graph: MutableMap<String, Node> = mutableMapOf()
+	internal val graph: MutableMap<String, Node> = mutableMapOf()
 
-    operator fun ApioGraph.get(id: String): Node? {
-        return graph[id]
-    }
+	operator fun ApioGraph.get(id: String): Node? {
+		return graph[id]
+	}
 
-    internal fun updateNodes(thing: Thing, embeddedThings: Map<String, Thing?>) {
-        val nodes = embeddedThings.map { (id, embeddedThing) ->
-            val previousThing = graph[id]?.value
+	internal fun updateNodes(thing: Thing, embeddedThings: Map<String, Thing?>) {
+		val nodes = embeddedThings.map { (id, embeddedThing) ->
+			val previousThing = graph[id]?.value
 
-            val newThing = embeddedThing?.merge(previousThing) ?: previousThing
+			val newThing = embeddedThing?.merge(previousThing) ?: previousThing
 
-            id to Node(id, newThing)
-        }
+			id to Node(id, newThing)
+		}
 
-        graph[thing.id] = Node(thing.id, thing)
-        graph.putAll(nodes)
-    }
+		graph[thing.id] = Node(thing.id, thing)
+		graph.putAll(nodes)
+	}
 
-    fun clearGraph() {
-        graph.clear()
-    }
+	fun clearGraph() {
+		graph.clear()
+	}
 }
 
 class Node(val id: String, var value: Thing? = null)

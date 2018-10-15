@@ -22,4 +22,4 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class Operation(val id: String, val target: String, val type: ThingType, val method: String,
-    var form: OperationForm?) : Parcelable
+	var form: OperationForm?) : Parcelable

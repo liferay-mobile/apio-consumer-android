@@ -26,4 +26,4 @@ class InvalidRequestUrlException : ApioException("Invalid request URL")
 class ThingNotFoundException : ApioException("Thing not found")
 
 class ThingWithoutOperationException(thingId: String, operationId: String)
-    : ApioException("Thing $thingId doesn't have the operation $operationId")
+	: ApioException("Thing $thingId doesn't have the operation $operationId")

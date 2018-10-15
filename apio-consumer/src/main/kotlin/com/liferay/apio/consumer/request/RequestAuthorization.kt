@@ -20,6 +20,6 @@ import com.liferay.apio.consumer.authenticator.ApioAuthenticator
  * @author Paulo Cruz
  */
 internal object RequestAuthorization {
-    var authenticator: ApioAuthenticator? = null
+	var authenticator: ApioAuthenticator? = null
 }
 

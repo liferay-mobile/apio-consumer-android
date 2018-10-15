@@ -19,11 +19,11 @@ package com.liferay.apio.consumer.model
  */
 data class Context(val vocab: String, val attributeContext: Map<String, Any>) {
 
-    fun isId(attributeName: String): Boolean {
-        return (attributeContext[attributeName] as? Map<String, Any>)
-            ?.let { it["@type"] }
-            ?.let { it == "@id" }
-            ?: false
-    }
+	fun isId(attributeName: String): Boolean {
+		return (attributeContext[attributeName] as? Map<String, Any>)
+			?.let { it["@type"] }
+			?.let { it == "@id" }
+			?: false
+	}
 
 }

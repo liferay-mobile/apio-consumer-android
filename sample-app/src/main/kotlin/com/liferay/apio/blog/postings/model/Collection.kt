@@ -26,9 +26,9 @@ import com.liferay.apio.consumer.model.get
 data class Collection(val members: List<Thing>?, val totalItems: Int?, val pages: Pages?) {
 	companion object {
 		val DEFAULT_VIEWS: MutableMap<Scenario, Int> =
-				mutableMapOf(
-						Detail to R.layout.collection_detail_custom
-				)
+			mutableMapOf(
+				Detail to R.layout.collection_detail_custom
+			)
 
 		val converter: (Thing) -> Any = { it: Thing ->
 			val member = (it["member"] as? List<Relation>)?.mapNotNull {

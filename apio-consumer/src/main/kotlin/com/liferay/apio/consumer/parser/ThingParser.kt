@@ -29,185 +29,185 @@ import okhttp3.Response
  */
 class ThingParser {
 
-    companion object {
-        @JvmStatic
-        @Throws(CantParseToThingException::class)
-        fun parse(response: Response): Thing {
-            return response.body()?.let {
-                parse(it.string())
-            }?.let {
-                val (thing, embeddedThings) = it
-                ApioGraph.updateNodes(thing, embeddedThings)
+	companion object {
+		@JvmStatic
+		@Throws(CantParseToThingException::class)
+		fun parse(response: Response): Thing {
+			return response.body()?.let {
+				parse(it.string())
+			}?.let {
+				val (thing, embeddedThings) = it
+				ApioGraph.updateNodes(thing, embeddedThings)
 
-                if (!response.isSuccessful) {
-                    throw CantParseToThingException()
-                }
+				if (!response.isSuccessful) {
+					throw CantParseToThingException()
+				}
 
-                thing
-            } ?: throw CantParseToThingException()
-        }
+				thing
+			} ?: throw CantParseToThingException()
+		}
 
-        @JvmStatic
-        fun parseType(type: Any?): ThingType {
-            return (type as? String)?.let { listOf(it) }
-                ?: type as? ThingType
-                ?: listOf()
-        }
+		@JvmStatic
+		fun parseType(type: Any?): ThingType {
+			return (type as? String)?.let { listOf(it) }
+				?: type as? ThingType
+				?: listOf()
+		}
 
-        @Throws(JsonParseException::class, JsonSyntaxException::class)
-        internal fun parse(json: String): Pair<Thing, Map<String, Thing?>>? {
-            val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
+		@Throws(JsonParseException::class, JsonSyntaxException::class)
+		internal fun parse(json: String): Pair<Thing, Map<String, Thing?>>? {
+			val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
 
-            val jsonObject = Gson().fromJson<Map<String, Any>>(json, mapType)
+			val jsonObject = Gson().fromJson<Map<String, Any>>(json, mapType)
 
-            return flatten(jsonObject, null)
-        }
+			return flatten(jsonObject, null)
+		}
 
-        private fun contextFrom(jsonObject: List<Any>?, parentContext: Context?): Context? {
-            return jsonObject?.let {
-                val vocab =
-                    it.find { it is Map<*, *> && it["@vocab"] is String }
-                        .let { (it as? Map<*, *>)?.get("@vocab") as? String }
-                        ?: parentContext?.vocab
-                        ?: throw ApioException("Empty Vocab")
+		private fun contextFrom(jsonObject: List<Any>?, parentContext: Context?): Context? {
+			return jsonObject?.let {
+				val vocab =
+					it.find { it is Map<*, *> && it["@vocab"] is String }
+						.let { (it as? Map<*, *>)?.get("@vocab") as? String }
+						?: parentContext?.vocab
+						?: throw ApioException("Empty Vocab")
 
-                val attributeContexts = HashMap<String, Any>()
+				val attributeContexts = HashMap<String, Any>()
 
-                it.filter {
-                    it is Map<*, *>
-                }.forEach {
-                    (it as? Map<String, Any>)?.filterKeys { it != "@vocab" }?.let {
-                        attributeContexts.putAll(it)
-                    }
-                }
+				it.filter {
+					it is Map<*, *>
+				}.forEach {
+					(it as? Map<String, Any>)?.filterKeys { it != "@vocab" }?.let {
+						attributeContexts.putAll(it)
+					}
+				}
 
-                Context(vocab, attributeContexts)
-            }
-        }
+				Context(vocab, attributeContexts)
+			}
+		}
 
-        private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair<Thing, Map<String, Thing?>>? {
-            if (!jsonObject.containsKey("statusCode")) {
-                val id = jsonObject["@id"] as String
+		private fun flatten(jsonObject: Map<String, Any>, parentContext: Context?): Pair<Thing, Map<String, Thing?>>? {
+			if (!jsonObject.containsKey("statusCode")) {
+				val id = jsonObject["@id"] as String
 
-                val types = parseType(jsonObject["@type"])
+				val types = parseType(jsonObject["@type"])
 
-                val context = contextFrom(jsonObject["@context"] as? List<Any>, parentContext)
+				val context = contextFrom(jsonObject["@context"] as? List<Any>, parentContext)
 
-                val (attributes, things) = foldTree(jsonObject, context)
+				val (attributes, things) = foldTree(jsonObject, context)
 
-                val operations = parseOperations(jsonObject)
+				val operations = parseOperations(jsonObject)
 
-                val thing = Thing(id, types, attributes, operations = operations)
+				val thing = Thing(id, types, attributes, operations = operations)
 
-                return thing to things
-            }
+				return thing to things
+			}
 
-            return null
-        }
+			return null
+		}
 
-        private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Map.Entry<String, Any> ->
-            val (attributes, things) = acc
+		private fun foldEntry(context: Context?) = { acc: FoldedAttributes, entry: Map.Entry<String, Any> ->
+			val (attributes, things) = acc
 
-            val key = entry.key
-            val value = entry.value
+			val key = entry.key
+			val value = entry.value
 
-            when {
-                value is Embedded<*, *> -> value.parse(context, things, attributes, key)
-                value is EmbeddedList<*> && value.hasMapInstances() ->
-                    value.parse(context, things, attributes, key)
-                context != null && context.isId(key) -> with(value as String) {
-                    things[this] = null
-                    attributes[key] = Relation(this)
-                }
-                else -> attributes[key] = value
-            }
+			when {
+				value is Embedded<*, *> -> value.parse(context, things, attributes, key)
+				value is EmbeddedList<*> && value.hasMapInstances() ->
+					value.parse(context, things, attributes, key)
+				context != null && context.isId(key) -> with(value as String) {
+					things[this] = null
+					attributes[key] = Relation(this)
+				}
+				else -> attributes[key] = value
+			}
 
-            attributes to things
-        }
+			attributes to things
+		}
 
-        private fun foldTree(jsonObject: Map<String, Any>,
-            context: Context?): Pair<MutableMap<String, Any>, MutableMap<String, Thing?>> {
-            return jsonObject
-                .filter { it.key !in listOf("@id", "@type", "@context") }
-                .entries
-                .fold(mutableMapOf<String, Any>() to mutableMapOf(), foldEntry(context))
-        }
+		private fun foldTree(jsonObject: Map<String, Any>,
+			context: Context?): Pair<MutableMap<String, Any>, MutableMap<String, Thing?>> {
+			return jsonObject
+				.filter { it.key !in listOf("@id", "@type", "@context") }
+				.entries
+				.fold(mutableMapOf<String, Any>() to mutableMapOf(), foldEntry(context))
+		}
 
-        private fun Embedded<*, *>.parse(context: Context?, things: MutableMap<String, Thing?>,
-            attributes: MutableMap<String, Any>, key: String) {
+		private fun Embedded<*, *>.parse(context: Context?, things: MutableMap<String, Thing?>,
+			attributes: MutableMap<String, Any>, key: String) {
 
-            (this as? Embedded<String, Any>)?.apply {
-                if (this.containsKey("@id")) {
-                    val result = flatten(this, context)
+			(this as? Embedded<String, Any>)?.apply {
+				if (this.containsKey("@id")) {
+					val result = flatten(this, context)
 
-                    result?.let {
-                        val (thing, embeddedThings) = it
-                        attributes[key] = Relation(thing.id)
+					result?.let {
+						val (thing, embeddedThings) = it
+						attributes[key] = Relation(thing.id)
 
-                        things.put(thing.id, thing)
+						things.put(thing.id, thing)
 
-                        things.putAll(embeddedThings)
-                    }
-                } else {
-                    val (attr, embeddedThings) = foldTree(this, context)
+						things.putAll(embeddedThings)
+					}
+				} else {
+					val (attr, embeddedThings) = foldTree(this, context)
 
-                    things.putAll(embeddedThings)
-                    attributes[key] = attr
-                }
-            }
-        }
+					things.putAll(embeddedThings)
+					attributes[key] = attr
+				}
+			}
+		}
 
-        private fun EmbeddedList<*>.parse(context: Context?, things: MutableMap<String, Thing?>,
-            attributes: MutableMap<String, Any>, key: String) {
+		private fun EmbeddedList<*>.parse(context: Context?, things: MutableMap<String, Thing?>,
+			attributes: MutableMap<String, Any>, key: String) {
 
-            (this as? EmbeddedList<Embedded<String, Any>>)?.apply {
-                if (this.first().containsKey("@id")) {
-                    val list = this.map { flatten(it, context)!! }
-                    val mutableList = mutableListOf<Relation>()
+			(this as? EmbeddedList<Embedded<String, Any>>)?.apply {
+				if (this.first().containsKey("@id")) {
+					val list = this.map { flatten(it, context)!! }
+					val mutableList = mutableListOf<Relation>()
 
-                    for ((thing, embeddedThings) in list) {
-                        mutableList.add(Relation(thing.id))
+					for ((thing, embeddedThings) in list) {
+						mutableList.add(Relation(thing.id))
 
-                        things.put(thing.id, thing)
+						things.put(thing.id, thing)
 
-                        things.putAll(embeddedThings)
-                    }
+						things.putAll(embeddedThings)
+					}
 
-                    attributes[key] = mutableList
-                } else {
-                    val pairsList = this.map { foldTree(it, context) }
+					attributes[key] = mutableList
+				} else {
+					val pairsList = this.map { foldTree(it, context) }
 
-                    val foldedList = mutableListOf<Map<String, Any>>()
+					val foldedList = mutableListOf<Map<String, Any>>()
 
-                    for ((list, embeddedThings) in pairsList) {
-                        foldedList.add(list)
+					for ((list, embeddedThings) in pairsList) {
+						foldedList.add(list)
 
-                        things.putAll(embeddedThings)
-                    }
+						things.putAll(embeddedThings)
+					}
 
-                    attributes[key] = foldedList
-                }
-            }
-        }
+					attributes[key] = foldedList
+				}
+			}
+		}
 
-        private fun EmbeddedList<*>.hasMapInstances() = !this.filterIsInstance<Map<String, Any>>().isEmpty()
+		private fun EmbeddedList<*>.hasMapInstances() = !this.filterIsInstance<Map<String, Any>>().isEmpty()
 
-        private fun parseOperations(jsonObject: Map<String, Any>): MutableMap<String, Operation> {
-            val operationsJson = jsonObject["operation"] as? List<Map<String, Any>> ?: listOf()
+		private fun parseOperations(jsonObject: Map<String, Any>): MutableMap<String, Operation> {
+			val operationsJson = jsonObject["operation"] as? List<Map<String, Any>> ?: listOf()
 
-            return operationsJson.map {
-                val id = it["@id"] as String
-                val target = it["target"] as String
-                val method = it["method"] as String
-                val expects = it["expects"] as? String
-                val type = parseType(it["@type"])
+			return operationsJson.map {
+				val id = it["@id"] as String
+				val target = it["target"] as String
+				val method = it["method"] as String
+				val expects = it["expects"] as? String
+				val type = parseType(it["@type"])
 
-                val form = expects?.let { OperationForm(it) }
+				val form = expects?.let { OperationForm(it) }
 
-                id to Operation(id, target, type, method, form)
-            }.toMap().toMutableMap()
-        }
-    }
+				id to Operation(id, target, type, method, form)
+			}.toMap().toMutableMap()
+		}
+	}
 
 }
 

@@ -37,96 +37,96 @@ import java.io.IOException
  */
 internal class RequestExecutor {
 
-    companion object {
-        @Throws(CantParseToThingException::class, IOException::class, ThingNotFoundException::class,
-            ThingWithoutOperationException::class)
-        fun performOperation(thingId: String, operationId: String,
-            fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() }): Thing {
+	companion object {
+		@Throws(CantParseToThingException::class, IOException::class, ThingNotFoundException::class,
+			ThingWithoutOperationException::class)
+		fun performOperation(thingId: String, operationId: String,
+			fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() }): Thing {
 
-            val thing = ApioGraph.graph[thingId]?.value
-                ?: throw ThingNotFoundException()
+			val thing = ApioGraph.graph[thingId]?.value
+				?: throw ThingNotFoundException()
 
-            val operation = thing.operations[operationId]
-                ?: throw ThingWithoutOperationException(thingId, operationId)
+			val operation = thing.operations[operationId]
+				?: throw ThingWithoutOperationException(thingId, operationId)
 
-            var attributes = emptyMap<String, Any>()
+			var attributes = emptyMap<String, Any>()
 
-            if (operation.form != null) {
-                val form = operation.form!!
+			if (operation.form != null) {
+				val form = operation.form!!
 
-                if (form.properties.isEmpty()) {
-                    form.properties = requestProperties(form.id)
-                    thing.operations[operationId] = operation
-                }
+				if (form.properties.isEmpty()) {
+					form.properties = requestProperties(form.id)
+					thing.operations[operationId] = operation
+				}
 
-                attributes = fillFields(form.properties)
-            }
+				attributes = fillFields(form.properties)
+			}
 
-            val response = requestOperation(operation.target, operation.method, attributes)
-            return ThingParser.parse(response)
-        }
+			val response = requestOperation(operation.target, operation.method, attributes)
+			return ThingParser.parse(response)
+		}
 
-        @Throws(CantParseToThingException::class, IOException::class)
-        fun requestThing(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>): Thing {
-            val httpUrl = RequestUtil.createUrl(url, fields, embedded)
-            val response = request(httpUrl)
+		@Throws(CantParseToThingException::class, IOException::class)
+		fun requestThing(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>): Thing {
+			val httpUrl = RequestUtil.createUrl(url, fields, embedded)
+			val response = request(httpUrl)
 
-            return ThingParser.parse(response)
-        }
+			return ThingParser.parse(response)
+		}
 
-        @Throws(IOException::class)
-        internal fun requestProperties(url: String): List<Property> {
-            val httpUrl = HttpUrl.parse(url) ?: throw InvalidRequestUrlException()
+		@Throws(IOException::class)
+		internal fun requestProperties(url: String): List<Property> {
+			val httpUrl = HttpUrl.parse(url) ?: throw InvalidRequestUrlException()
 
-            val response = request(httpUrl)
+			val response = request(httpUrl)
 
-            val json = response.body()?.string()
+			val json = response.body()?.string()
 
-            val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
+			val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
 
-            val jsonObject = Gson().fromJson<Map<String, Any>>(json, mapType)
+			val jsonObject = Gson().fromJson<Map<String, Any>>(json, mapType)
 
-            val supportedProperties = jsonObject["supportedProperty"] as List<Map<String, Any>>
+			val supportedProperties = jsonObject["supportedProperty"] as List<Map<String, Any>>
 
-            return supportedProperties.map {
-                val type = ThingParser.parseType(it["@type"])
-                val name = it["property"] as String
-                val required = it["required"] as Boolean
-                Property(type, name, required)
-            }
-        }
+			return supportedProperties.map {
+				val type = ThingParser.parseType(it["@type"])
+				val name = it["property"] as String
+				val required = it["required"] as Boolean
+				Property(type, name, required)
+			}
+		}
 
-        @Throws(IOException::class)
-        private fun execute(request: Request): Response {
-            val okHttpClient = OkHttpClient.Builder().build()
+		@Throws(IOException::class)
+		private fun execute(request: Request): Response {
+			val okHttpClient = OkHttpClient.Builder().build()
 
-            return okHttpClient.newCall(request).execute()
-        }
+			return okHttpClient.newCall(request).execute()
+		}
 
-        @Throws(IOException::class)
-        private fun request(httpUrl: HttpUrl): Response {
-            val request = RequestUtil.createRequest(httpUrl, RequestAuthorization.authenticator)
+		@Throws(IOException::class)
+		private fun request(httpUrl: HttpUrl): Response {
+			val request = RequestUtil.createRequest(httpUrl, RequestAuthorization.authenticator)
 
-            return execute(request)
-        }
+			return execute(request)
+		}
 
-        @Throws(IOException::class)
-        private fun requestOperation(url: String, method: String, attributes: Map<String, Any> = emptyMap())
-            : Response {
+		@Throws(IOException::class)
+		private fun requestOperation(url: String, method: String, attributes: Map<String, Any> = emptyMap())
+			: Response {
 
-            val requestBody = attributes.let {
-                if (attributes.isEmpty() && !HttpMethod.permitsRequestBody(method)) {
-                    null
-                } else {
-                    RequestUtil.getRequestBody(attributes)
-                }
-            }
+			val requestBody = attributes.let {
+				if (attributes.isEmpty() && !HttpMethod.permitsRequestBody(method)) {
+					null
+				} else {
+					RequestUtil.getRequestBody(attributes)
+				}
+			}
 
-            val request =
-                RequestUtil.createRequest(HttpUrl.parse(url), method, requestBody, RequestAuthorization.authenticator)
+			val request =
+				RequestUtil.createRequest(HttpUrl.parse(url), method, requestBody, RequestAuthorization.authenticator)
 
-            return RequestExecutor.execute(request)
-        }
-    }
+			return RequestExecutor.execute(request)
+		}
+	}
 
 }

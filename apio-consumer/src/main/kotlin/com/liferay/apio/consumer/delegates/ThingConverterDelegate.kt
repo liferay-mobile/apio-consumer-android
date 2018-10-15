@@ -21,36 +21,36 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 fun <T> converter(converter: (Thing) -> T?, onConvert: (T) -> Unit): ReadWriteProperty<Any, Thing?> =
-    ThingConverterDelegate(converter, onConvert)
+	ThingConverterDelegate(converter, onConvert)
 
 inline fun <reified T> converter(noinline onConvert: (T) -> Unit): ReadWriteProperty<Any, Thing?> =
-    ThingConverterDelegate({ convert<T>(it) }, onConvert)
+	ThingConverterDelegate({ convert<T>(it) }, onConvert)
 
 @PublishedApi
 internal class ThingConverterDelegate<T>(
-    val converter: (Thing) -> T?,
-    val onConvert: (T) -> Unit) : ReadWriteProperty<Any, Thing?> {
+	val converter: (Thing) -> T?,
+	val onConvert: (T) -> Unit) : ReadWriteProperty<Any, Thing?> {
 
-    private var thing: Thing? by observeNonNull { it.let(converter)?.apply(onConvert) }
+	private var thing: Thing? by observeNonNull { it.let(converter)?.apply(onConvert) }
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): Thing? = thing
+	override fun getValue(thisRef: Any, property: KProperty<*>): Thing? = thing
 
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: Thing?) {
-        thing = value
-    }
+	override fun setValue(thisRef: Any, property: KProperty<*>, value: Thing?) {
+		thing = value
+	}
 
 }
 
 inline fun <reified T> convert(thing: Thing): T? = convert(T::class.java, thing)
 
 fun <T> convert(clazz: Class<T>, thing: Thing): T? {
-    val t = (converters[clazz.name] as? (Thing) -> T)?.invoke(thing)
+	val t = (converters[clazz.name] as? (Thing) -> T)?.invoke(thing)
 
-    if (t == null) {
-        AnkoLogger(clazz).error { "Converter not found for this class" }
-    }
+	if (t == null) {
+		AnkoLogger(clazz).error { "Converter not found for this class" }
+	}
 
-    return t
+	return t
 }
 
 var converters: MutableMap<String, (Thing) -> Any> = mutableMapOf()

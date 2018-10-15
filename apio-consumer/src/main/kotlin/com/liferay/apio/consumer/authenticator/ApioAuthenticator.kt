@@ -21,6 +21,6 @@ import okhttp3.Request
  */
 interface ApioAuthenticator {
 
-    fun authenticate(request: Request): Request
+	fun authenticate(request: Request): Request
 
 }

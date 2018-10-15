@@ -26,20 +26,20 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class OperationForm(val id: String, var properties: List<Property> = listOf()) : Parcelable {
 
-    fun getFormProperties(onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
-        getFormProperties {
-            it.fold(onSuccess, onError)
-        }
-    }
+	fun getFormProperties(onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
+		getFormProperties {
+			it.fold(onSuccess, onError)
+		}
+	}
 
-    fun getFormProperties(onComplete: (Result<List<Property>, Exception>) -> Unit) {
-        ApioConsumer.requestProperties(id) {
-            it.success { properties ->
-                this.properties = properties
-            }
+	fun getFormProperties(onComplete: (Result<List<Property>, Exception>) -> Unit) {
+		ApioConsumer.requestProperties(id) {
+			it.success { properties ->
+				this.properties = properties
+			}
 
-            onComplete(it)
-        }
-    }
+			onComplete(it)
+		}
+	}
 
 }

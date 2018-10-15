@@ -34,76 +34,76 @@ import okhttp3.HttpUrl
  */
 object ApioConsumer {
 
-    fun fetch(url: HttpUrl, onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
-        fetch(url, emptyMap(), emptyList(), onSuccess, onError)
-    }
+	fun fetch(url: HttpUrl, onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
+		fetch(url, emptyMap(), emptyList(), onSuccess, onError)
+	}
 
-    fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
-        onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
+	fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
+		onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
 
-        fetch(url, fields, embedded) {
-            it.fold(onSuccess, onError)
-        }
-    }
+		fetch(url, fields, embedded) {
+			it.fold(onSuccess, onError)
+		}
+	}
 
-    @JvmOverloads
-    fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
-        onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
+	@JvmOverloads
+	fun fetch(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
+		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
 
-        launch(UI) {
-            withContext(CommonPool) {
-                try {
-                    Result.of(RequestExecutor.requestThing(url, fields, embedded))
-                } catch (e: Exception) {
-                    Result.error(e)
-                }
-            }.also(onComplete)
-        }
-    }
+		launch(UI) {
+			withContext(CommonPool) {
+				try {
+					Result.of(RequestExecutor.requestThing(url, fields, embedded))
+				} catch (e: Exception) {
+					Result.error(e)
+				}
+			}.also(onComplete)
+		}
+	}
 
-    fun performOperation(thingId: String, operationId: String,
-        fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
-        onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
+	fun performOperation(thingId: String, operationId: String,
+		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
+		onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
 
-        performOperation(thingId, operationId, fillFields) {
-            it.fold(onSuccess, onError)
-        }
-    }
+		performOperation(thingId, operationId, fillFields) {
+			it.fold(onSuccess, onError)
+		}
+	}
 
-    @JvmOverloads
-    fun performOperation(thingId: String, operationId: String,
-        fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
-        onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
+	@JvmOverloads
+	fun performOperation(thingId: String, operationId: String,
+		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
+		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
 
-        launch(UI) {
-            withContext(CommonPool) {
-                try {
-                    Result.of(RequestExecutor.performOperation(thingId, operationId, fillFields))
-                } catch (e: Exception) {
-                    Result.error(e)
-                }
-            }.also(onComplete)
-        }
-    }
+		launch(UI) {
+			withContext(CommonPool) {
+				try {
+					Result.of(RequestExecutor.performOperation(thingId, operationId, fillFields))
+				} catch (e: Exception) {
+					Result.error(e)
+				}
+			}.also(onComplete)
+		}
+	}
 
-    @JvmOverloads
-    fun setAuthenticator(authenticator: ApioAuthenticator? = null) {
-        RequestAuthorization.authenticator = authenticator
-    }
+	@JvmOverloads
+	fun setAuthenticator(authenticator: ApioAuthenticator? = null) {
+		RequestAuthorization.authenticator = authenticator
+	}
 
-    internal fun requestProperties(url: String, onComplete: (Result<List<Property>, Exception>) -> Unit) {
-        launch(UI) {
-            withContext(CommonPool) {
-                try {
-                    Result.of(RequestExecutor.requestProperties(url))
-                } catch (e: Exception) {
-                    Result.error(e)
-                }
-            }.also(onComplete)
-        }
-    }
+	internal fun requestProperties(url: String, onComplete: (Result<List<Property>, Exception>) -> Unit) {
+		launch(UI) {
+			withContext(CommonPool) {
+				try {
+					Result.of(RequestExecutor.requestProperties(url))
+				} catch (e: Exception) {
+					Result.error(e)
+				}
+			}.also(onComplete)
+		}
+	}
 
-    private fun emptyOnComplete() = { _: Result<Thing, Exception> -> }
-    private fun emptyOnError() = { _: Exception -> }
-    private fun emptyFillFields() = { _: List<Property> -> emptyMap<String, Any>() }
+	private fun emptyOnComplete() = { _: Result<Thing, Exception> -> }
+	private fun emptyOnError() = { _: Exception -> }
+	private fun emptyFillFields() = { _: List<Property> -> emptyMap<String, Any>() }
 }

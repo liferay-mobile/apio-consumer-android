@@ -43,8 +43,7 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 	override fun onBindViewHolder(holder: ThingViewHolder, position: Int) {
 		if (members.size > position) {
 			holder.thing = members[position]
-		}
-		else {
+		} else {
 			nextPage?.let {
 				HttpUrl.parse(nextPage)
 			}?.also { httpUrl ->
@@ -71,7 +70,7 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThingViewHolder {
 		return parent?.inflate(R.layout.thing_viewholder_default)?.let {
-            ThingViewHolder(it, this)
+			ThingViewHolder(it, this)
 		}
 	}
 

@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), ScreenletEvents {
 	}
 
 	override fun <T : BaseView> onGetCustomLayout(screenlet: ThingScreenlet, parentView: T?, thing: Thing,
-												  scenario: Scenario): Int? =
+		scenario: Scenario): Int? =
 		if (thing["headline"] == "My blog") R.layout.blog_posting_row_by_id
 		else super.onGetCustomLayout(screenlet, parentView, thing, scenario)
 

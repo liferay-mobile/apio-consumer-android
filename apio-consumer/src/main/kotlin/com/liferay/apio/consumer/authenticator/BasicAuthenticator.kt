@@ -21,14 +21,14 @@ import okhttp3.Request
  */
 class BasicAuthenticator(private val credentials: String) : ApioAuthenticator {
 
-    override fun authenticate(request: Request): Request {
-        return request.newBuilder()
-            .addHeader(AUTHORIZATION_KEY, credentials)
-            .build()
-    }
+	override fun authenticate(request: Request): Request {
+		return request.newBuilder()
+			.addHeader(AUTHORIZATION_KEY, credentials)
+			.build()
+	}
 
-    companion object {
-        private const val AUTHORIZATION_KEY: String = "Authorization"
-    }
+	companion object {
+		private const val AUTHORIZATION_KEY: String = "Authorization"
+	}
 
 }

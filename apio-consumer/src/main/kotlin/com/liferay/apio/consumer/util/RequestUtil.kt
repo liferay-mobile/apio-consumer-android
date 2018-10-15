@@ -31,94 +31,94 @@ import java.net.URLConnection
  */
 internal class RequestUtil {
 
-    companion object {
-        fun createRequest(httpUrl: HttpUrl?, authenticator: ApioAuthenticator?): Request {
-            val request = Request.Builder()
-                .url(httpUrl!!)
-                .addHeader("Accept", "application/ld+json")
-                .build()
+	companion object {
+		fun createRequest(httpUrl: HttpUrl?, authenticator: ApioAuthenticator?): Request {
+			val request = Request.Builder()
+				.url(httpUrl!!)
+				.addHeader("Accept", "application/ld+json")
+				.build()
 
-            return authenticator?.authenticate(request) ?: request
-        }
+			return authenticator?.authenticate(request) ?: request
+		}
 
-        fun createRequest(httpUrl: HttpUrl?, method: String, requestBody: RequestBody?,
-            authenticator: ApioAuthenticator?): Request {
+		fun createRequest(httpUrl: HttpUrl?, method: String, requestBody: RequestBody?,
+			authenticator: ApioAuthenticator?): Request {
 
-            return createRequest(httpUrl, authenticator)
-                .newBuilder()
-                .method(method, requestBody)
-                .build()
-        }
+			return createRequest(httpUrl, authenticator)
+				.newBuilder()
+				.method(method, requestBody)
+				.build()
+		}
 
-        fun createUrl(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>): HttpUrl {
-            return url.newBuilder()
-                .apply {
-                    fields.forEach { (type, values) ->
-                        val types = values.joinToString(separator = ",")
+		fun createUrl(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>): HttpUrl {
+			return url.newBuilder()
+				.apply {
+					fields.forEach { (type, values) ->
+						val types = values.joinToString(separator = ",")
 
-                        this.addQueryParameter("fields[$type]", types)
-                    }
-                }
-                .addQueryParameter("embedded", embedded.joinToString(","))
-                .build()
-        }
+						this.addQueryParameter("fields[$type]", types)
+					}
+				}
+				.addQueryParameter("embedded", embedded.joinToString(","))
+				.build()
+		}
 
-        fun getRequestBody(attributes: Map<String, Any>): RequestBody {
-            if (attributes.values.none { it is InputStream }) {
-                val json = Gson().toJson(attributes)
+		fun getRequestBody(attributes: Map<String, Any>): RequestBody {
+			if (attributes.values.none { it is InputStream }) {
+				val json = Gson().toJson(attributes)
 
-                return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
-            } else {
-                val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+				return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+			} else {
+				val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
-                for ((key, value) in attributes) {
-                    if (value is InputStream) {
-                        val byteArray = getByteArrayFromInputStream(value)
-                        val contentType = getContentType(attributes, value)
-                        val body = RequestBody.create(MediaType.parse(contentType), byteArray)
+				for ((key, value) in attributes) {
+					if (value is InputStream) {
+						val byteArray = getByteArrayFromInputStream(value)
+						val contentType = getContentType(attributes, value)
+						val body = RequestBody.create(MediaType.parse(contentType), byteArray)
 
-                        builder.addFormDataPart(key, key, body)
-                    } else {
-                        builder.addFormDataPart(key, value as String)
-                    }
-                }
+						builder.addFormDataPart(key, key, body)
+					} else {
+						builder.addFormDataPart(key, value as String)
+					}
+				}
 
-                return builder.build()
-            }
-        }
+				return builder.build()
+			}
+		}
 
-        fun getResponseException(thing: Thing, response: Response): Exception {
-            return thing.let {
-                it["title"] as? String
-            }?.let {
-                ApioException(it)
-            } ?: run {
-                if (response.message().isNotEmpty()) {
-                    ApioException(response.message())
-                } else {
-                    ThingNotFoundException()
-                }
-            }
-        }
+		fun getResponseException(thing: Thing, response: Response): Exception {
+			return thing.let {
+				it["title"] as? String
+			}?.let {
+				ApioException(it)
+			} ?: run {
+				if (response.message().isNotEmpty()) {
+					ApioException(response.message())
+				} else {
+					ThingNotFoundException()
+				}
+			}
+		}
 
-        private fun getByteArrayFromInputStream(inputStream: InputStream): ByteArray {
-            val byteBuffer = ByteArrayOutputStream()
+		private fun getByteArrayFromInputStream(inputStream: InputStream): ByteArray {
+			val byteBuffer = ByteArrayOutputStream()
 
-            inputStream.use { input ->
-                byteBuffer.use { output ->
-                    input.copyTo(output)
-                }
-            }
+			inputStream.use { input ->
+				byteBuffer.use { output ->
+					input.copyTo(output)
+				}
+			}
 
-            return byteBuffer.toByteArray()
-        }
+			return byteBuffer.toByteArray()
+		}
 
-        private fun getContentType(attributes: Map<String, Any>, inputStream: InputStream): String {
-            val name = attributes["name"] as? String
+		private fun getContentType(attributes: Map<String, Any>, inputStream: InputStream): String {
+			val name = attributes["name"] as? String
 
-            return URLConnection.guessContentTypeFromStream(inputStream)
-                ?: URLConnection.guessContentTypeFromName(name)
-                ?: "application/*"
-        }
-    }
+			return URLConnection.guessContentTypeFromStream(inputStream)
+				?: URLConnection.guessContentTypeFromName(name)
+				?: "application/*"
+		}
+	}
 }
