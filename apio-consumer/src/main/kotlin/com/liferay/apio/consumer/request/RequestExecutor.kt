@@ -106,7 +106,7 @@ internal class RequestExecutor {
 
 		@Throws(IOException::class)
 		private fun request(httpUrl: HttpUrl): Response {
-			val request = RequestUtil.createRequest(httpUrl, RequestAuthorization.authenticator)
+			val request = RequestUtil.createRequest(httpUrl, authenticator = RequestAuthorization.authenticator)
 
 			return execute(request)
 		}
