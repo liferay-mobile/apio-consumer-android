@@ -12,15 +12,13 @@
  * details.
  */
 
-package com.liferay.apio.consumer.extensions
+package com.liferay.apio.consumer.model
 
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-fun String.asDate(format: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US)): Date? =
-	try {
-		format.parse(this)
-	} catch (parseException: ParseException) {
-		null
-	}
+/**
+ * @author Javier Gamarra
+ */
+@Parcelize
+data class Property(val type: ThingType, val name: String, val required: Boolean) : Parcelable

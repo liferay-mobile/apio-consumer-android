@@ -25,11 +25,11 @@ import com.liferay.apio.consumer.model.get
 import java.util.Date
 
 data class BlogPosting(
-        val headline: String?,
-        val alternativeHeadline: String?,
-        val articleBody: String?,
-        val creator: Relation?,
-        val createDate: Date?) {
+	val headline: String?,
+	val alternativeHeadline: String?,
+	val articleBody: String?,
+	val creator: Relation?,
+	val createDate: Date?) {
 
 	companion object {
 		val DEFAULT_VIEWS: MutableMap<Scenario, Int> =
@@ -40,11 +40,11 @@ data class BlogPosting(
 
 		val converter: (Thing) -> Any = {
 			BlogPosting(
-					it["headline"] as? String,
-					it["alternativeHeadline"] as? String,
-					it["articleBody"] as? String,
-					it["creator"] as? Relation,
-					(it["dateCreated"] as? String)?.asDate())
+				it["headline"] as? String,
+				it["alternativeHeadline"] as? String,
+				it["articleBody"] as? String,
+				it["creator"] as? Relation,
+				(it["dateCreated"] as? String)?.asDate())
 		}
 	}
 }

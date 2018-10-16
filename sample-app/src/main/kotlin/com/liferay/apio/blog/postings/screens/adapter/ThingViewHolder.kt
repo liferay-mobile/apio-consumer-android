@@ -39,7 +39,7 @@ open class ThingViewHolder(itemView: View, listener: Listener) : RecyclerView.Vi
 
 		thingScreenlet.screenletEvents = object : ScreenletEvents {
 			override fun <T : BaseView> onGetCustomLayout(screenlet: ThingScreenlet, parentView: T?, thing: Thing,
-                                                                                                  scenario: Scenario): Int? {
+				scenario: Scenario): Int? {
 				return listener.onLayoutRow(screenlet.baseView, thing, scenario)
 			}
 		}

@@ -20,11 +20,11 @@ import android.view.ViewGroup
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.delegates.convert
 import com.liferay.apio.blog.postings.extensions.inflate
-import com.liferay.apio.consumer.fetch
 import com.liferay.apio.blog.postings.model.Collection
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.blog.postings.screens.views.BaseView
 import com.liferay.apio.blog.postings.screens.views.Scenario
+import com.liferay.apio.consumer.ApioConsumer
 import okhttp3.HttpUrl
 
 class ThingAdapter(collection: Collection, val listener: Listener) :
@@ -42,24 +42,18 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 
 	override fun onBindViewHolder(holder: ThingViewHolder, position: Int) {
 		if (members.size > position) {
-			holder?.thing = members[position]
+			holder.thing = members[position]
 		} else {
-			nextPage.let {
-				HttpUrl.parse(nextPage)?.let {
-					fetch(it) {
-						it.fold(
-							success = {
-								convert<Collection>(it)?.let {
-									val moreMembers = it.members
-									merge(members, moreMembers)
-									notifyDataSetChanged()
-								}
-							},
-							failure = {}
-						)
+			nextPage?.let {
+				HttpUrl.parse(nextPage)
+			}?.also { httpUrl ->
+				ApioConsumer().fetch(httpUrl, onSuccess = { thing ->
+					convert<Collection>(thing)?.let { collection ->
+						val moreMembers = collection.members
+						merge(members, moreMembers)
+						notifyDataSetChanged()
 					}
-				}
-
+				})
 			}
 		}
 	}
@@ -76,7 +70,7 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThingViewHolder {
 		return parent?.inflate(R.layout.thing_viewholder_default)?.let {
-            ThingViewHolder(it, this)
+			ThingViewHolder(it, this)
 		}
 	}
 

@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = '1.2.51'
+	ext.kotlin_version = '1.2.61'
 
 	repositories {
 		jcenter()
@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-beta01'
+		classpath 'com.android.tools.build:gradle:3.2.0'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
 		classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
@@ -51,10 +51,10 @@ ext {
 	minSdkVersion = 15
 	compileSdkVersion = 27
 	targetSdkVersion = compileSdkVersion
-	buildToolsVersion = '27.0.3'
+	buildToolsVersion = '28.0.2'
 
 	versionCode = 1
-	versionName = '0.0.6'
+	versionName = '0.0.7-beta'
 
 	publishedGroupId = 'com.liferay.mobile'
 	libraryName = 'apio-consumer-android'

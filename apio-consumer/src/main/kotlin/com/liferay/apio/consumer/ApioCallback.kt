@@ -12,15 +12,20 @@
  * details.
  */
 
-package com.liferay.apio.consumer.extensions
+package com.liferay.apio.consumer
 
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
+import com.github.kittinunf.result.Result
+import com.liferay.apio.consumer.model.Thing
 
-fun String.asDate(format: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US)): Date? =
-	try {
-		format.parse(this)
-	} catch (parseException: ParseException) {
-		null
-	}
+/**
+ * @author Paulo Cruz
+ */
+interface ApioCallback {
+    fun onError(exception: Exception)
+    fun onSuccess(thing: Thing)
+
+    @JvmSynthetic
+    fun onComplete(result: Result<Thing, Exception>) {
+        result.fold(::onSuccess, ::onError)
+    }
+}

@@ -25,10 +25,9 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.WindowManager
-import com.github.kittinunf.result.Result
 import com.liferay.apio.blog.postings.R
-import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.requestParseWaitLoop
+import com.liferay.apio.consumer.ApioConsumer
+import com.liferay.apio.consumer.authenticator.BasicAuthenticator
 import okhttp3.Credentials
 import okhttp3.HttpUrl
 import org.junit.Assert
@@ -47,7 +46,7 @@ class BlogPostingListTest {
 	@JvmField
 	val activityRule = ActivityTestRule(MainActivity::class.java)
 
-	private val credentials = Credentials.basic("vulcan@liferay.com", "vulcan")
+	private val credentials = Credentials.basic("apio@liferay.com", "apio")
 
 	@Before
 	fun unlockScreen() {
@@ -75,13 +74,14 @@ class BlogPostingListTest {
 		val url = HttpUrl.parse("http://screens.liferay.org.es/o/api/p/groups/57459/blogs")
 
 		url?.let {
-			val result: Result<Thing, Exception> = requestParseWaitLoop(url, mapOf(), listOf(), credentials)
+			val apioConsumer = ApioConsumer(BasicAuthenticator(credentials))
 
-			Assert.assertNotNull(result.component1())
-
-			result.fold(success = {
+			apioConsumer.fetch(url, onSuccess = {
+				Assert.assertNotNull(it)
 				Assert.assertEquals(TEST_DOMAIN + "groups/57459/blogs", it.id)
-			}, failure = { Assert.fail() })
+			}, onError = {
+				Assert.fail()
+			})
 		}
 	}
 

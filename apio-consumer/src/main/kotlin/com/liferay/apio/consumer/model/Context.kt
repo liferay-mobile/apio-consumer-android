@@ -12,15 +12,18 @@
  * details.
  */
 
-package com.liferay.apio.consumer.extensions
+package com.liferay.apio.consumer.model
 
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
+/**
+ * @author Javier Gamarra
+ */
+data class Context(val vocab: String, val attributeContext: Map<String, Any>) {
 
-fun String.asDate(format: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US)): Date? =
-	try {
-		format.parse(this)
-	} catch (parseException: ParseException) {
-		null
+	fun isId(attributeName: String): Boolean {
+		return (attributeContext[attributeName] as? Map<String, Any>)
+			?.let { it["@type"] }
+			?.let { it == "@id" }
+			?: false
 	}
+
+}

@@ -12,15 +12,18 @@
  * details.
  */
 
-package com.liferay.apio.consumer.extensions
+package com.liferay.apio.consumer.exception
 
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
+/**
+ * @author Paulo Cruz
+ */
+open class ApioException(s: String) : Exception(s)
 
-fun String.asDate(format: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US)): Date? =
-	try {
-		format.parse(this)
-	} catch (parseException: ParseException) {
-		null
-	}
+class CantParseToThingException : ApioException("Can't parse to thing")
+
+class InvalidRequestUrlException : ApioException("Invalid request URL")
+
+class ThingNotFoundException : ApioException("Thing not found")
+
+class ThingWithoutOperationException(thingId: String, operationId: String)
+	: ApioException("Thing $thingId doesn't have the operation $operationId")

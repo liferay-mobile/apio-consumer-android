@@ -17,7 +17,8 @@ package com.liferay.apio.blog.postings.model
 import com.liferay.apio.blog.postings.screens.views.Detail
 import com.liferay.apio.blog.postings.screens.views.Scenario
 import com.liferay.apio.blog.postings.R
-import com.liferay.apio.consumer.graph
+import com.liferay.apio.consumer.cache.ThingsCache
+import com.liferay.apio.consumer.cache.ThingsCache.get
 import com.liferay.apio.consumer.model.Relation
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.model.get
@@ -25,13 +26,13 @@ import com.liferay.apio.consumer.model.get
 data class Collection(val members: List<Thing>?, val totalItems: Int?, val pages: Pages?) {
 	companion object {
 		val DEFAULT_VIEWS: MutableMap<Scenario, Int> =
-				mutableMapOf(
-						Detail to R.layout.collection_detail_custom
-				)
+			mutableMapOf(
+				Detail to R.layout.collection_detail_custom
+			)
 
 		val converter: (Thing) -> Any = { it: Thing ->
 			val member = (it["member"] as? List<Relation>)?.mapNotNull {
-				graph[it.id]?.value
+				ThingsCache[it.id]?.value
 			}
 
 			val totalItems = (it["totalItems"] as? Double)?.toInt()

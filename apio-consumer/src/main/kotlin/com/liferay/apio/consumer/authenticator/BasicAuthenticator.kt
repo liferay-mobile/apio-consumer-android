@@ -12,15 +12,23 @@
  * details.
  */
 
-package com.liferay.apio.consumer.extensions
+package com.liferay.apio.consumer.authenticator
 
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
+import okhttp3.Request
 
-fun String.asDate(format: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US)): Date? =
-	try {
-		format.parse(this)
-	} catch (parseException: ParseException) {
-		null
+/**
+ * @author Paulo Cruz
+ */
+class BasicAuthenticator(private val credentials: String) : ApioAuthenticator {
+
+	override fun authenticate(request: Request): Request {
+		return request.newBuilder()
+			.addHeader(AUTHORIZATION_KEY, credentials)
+			.build()
 	}
+
+	companion object {
+		private const val AUTHORIZATION_KEY: String = "Authorization"
+	}
+
+}

@@ -15,27 +15,31 @@
 package com.liferay.apio.consumer.model
 
 import android.os.Parcelable
+import com.github.kittinunf.result.Result
+import com.github.kittinunf.result.success
+import com.liferay.apio.consumer.ApioConsumer
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
 
 /**
  * @author Javier Gamarra
  */
-typealias ThingType = List<String>
-
 @Parcelize
-data class Thing(val id: String, val type: ThingType, val attributes: Map<String, @RawValue Any>,
-	val name: String? = null, val operations: MutableMap<String, Operation> = mutableMapOf()) : Parcelable {
+data class OperationForm(val id: String, var properties: List<Property> = listOf()) : Parcelable {
 
-	fun merge(value: Thing?): Thing = value?.let { Thing(id, type, attributes + it.attributes) } ?: this
-
-	fun containsOperation(operationId: String): Boolean = operations.keys.none { it.contains(operationId) }
-
-	fun getOperation(operationId: String): Operation? {
-		val key = operations.keys.firstOrNull { it.contains(operationId) }
-
-		return key?.let { operations[it] }
+	fun getFormProperties(onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
+		getFormProperties {
+			it.fold(onSuccess, onError)
+		}
 	}
-}
 
-operator fun Thing.get(attribute: String): Any? = attributes[attribute]
+	fun getFormProperties(onComplete: (Result<List<Property>, Exception>) -> Unit) {
+		ApioConsumer().requestProperties(id) {
+			it.success { properties ->
+				this.properties = properties
+			}
+
+			onComplete(it)
+		}
+	}
+
+}
