@@ -17,6 +17,7 @@ package com.liferay.apio.blog.postings.screens.adapter
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.View
 import android.view.ViewGroup
+import com.github.kittinunf.result.success
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.delegates.convert
 import com.liferay.apio.blog.postings.extensions.inflate
@@ -47,11 +48,13 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 			nextPage?.let {
 				HttpUrl.parse(nextPage)
 			}?.also { httpUrl ->
-				ApioConsumer().fetch(httpUrl, onSuccess = { thing ->
-					convert<Collection>(thing)?.let { collection ->
-						val moreMembers = collection.members
-						merge(members, moreMembers)
-						notifyDataSetChanged()
+				ApioConsumer().fetch(httpUrl, onComplete = { result ->
+					result.success {
+						convert<Collection>(it)?.let { collection ->
+							val moreMembers = collection.members
+							merge(members, moreMembers)
+							notifyDataSetChanged()
+						}
 					}
 				})
 			}
