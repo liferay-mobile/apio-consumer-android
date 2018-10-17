@@ -38,13 +38,6 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 
 	@JvmOverloads
 	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
-		fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(), callback: ApioCallback) {
-
-		fetch(url, authenticator, fields, embedded, callback::onComplete)
-	}
-
-	@JvmOverloads
-	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
 		fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
 		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
 
@@ -59,14 +52,6 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 				}
 			}.also(onComplete)
 		}
-	}
-
-	@JvmOverloads
-	fun performOperation(thingId: String, operationId: String,
-		authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
-		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(), callback: ApioCallback) {
-
-		performOperation(thingId, operationId, authenticator, fillFields, callback::onComplete)
 	}
 
 	@JvmOverloads
