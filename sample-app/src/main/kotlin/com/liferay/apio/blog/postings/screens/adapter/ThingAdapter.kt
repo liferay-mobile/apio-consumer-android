@@ -48,7 +48,7 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 			nextPage?.let {
 				HttpUrl.parse(nextPage)
 			}?.also { httpUrl ->
-				ApioConsumer().fetch(httpUrl, onComplete = { result ->
+				ApioConsumer().fetch(httpUrl) { result ->
 					result.success {
 						convert<Collection>(it)?.let { collection ->
 							val moreMembers = collection.members
@@ -56,7 +56,7 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 							notifyDataSetChanged()
 						}
 					}
-				})
+				}
 			}
 		}
 	}
