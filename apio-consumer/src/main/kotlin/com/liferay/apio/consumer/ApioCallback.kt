@@ -29,3 +29,4 @@ interface ApioCallback {
         result.fold(::onSuccess, ::onError)
     }
 }
+
