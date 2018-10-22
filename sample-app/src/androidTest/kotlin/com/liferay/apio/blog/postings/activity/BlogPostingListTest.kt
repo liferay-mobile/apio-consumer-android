@@ -76,12 +76,14 @@ class BlogPostingListTest {
 		url?.let {
 			val apioConsumer = ApioConsumer(BasicAuthenticator(credentials))
 
-			apioConsumer.fetch(url, onSuccess = {
-				Assert.assertNotNull(it)
-				Assert.assertEquals(TEST_DOMAIN + "groups/57459/blogs", it.id)
-			}, onError = {
-				Assert.fail()
-			})
+			apioConsumer.fetch(url) { result ->
+				result.fold({ thing ->
+					Assert.assertNotNull(thing)
+					Assert.assertEquals(TEST_DOMAIN + "groups/57459/blogs", thing.id)
+				}, { _ ->
+					Assert.fail()
+				})
+			}
 		}
 	}
 
