@@ -32,7 +32,7 @@ Apio Consumer helps you by providing the following:
 
 - Default visualization for some popular [schema.org](http://schema.org) models like BlogPosting, Person or DigitalDocument. Apio Consumer will render those models with a default XML layout that can be customized at will.
 - Support for JSON+LD, Apio Consumer can parse JSON documents in that format and return the model with all the information.
-- Integration with [Liferay Screens](http://github.com/liferay/liferay-screens), that provides a Screenlet called *LoginScreenlet* that is able to render any supported models just by passing the URL of the resource.
+- Integration with [Liferay Screens](http://github.com/liferay/liferay-screens), that provides a Screenlet called *ThingScreenlet* that is able to render any supported models just by passing the URL of the resource.
 - A representation of your data in a local graph that allows you to traverse the information away from a network connection.
 - An easy mechanism for customization of the layouts called *scenarios*, that lets you pass another XML layout that applies when you are representing the resource inside a list (a *row* scenario), a detail view or the full resource.
 - A straight way of consuming your hypermedia API :D
