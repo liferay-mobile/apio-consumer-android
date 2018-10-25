@@ -20,6 +20,7 @@ plugins {
 }
 
 detekt {
+	version = "1.0.0.RC6-4"
 	profile('main') {
 		input = "$projectDir"
 		config = './detekt.yml'
