@@ -117,6 +117,7 @@ class ThingScreenlet @JvmOverloads constructor(
 			onEventFor(Event.FetchLayout(thing = it, scenario = scenario))
 		}
 	}
+
 	init {
 		val typedArray = attrs?.let { context.theme.obtainStyledAttributes(it, R.styleable.ThingScreenlet, 0, 0) }
 
