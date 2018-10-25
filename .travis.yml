@@ -45,5 +45,5 @@ before_script:
 
 script:
   - ./gradlew build testDebug && ./gradlew assembleRelease
-#  - ./gradlew detektCheck
+  - ./gradlew detektCheck
   - ./gradlew clean aADT && ./gradlew cADT

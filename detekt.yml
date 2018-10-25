@@ -1,8 +1,7 @@
 autoCorrect: true
 
 build:
-  warningThreshold: 5
-  failThreshold: 10
+  maxIssues: 10
   weights:
     complexity: 2
     formatting: 0
@@ -100,7 +99,7 @@ formatting:
 style:
   active: true
   WildcardImport:
-    active: true
+    active: false
   MaxLineLength:
     active: true
     maxLineLength: 120

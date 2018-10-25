@@ -16,10 +16,11 @@ buildscript {
 }
 
 plugins {
-	id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC6-4'
+	id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC8'
 }
 
 detekt {
+	version = "1.0.0.RC8"
 	profile('main') {
 		input = "$projectDir"
 		config = './detekt.yml'
