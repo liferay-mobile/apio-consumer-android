@@ -30,7 +30,6 @@ detekt {
 	idea {
 		path = '/Applications/IntelliJ IDEA.app/Contents'
 		codeStyleScheme = "$projectDir/ApioCodeConvention.xml"
-		inspectionsProfile = "$projectDir/ApioCodeFormatting.xml"
 		report = './library/reports'
 		mask = '*.kt,'
 	}
