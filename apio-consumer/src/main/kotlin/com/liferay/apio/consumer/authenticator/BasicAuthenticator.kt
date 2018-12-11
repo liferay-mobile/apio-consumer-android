@@ -19,16 +19,17 @@ import okhttp3.Request
 /**
  * @author Paulo Cruz
  */
-class BasicAuthenticator(private val credentials: String) : ApioAuthenticator {
+class BasicAuthenticator(private val credentials: String?) : ApioAuthenticator {
 
 	override fun authenticate(request: Request): Request {
 		return request.newBuilder()
-			.addHeader(AUTHORIZATION_KEY, credentials)
+			.addHeader(AUTHORIZATION_KEY, credentials ?: EMPTY_CREDENTIALS)
 			.build()
 	}
 
 	companion object {
 		private const val AUTHORIZATION_KEY: String = "Authorization"
+		private const val EMPTY_CREDENTIALS: String = ""
 	}
 
 }
