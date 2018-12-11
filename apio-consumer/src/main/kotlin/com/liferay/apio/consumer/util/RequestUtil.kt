@@ -17,9 +17,10 @@ package com.liferay.apio.consumer.util
 import com.google.gson.Gson
 import com.liferay.apio.consumer.authenticator.ApioAuthenticator
 import com.liferay.apio.consumer.exception.ApioException
+import com.liferay.apio.consumer.exception.RequestFailedException
 import com.liferay.apio.consumer.exception.ThingNotFoundException
-import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.model.get
+import com.liferay.apio.consumer.parser.ThingParser
+import com.liferay.apio.consumer.parser.ThingParser.Companion.toJsonMap
 import okhttp3.*
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -85,18 +86,19 @@ internal class RequestUtil {
 			}
 		}
 
-		fun getResponseException(thing: Thing, response: Response): Exception {
-			return thing.let {
-				it["title"] as? String
-			}?.let {
-				ApioException(it)
-			} ?: run {
-				if (response.message().isNotEmpty()) {
-					ApioException(response.message())
-				} else {
-					ThingNotFoundException()
-				}
-			}
+		fun getResponseException(response: Response): Exception {
+            return response.body()?.string()?.toJsonMap()?.let {
+                RequestFailedException(
+                    it["statusCode"] as Number,
+                    ThingParser.parseType(it["@type"]),
+                    it["title"] as String,
+                    it["description"] as? String
+                )
+            } ?: response.message().takeIf {
+                it.isNotEmpty()
+            }?.let {
+                ApioException(it)
+            } ?: ThingNotFoundException()
 		}
 
 		private fun getByteArrayFromInputStream(inputStream: InputStream): ByteArray {

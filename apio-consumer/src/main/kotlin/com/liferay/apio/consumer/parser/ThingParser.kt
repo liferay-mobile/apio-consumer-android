@@ -22,7 +22,6 @@ import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.exception.CantParseToThingException
 import com.liferay.apio.consumer.cache.ThingsCache
 import com.liferay.apio.consumer.model.*
-import com.liferay.apio.consumer.util.RequestUtil
 import okhttp3.Response
 
 /**
@@ -31,21 +30,17 @@ import okhttp3.Response
 class ThingParser {
 
 	companion object {
+		private val gson = Gson()
+		private val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
+
 		@JvmStatic
-		@Throws(CantParseToThingException::class)
+		@Throws(CantParseToThingException::class, JsonSyntaxException::class)
 		fun parse(response: Response): Thing {
 			return response.body()?.let {
 				parse(it.string())
-			}?.let {
-				val (thing, embeddedThings) = it
+			}?.also { (thing, embeddedThings) ->
 				ThingsCache.updateNodes(thing, embeddedThings)
-
-				if (!response.isSuccessful) {
-					throw RequestUtil.getResponseException(thing, response)
-				}
-
-				thing
-			} ?: throw CantParseToThingException()
+			}?.first ?: throw CantParseToThingException()
 		}
 
 		@JvmStatic
@@ -55,11 +50,15 @@ class ThingParser {
 				?: listOf()
 		}
 
+		@JvmStatic
+		@Throws(JsonSyntaxException::class)
+		fun String.toJsonMap(): Map<String, Any> {
+			return gson.fromJson<Map<String, Any>>(this, mapType)
+		}
+
 		@Throws(JsonParseException::class, JsonSyntaxException::class)
 		internal fun parse(json: String): Pair<Thing, Map<String, Thing?>>? {
-			val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
-
-			val jsonObject = Gson().fromJson<Map<String, Any>>(json, mapType)
+			val jsonObject = json.toJsonMap()
 
 			return flatten(jsonObject, null)
 		}
