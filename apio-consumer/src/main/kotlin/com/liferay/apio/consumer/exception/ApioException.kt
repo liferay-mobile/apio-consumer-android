@@ -30,5 +30,5 @@ class ThingNotFoundException : ApioException("Thing not found")
 class ThingWithoutOperationException(thingId: String, operationId: String)
 	: ApioException("Thing $thingId doesn't have the operation $operationId")
 
-class RequestFailedException(val statusCode: Number, val type: ThingType, val title: String, val description: String?)
+class RequestFailedException(val statusCode: Int, val type: ThingType, val title: String, val description: String?)
 	: ApioException(title + (description?.let { ": $description" }))

@@ -90,7 +90,7 @@ internal class RequestUtil {
 				ThingParser.stringToJsonMap(it)
 			}?.let {
 				RequestFailedException(
-					it["statusCode"] as Number,
+					(it["statusCode"] as Number).toInt(),
 					ThingParser.parseType(it["@type"]),
 					it["title"] as String,
 					it["description"] as? String
