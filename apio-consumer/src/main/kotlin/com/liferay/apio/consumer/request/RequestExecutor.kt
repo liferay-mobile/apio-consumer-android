@@ -15,13 +15,11 @@
 package com.liferay.apio.consumer.request
 
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-import com.liferay.apio.consumer.exception.CantParseToThingException
-import com.liferay.apio.consumer.exception.InvalidRequestUrlException
-import com.liferay.apio.consumer.exception.ThingNotFoundException
-import com.liferay.apio.consumer.exception.ThingWithoutOperationException
 import com.liferay.apio.consumer.cache.ThingsCache
 import com.liferay.apio.consumer.cache.ThingsCache.get
+import com.liferay.apio.consumer.exception.*
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.parser.ThingParser
@@ -39,7 +37,8 @@ import java.io.IOException
 internal class RequestExecutor {
 
 	companion object {
-		@Throws(CantParseToThingException::class, InvalidRequestUrlException::class, IOException::class,
+		@Throws(ApioException::class, CantParseToThingException::class, InvalidRequestUrlException::class,
+			IOException::class, JsonSyntaxException::class, RequestFailedException::class,
 			ThingNotFoundException::class, ThingWithoutOperationException::class)
 		fun performOperation(thingId: String, operationId: String,
 			fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() }): Thing {
@@ -64,15 +63,17 @@ internal class RequestExecutor {
 			}
 
 			val response = requestOperation(operation.target, operation.method, attributes)
-			return ThingParser.parse(response)
+
+			return checkResponseStatus(response)
 		}
 
-		@Throws(CantParseToThingException::class, IOException::class)
+		@Throws(ApioException::class, CantParseToThingException::class, IOException::class, JsonSyntaxException::class,
+			RequestFailedException::class, ThingNotFoundException::class)
 		fun requestThing(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>): Thing {
 			val httpUrl = RequestUtil.createUrl(url, fields, embedded)
 			val response = request(httpUrl)
 
-			return ThingParser.parse(response)
+			return checkResponseStatus(response)
 		}
 
 		@Throws(IOException::class)
@@ -94,6 +95,16 @@ internal class RequestExecutor {
 				val name = it["property"] as String
 				val required = it["required"] as Boolean
 				Property(type, name, required)
+			}
+		}
+
+		@Throws(ApioException::class, JsonSyntaxException::class, RequestFailedException::class,
+			ThingNotFoundException::class)
+		private fun checkResponseStatus(response: Response): Thing {
+			if (response.isSuccessful) {
+				return ThingParser.parse(response)
+			} else {
+				throw RequestUtil.getResponseException(response)
 			}
 		}
 

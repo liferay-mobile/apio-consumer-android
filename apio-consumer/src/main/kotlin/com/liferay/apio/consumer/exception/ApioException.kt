@@ -14,6 +14,8 @@
 
 package com.liferay.apio.consumer.exception
 
+import com.liferay.apio.consumer.model.ThingType
+
 /**
  * @author Paulo Cruz
  */
@@ -27,3 +29,6 @@ class ThingNotFoundException : ApioException("Thing not found")
 
 class ThingWithoutOperationException(thingId: String, operationId: String)
 	: ApioException("Thing $thingId doesn't have the operation $operationId")
+
+class RequestFailedException(val statusCode: Int, val type: ThingType, val title: String, val description: String?)
+	: ApioException(title + (description?.let { ": $description" }))
