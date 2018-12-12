@@ -91,19 +91,21 @@ class ThingScreenlet @JvmOverloads constructor(
 		val apioConsumer = ApioConsumer(authenticator)
 
 		HttpUrl.parse(thingId)?.let {
-			apioConsumer.fetch(it, onSuccess = { thing ->
-				if (scenario != null) {
-					this.scenario = scenario
-				}
+			apioConsumer.fetch(it) { result ->
+				result.fold({
+					if (scenario != null) {
+						this.scenario = scenario
+					}
 
-				this.thing = thing
+					this.thing = it
 
-				onComplete?.invoke(this)
-			}, onError = { exception ->
-				baseView?.showError(exception.message)
+					onComplete?.invoke(this)
+				}, {
+					baseView?.showError(it.message)
 
-				onComplete?.invoke(this)
-			})
+					onComplete?.invoke(this)
+				})
+			}
 		}
 
 	}

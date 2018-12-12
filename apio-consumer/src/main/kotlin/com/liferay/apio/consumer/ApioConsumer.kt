@@ -38,23 +38,6 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 
 	@JvmOverloads
 	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
-		fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(), callback: ApioCallback) {
-
-		fetch(url, authenticator, fields, embedded, callback::onComplete)
-	}
-
-	@JvmSynthetic
-	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
-		fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
-		onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
-
-		fetch(url, authenticator, fields, embedded) {
-			it.fold(onSuccess, onError)
-		}
-	}
-
-	@JvmSynthetic
-	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
 		fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
 		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
 
@@ -72,25 +55,6 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 	}
 
 	@JvmOverloads
-	fun performOperation(thingId: String, operationId: String,
-		authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
-		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(), callback: ApioCallback) {
-
-		performOperation(thingId, operationId, authenticator, fillFields, callback::onComplete)
-	}
-
-	@JvmSynthetic
-	fun performOperation(thingId: String, operationId: String,
-		authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
-		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
-		onSuccess: (Thing) -> Unit, onError: (Exception) -> Unit = emptyOnError()) {
-
-		performOperation(thingId, operationId, authenticator, fillFields) {
-			it.fold(onSuccess, onError)
-		}
-	}
-
-	@JvmSynthetic
 	fun performOperation(thingId: String, operationId: String,
 		authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
 		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
@@ -126,6 +90,5 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 	}
 
 	private fun emptyOnComplete() = { _: Result<Thing, Exception> -> }
-	private fun emptyOnError() = { _: Exception -> }
 	private fun emptyFillFields() = { _: List<Property> -> emptyMap<String, Any>() }
 }
