@@ -67,7 +67,8 @@ internal class RequestExecutor {
 			return checkResponseStatus(response)
 		}
 
-		@Throws(CantParseToThingException::class, IOException::class, JsonSyntaxException::class)
+		@Throws(ApioException::class, CantParseToThingException::class, IOException::class, JsonSyntaxException::class,
+			RequestFailedException::class, ThingNotFoundException::class)
 		fun requestThing(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>): Thing {
 			val httpUrl = RequestUtil.createUrl(url, fields, embedded)
 			val response = request(httpUrl)
