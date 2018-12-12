@@ -14,6 +14,7 @@
 
 package com.liferay.apio.consumer
 
+import com.liferay.apio.consumer.exception.RequestFailedException
 import com.liferay.apio.consumer.model.Relation
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.parser.ThingParser
@@ -29,6 +30,7 @@ const val TEST_DOMAIN = "http://screens.liferay.org.es/o/api/p/"
 class ApioConsumerTest {
 
 	private val blogCollection = "{\"totalItems\":1,\"view\":{\"last\":\"http://screens.liferay.org.es/o/api/p/blogs?page=1&per_page=30\",\"@type\":[\"PartialCollectionView\"],\"@id\":\"http://screens.liferay.org.es/o/api/p/blogs?page=1&per_page=30\",\"first\":\"http://screens.liferay.org.es/o/api/p/blogs?page=1&per_page=30\"},\"numberOfItems\":1,\"@type\":[\"Collection\"],\"member\":[{\"creator\":\"http://screens.liferay.org.es/o/api/p/people/57457\",\"articleBody\":\"<p>My Content<\\/p>\",\"@type\":[\"BlogPosting\"],\"author\":\"http://screens.liferay.org.es/o/api/p/people/57457\",\"@context\":{\"creator\":{\"@type\":\"@id\"},\"author\":{\"@type\":\"@id\"},\"comment\":{\"@type\":\"@id\"},\"aggregateRating\":{\"@type\":\"@id\"},\"group\":{\"@type\":\"@id\"}},\"alternativeHeadline\":\"My Subtitle\",\"license\":\"https://creativecommons.org/licenses/by/4.0\",\"modifiedDate\":\"2017-08-31T18:39:52+00:00\",\"comment\":\"http://screens.liferay.org.es/o/api/p/comments?id=57499&type=blogs&filterName=assetType_id\",\"@id\":\"http://screens.liferay.org.es/o/api/p/blogs/57499\",\"aggregateRating\":\"http://screens.liferay.org.es/o/api/p/aggregate-ratings/com.liferay.apio.liferay.portal.identifier.ClassNameClassPKIdentifier@4d2042ba\",\"headline\":\"My Title\",\"fileFormat\":\"text/html\",\"createDate\":\"2017-08-31T18:39:52+00:00\",\"group\":\"http://screens.liferay.org.es/o/api/p/groups/57459\"}],\"@id\":\"http://screens.liferay.org.es/o/api/p/blogs\",\"@context\":{\"@vocab\":\"http://schema.org\",\"Collection\":\"http://www.w3.org/ns/hydra/pagination.jsonld\"}}"
+	private val notFoundError = "{\"statusCode\": 404,\"title\": \"Resource not found\",\"@type\": \"not-found\"}"
 
 	@Test
 	fun parseCreatesPairsWithRelationsTest() {
@@ -69,6 +71,33 @@ class ApioConsumerTest {
 
 		assertNotNull(thing)
 		assertEquals(TEST_DOMAIN + "blogs", thing.id)
+
+		mockWebServer.shutdown()
+	}
+
+	@Test
+	fun requestABlogFilteredByInvalidGroupId() {
+		val expectedTitle = "Resource not found"
+		val expectedType = listOf("not-found")
+		val responseStatusCode = 404
+
+		val mockWebServer = MockWebServer()
+		val body = MockResponse()
+			.addHeader("Content-Type", "application/json; charset=utf-8")
+			.addHeader("Cache-Control", "no-cache")
+			.setBody(notFoundError)
+			.setResponseCode(responseStatusCode)
+		mockWebServer.enqueue(body)
+
+		val url = mockWebServer.url("o/api/p/blogs?id=INVALID&filterName=groupId")
+
+		try {
+			RequestExecutor.requestThing(url!!, mapOf(), listOf())
+		} catch(e: RequestFailedException) {
+			assertEquals(responseStatusCode, e.statusCode)
+			assertEquals(expectedTitle, e.title)
+			assertEquals(expectedType, e.type)
+		}
 
 		mockWebServer.shutdown()
 	}
