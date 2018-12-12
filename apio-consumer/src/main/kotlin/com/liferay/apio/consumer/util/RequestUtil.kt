@@ -20,7 +20,6 @@ import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.exception.RequestFailedException
 import com.liferay.apio.consumer.exception.ThingNotFoundException
 import com.liferay.apio.consumer.parser.ThingParser
-import com.liferay.apio.consumer.parser.ThingParser.Companion.toJsonMap
 import okhttp3.*
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -87,7 +86,9 @@ internal class RequestUtil {
 		}
 
 		fun getResponseException(response: Response): Exception {
-			return response.body()?.string()?.toJsonMap()?.let {
+			return response.body()?.string()?.let {
+				ThingParser.stringToJsonMap(it)
+			}?.let {
 				RequestFailedException(
 					it["statusCode"] as Number,
 					ThingParser.parseType(it["@type"]),
