@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = '1.2.61'
+	ext.kotlin_version = '1.2.71'
 
 	repositories {
 		jcenter()
@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0'
+		classpath 'com.android.tools.build:gradle:3.2.1'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
 		classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
@@ -51,7 +51,7 @@ ext {
 	minSdkVersion = 15
 	compileSdkVersion = 27
 	targetSdkVersion = compileSdkVersion
-	buildToolsVersion = '28.0.2'
+	buildToolsVersion = '28.0.3'
 
 	versionCode = 1
 	versionName = '0.0.8'
