@@ -93,7 +93,7 @@ class ApioConsumerTest {
 
 		try {
 			RequestExecutor.requestThing(url!!, mapOf(), listOf())
-		} catch(e: RequestFailedException) {
+		} catch (e: RequestFailedException) {
 			assertEquals(responseStatusCode, e.statusCode)
 			assertEquals(expectedTitle, e.title)
 			assertEquals(expectedType, e.type)
