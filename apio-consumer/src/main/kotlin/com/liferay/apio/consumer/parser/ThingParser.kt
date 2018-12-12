@@ -36,8 +36,8 @@ class ThingParser {
 		@JvmStatic
 		@Throws(CantParseToThingException::class, JsonSyntaxException::class)
 		fun parse(response: Response): Thing {
-			return response.body()?.let {
-				parse(it.string())
+			return response.body()?.string()?.let {
+				parse(it)
 			}?.also { (thing, embeddedThings) ->
 				ThingsCache.updateNodes(thing, embeddedThings)
 			}?.first ?: throw CantParseToThingException()
@@ -52,13 +52,13 @@ class ThingParser {
 
 		@JvmStatic
 		@Throws(JsonSyntaxException::class)
-		fun String.toJsonMap(): Map<String, Any> {
-			return gson.fromJson<Map<String, Any>>(this, mapType)
+		fun stringToJsonMap(json: String): Map<String, Any> {
+			return gson.fromJson<Map<String, Any>>(json, mapType)
 		}
 
 		@Throws(JsonParseException::class, JsonSyntaxException::class)
 		internal fun parse(json: String): Pair<Thing, Map<String, Thing?>>? {
-			val jsonObject = json.toJsonMap()
+			val jsonObject = stringToJsonMap(json)
 
 			return flatten(jsonObject, null)
 		}
