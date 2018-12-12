@@ -87,18 +87,18 @@ internal class RequestUtil {
 		}
 
 		fun getResponseException(response: Response): Exception {
-            return response.body()?.string()?.toJsonMap()?.let {
-                RequestFailedException(
-                    it["statusCode"] as Number,
-                    ThingParser.parseType(it["@type"]),
-                    it["title"] as String,
-                    it["description"] as? String
-                )
-            } ?: response.message().takeIf {
-                it.isNotEmpty()
-            }?.let {
-                ApioException(it)
-            } ?: ThingNotFoundException()
+			return response.body()?.string()?.toJsonMap()?.let {
+				RequestFailedException(
+					it["statusCode"] as Number,
+					ThingParser.parseType(it["@type"]),
+					it["title"] as String,
+					it["description"] as? String
+				)
+			} ?: response.message().takeIf {
+				it.isNotEmpty()
+			}?.let {
+				ApioException(it)
+			} ?: ThingNotFoundException()
 		}
 
 		private fun getByteArrayFromInputStream(inputStream: InputStream): ByteArray {
