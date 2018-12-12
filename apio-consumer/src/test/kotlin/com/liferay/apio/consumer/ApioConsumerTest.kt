@@ -21,8 +21,7 @@ import com.liferay.apio.consumer.parser.ThingParser
 import com.liferay.apio.consumer.request.RequestExecutor
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.*
 import org.junit.Test
 
 const val TEST_DOMAIN = "http://screens.liferay.org.es/o/api/p/"
@@ -93,10 +92,13 @@ class ApioConsumerTest {
 
 		try {
 			RequestExecutor.requestThing(url!!, mapOf(), listOf())
+			fail()
 		} catch (e: RequestFailedException) {
 			assertEquals(responseStatusCode, e.statusCode)
 			assertEquals(expectedTitle, e.title)
 			assertEquals(expectedType, e.type)
+		} catch (e: Exception) {
+			fail()
 		}
 
 		mockWebServer.shutdown()
