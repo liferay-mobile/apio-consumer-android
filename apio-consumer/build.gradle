@@ -56,9 +56,5 @@ dependencies {
 	debugImplementation libraries.okhttp_idling
 }
 
-kotlin {
-	experimental { coroutines 'enable' }
-}
-
 apply from: '../install.gradle'
 apply from: '../bintray.gradle'
