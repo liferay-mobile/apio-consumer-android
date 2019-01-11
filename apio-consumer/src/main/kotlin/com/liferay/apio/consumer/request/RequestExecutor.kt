@@ -52,7 +52,7 @@ internal class RequestExecutor {
 				val form = operation.form!!
 
 				if (form.properties.isEmpty()) {
-					form.properties = requestProperties(form.id)
+					form.properties = requestProperties(form.id, headers)
 					thing.operations[operationId] = operation
 				}
 
@@ -77,10 +77,10 @@ internal class RequestExecutor {
 		}
 
 		@Throws(IOException::class)
-		internal fun requestProperties(url: String): List<Property> {
+		internal fun requestProperties(url: String, headers: Map<String, String> = emptyMap()): List<Property> {
 			val httpUrl = HttpUrl.parse(url) ?: throw InvalidRequestUrlException()
 
-			val response = request(httpUrl)
+			val response = request(httpUrl, Headers.of(headers))
 
 			val json = response.body()?.string()
 

@@ -19,7 +19,7 @@ import okhttp3.Credentials
 /**
  * @author Paulo Cruz
  */
-const val AUTHORIZATION = "Authorization"
+private const val AUTHORIZATION = "Authorization"
 
 class Authorization(credentials: String) : RequestHeader(AUTHORIZATION to credentials) {
 	constructor(username: String, password: String) : this(Credentials.basic(username, password))
