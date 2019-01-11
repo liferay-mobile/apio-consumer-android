@@ -28,15 +28,15 @@ import android.view.WindowManager
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.ApioConsumer
 import com.liferay.apio.consumer.authenticator.BasicAuthenticator
+import com.liferay.apio.consumer.configuration.Authorization
 import okhttp3.Credentials
-import okhttp3.HttpUrl
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-const val TEST_DOMAIN = "http://screens.liferay.org.es/o/api/p/"
+const val TEST_DOMAIN = "http://screens.liferay.org.es/o/api/p"
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -70,20 +70,17 @@ class BlogPostingListTest {
 
 	@Test
 	fun requestABlogFilteredByGroupId() {
+		val thingId = "$TEST_DOMAIN/groups/57459/blogs"
 
-		val url = HttpUrl.parse("http://screens.liferay.org.es/o/api/p/groups/57459/blogs")
+		val apioConsumer = ApioConsumer(Authorization(credentials))
 
-		url?.let {
-			val apioConsumer = ApioConsumer(BasicAuthenticator(credentials))
-
-			apioConsumer.fetch(url) { result ->
-				result.fold({ thing ->
-					Assert.assertNotNull(thing)
-					Assert.assertEquals(TEST_DOMAIN + "groups/57459/blogs", thing.id)
-				}, { _ ->
-					Assert.fail()
-				})
-			}
+		apioConsumer.fetchResource(thingId) { result ->
+			result.fold({ thing ->
+				Assert.assertNotNull(thing)
+				Assert.assertEquals("$TEST_DOMAIN/groups/57459/blogs", thing.id)
+			}, { _ ->
+				Assert.fail()
+			})
 		}
 	}
 

@@ -46,11 +46,9 @@ class ThingAdapter(collection: Collection, val listener: Listener) :
 			holder.thing = members[position]
 		} else {
 			nextPage?.let {
-				HttpUrl.parse(nextPage)
-			}?.also { httpUrl ->
-				ApioConsumer().fetch(httpUrl) { result ->
-					result.success {
-						convert<Collection>(it)?.let { collection ->
+				ApioConsumer().fetchResource(it) { result ->
+					result.success { thing ->
+						convert<Collection>(thing)?.let { collection ->
 							val moreMembers = collection.members
 							merge(members, moreMembers)
 							notifyDataSetChanged()

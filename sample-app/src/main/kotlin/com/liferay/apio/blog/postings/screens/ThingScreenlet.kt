@@ -18,6 +18,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import com.github.kittinunf.result.failure
+import com.github.kittinunf.result.success
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.delegates.observe
 import com.liferay.apio.blog.postings.extensions.inflate
@@ -33,8 +35,8 @@ import com.liferay.apio.blog.postings.screens.views.Detail
 import com.liferay.apio.blog.postings.screens.views.Row
 import com.liferay.apio.blog.postings.screens.views.Scenario
 import com.liferay.apio.consumer.ApioConsumer
-import com.liferay.apio.consumer.authenticator.BasicAuthenticator
-import okhttp3.HttpUrl
+import com.liferay.apio.consumer.configuration.*
+import java.util.*
 
 open class BaseScreenlet @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
@@ -84,30 +86,28 @@ class ThingScreenlet @JvmOverloads constructor(
 	fun load(thingId: String, credentials: String? = null, scenario: Scenario? = null,
 		onComplete: ((ThingScreenlet) -> Unit)? = null) {
 
-		val authenticator = credentials?.let {
-			BasicAuthenticator(credentials)
-		}
+		val apioConsumer = ApioConsumer(
+			AcceptLanguage(Locale.getDefault()),
+			credentials?.let { Authorization(credentials) }
+		)
 
-		val apioConsumer = ApioConsumer(authenticator)
+		apioConsumer.fetchResource(thingId) { result ->
+			result.success {
+				if (scenario != null) {
+					this.scenario = scenario
+				}
 
-		HttpUrl.parse(thingId)?.let {
-			apioConsumer.fetch(it) { result ->
-				result.fold({
-					if (scenario != null) {
-						this.scenario = scenario
-					}
+				this.thing = it
 
-					this.thing = it
+				onComplete?.invoke(this)
+			}
 
-					onComplete?.invoke(this)
-				}, {
-					baseView?.showError(it.message)
+			result.failure {
+				baseView?.showError(it.message)
 
-					onComplete?.invoke(this)
-				})
+				onComplete?.invoke(this)
 			}
 		}
-
 	}
 
 	private fun getLayoutIdFor(thing: Thing?): Int? {
