@@ -20,10 +20,7 @@ import com.liferay.apio.consumer.exception.InvalidRequestUrlException
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.request.*
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.*
 import okhttp3.HttpUrl
 
 /**
@@ -38,8 +35,8 @@ class ApioConsumer constructor(vararg defaultHeaders: RequestHeader?) {
 	fun fetchResource(thingId: String, configs: RequestConfiguration = RequestConfiguration(),
 		onComplete: (Result<Thing, Exception>) -> Unit) {
 
-		launch(UI) {
-			withContext(CommonPool) {
+		GlobalScope.launch(Dispatchers.Main) {
+			withContext(Dispatchers.IO) {
 				try {
 					val headers = defaultHeaders.merge(configs.headers)
 					val url = HttpUrl.parse(thingId) ?: throw InvalidRequestUrlException()
@@ -57,8 +54,8 @@ class ApioConsumer constructor(vararg defaultHeaders: RequestHeader?) {
 		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
 		onComplete: (Result<Thing, Exception>) -> Unit) {
 
-		launch(UI) {
-			withContext(CommonPool) {
+		GlobalScope.launch(Dispatchers.Main) {
+			withContext(Dispatchers.IO) {
 				try {
 					val headers = defaultHeaders.merge(configs.headers)
 
@@ -71,8 +68,8 @@ class ApioConsumer constructor(vararg defaultHeaders: RequestHeader?) {
 	}
 
 	internal fun requestProperties(operationId: String, onComplete: (Result<List<Property>, Exception>) -> Unit) {
-		launch(UI) {
-			withContext(CommonPool) {
+		GlobalScope.launch(Dispatchers.Main) {
+			withContext(Dispatchers.IO) {
 				try {
 					Result.of(RequestExecutor.requestProperties(operationId))
 				} catch (e: Exception) {
