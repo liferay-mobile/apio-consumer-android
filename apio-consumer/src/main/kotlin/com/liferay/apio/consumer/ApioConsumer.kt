@@ -15,11 +15,11 @@
 package com.liferay.apio.consumer
 
 import com.github.kittinunf.result.Result
-import com.liferay.apio.consumer.authenticator.ApioAuthenticator
+import com.liferay.apio.consumer.configuration.*
+import com.liferay.apio.consumer.exception.InvalidRequestUrlException
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.request.RequestAuthorization
-import com.liferay.apio.consumer.request.RequestExecutor
+import com.liferay.apio.consumer.request.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -30,23 +30,21 @@ import okhttp3.HttpUrl
  * @author Javier Gamarra
  * @author Paulo Cruz
  */
-class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? = null) {
+class ApioConsumer constructor(vararg defaultHeaders: RequestHeader?) {
 
-	init {
-		RequestAuthorization.authenticator = authenticator
-	}
+	private val defaultHeaders = defaultHeaders.filterNotNull()
 
 	@JvmOverloads
-	fun fetch(url: HttpUrl, authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
-		fields: Map<String, List<String>> = emptyMap(), embedded: List<String> = emptyList(),
-		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
-
-		setAuthenticator(authenticator)
+	fun fetchResource(thingId: String, configs: RequestConfiguration = RequestConfiguration(),
+		onComplete: (Result<Thing, Exception>) -> Unit) {
 
 		launch(UI) {
 			withContext(CommonPool) {
 				try {
-					Result.of(RequestExecutor.requestThing(url, fields, embedded))
+					val headers = defaultHeaders.merge(configs.headers)
+					val url = HttpUrl.parse(thingId) ?: throw InvalidRequestUrlException()
+
+					Result.of(RequestExecutor.requestThing(url, configs.fields, configs.embedded, headers))
 				} catch (e: Exception) {
 					Result.error(e)
 				}
@@ -55,17 +53,16 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 	}
 
 	@JvmOverloads
-	fun performOperation(thingId: String, operationId: String,
-		authenticator: ApioAuthenticator? = RequestAuthorization.authenticator,
+	fun performOperation(thingId: String, operationId: String, configs: RequestConfiguration = RequestConfiguration(),
 		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
-		onComplete: (Result<Thing, Exception>) -> Unit = emptyOnComplete()) {
-
-		setAuthenticator(authenticator)
+		onComplete: (Result<Thing, Exception>) -> Unit) {
 
 		launch(UI) {
 			withContext(CommonPool) {
 				try {
-					Result.of(RequestExecutor.performOperation(thingId, operationId, fillFields))
+					val headers = defaultHeaders.merge(configs.headers)
+
+					Result.of(RequestExecutor.performOperation(thingId, operationId, headers, fillFields))
 				} catch (e: Exception) {
 					Result.error(e)
 				}
@@ -73,15 +70,11 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 		}
 	}
 
-	fun setAuthenticator(authenticator: ApioAuthenticator? = null) {
-		RequestAuthorization.authenticator = authenticator
-	}
-
-	internal fun requestProperties(url: String, onComplete: (Result<List<Property>, Exception>) -> Unit) {
+	internal fun requestProperties(operationId: String, onComplete: (Result<List<Property>, Exception>) -> Unit) {
 		launch(UI) {
 			withContext(CommonPool) {
 				try {
-					Result.of(RequestExecutor.requestProperties(url))
+					Result.of(RequestExecutor.requestProperties(operationId))
 				} catch (e: Exception) {
 					Result.error(e)
 				}
@@ -89,6 +82,5 @@ class ApioConsumer @JvmOverloads constructor(authenticator: ApioAuthenticator? =
 		}
 	}
 
-	private fun emptyOnComplete() = { _: Result<Thing, Exception> -> }
 	private fun emptyFillFields() = { _: List<Property> -> emptyMap<String, Any>() }
 }

@@ -24,10 +24,7 @@ import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.parser.ThingParser
 import com.liferay.apio.consumer.util.RequestUtil
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import okhttp3.internal.http.HttpMethod
 import java.io.IOException
 
@@ -40,7 +37,7 @@ internal class RequestExecutor {
 		@Throws(ApioException::class, CantParseToThingException::class, InvalidRequestUrlException::class,
 			IOException::class, JsonSyntaxException::class, RequestFailedException::class,
 			ThingNotFoundException::class, ThingWithoutOperationException::class)
-		fun performOperation(thingId: String, operationId: String,
+		fun performOperation(thingId: String, operationId: String, headers: Map<String, String>,
 			fillFields: (List<Property>) -> Map<String, Any> = { emptyMap() }): Thing {
 
 			val thing = ThingsCache[thingId]?.value
@@ -62,16 +59,19 @@ internal class RequestExecutor {
 				attributes = fillFields(form.properties)
 			}
 
-			val response = requestOperation(operation.target, operation.method, attributes)
+			val response = requestOperation(operation.method, operation.target, Headers.of(headers), attributes)
 
 			return checkResponseStatus(response)
 		}
 
 		@Throws(ApioException::class, CantParseToThingException::class, IOException::class, JsonSyntaxException::class,
 			RequestFailedException::class, ThingNotFoundException::class)
-		fun requestThing(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>): Thing {
+		fun requestThing(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>,
+			headers: Map<String, String> = emptyMap()): Thing {
+
 			val httpUrl = RequestUtil.createUrl(url, fields, embedded)
-			val response = request(httpUrl)
+
+			val response = request(httpUrl, Headers.of(headers))
 
 			return checkResponseStatus(response)
 		}
@@ -116,15 +116,15 @@ internal class RequestExecutor {
 		}
 
 		@Throws(IOException::class)
-		private fun request(httpUrl: HttpUrl): Response {
-			val request = RequestUtil.createRequest(httpUrl, authenticator = RequestAuthorization.authenticator)
+		private fun request(httpUrl: HttpUrl, headers: Headers = Headers.of()): Response {
+			val request = RequestUtil.createRequest(httpUrl, headers)
 
 			return execute(request)
 		}
 
 		@Throws(IOException::class, InvalidRequestUrlException::class)
-		private fun requestOperation(url: String, method: String, attributes: Map<String, Any> = emptyMap())
-			: Response {
+		private fun requestOperation(method: String, url: String, headers: Headers = Headers.of(),
+			attributes: Map<String, Any> = emptyMap()): Response {
 
 			val requestBody = attributes.let {
 				if (attributes.isEmpty() && !HttpMethod.permitsRequestBody(method)) {
@@ -137,7 +137,7 @@ internal class RequestExecutor {
 			val httpUrl = HttpUrl.parse(url) ?: throw InvalidRequestUrlException()
 
 			val request =
-				RequestUtil.createRequest(httpUrl, method, requestBody, RequestAuthorization.authenticator)
+				RequestUtil.createRequest(httpUrl, headers, method, requestBody)
 
 			return RequestExecutor.execute(request)
 		}
