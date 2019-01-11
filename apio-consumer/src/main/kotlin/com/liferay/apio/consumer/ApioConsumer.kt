@@ -27,9 +27,9 @@ import okhttp3.HttpUrl
  * @author Javier Gamarra
  * @author Paulo Cruz
  */
-class ApioConsumer constructor(vararg defaultHeaders: RequestHeader?) {
+class ApioConsumer constructor(val defaultHeaders: List<RequestHeader>) {
 
-	private val defaultHeaders = defaultHeaders.filterNotNull()
+	constructor(vararg defaultHeaders: RequestHeader?) : this(defaultHeaders.filterNotNull())
 
 	@JvmOverloads
 	fun fetchResource(thingId: String, configs: RequestConfiguration = RequestConfiguration(),

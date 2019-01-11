@@ -20,7 +20,7 @@ import java.util.*
 /**
  * @author Paulo Cruz
  */
-const val ACCEPT_LANGUAGE = "Accept-Language"
+private const val ACCEPT_LANGUAGE = "Accept-Language"
 
 class AcceptLanguage(language: String) : RequestHeader(ACCEPT_LANGUAGE to language) {
 	constructor(locale: Locale) : this(locale.toW3cLanguageId())
