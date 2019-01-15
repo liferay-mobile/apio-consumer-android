@@ -52,15 +52,15 @@ class ThingParser {
 
 		@JvmStatic
 		@Throws(JsonSyntaxException::class)
-		fun stringToJsonMap(json: String): Map<String, Any> {
-			return gson.fromJson<Map<String, Any>>(json, mapType)
+		fun stringToJsonMap(json: String): Map<String, Any>? {
+			return gson.fromJson(json, mapType)
 		}
 
 		@Throws(JsonParseException::class, JsonSyntaxException::class)
 		internal fun parse(json: String): Pair<Thing, Map<String, Thing?>>? {
-			val jsonObject = stringToJsonMap(json)
-
-			return flatten(jsonObject, null)
+			return stringToJsonMap(json)?.let {
+				flatten(it, null)
+			}
 		}
 
 		private fun contextFrom(jsonObject: List<Any>?, parentContext: Context?): Context? {
