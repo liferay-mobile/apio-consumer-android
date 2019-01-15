@@ -25,15 +25,23 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.WindowManager
+import com.github.kittinunf.result.Result
+import com.github.kittinunf.result.failure
+import com.github.kittinunf.result.success
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.ApioConsumer
 import com.liferay.apio.consumer.configuration.Authorization
+import com.liferay.apio.consumer.model.Thing
+import kotlinx.coroutines.*
 import okhttp3.Credentials
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Exception
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 const val TEST_DOMAIN = "http://screens.liferay.org.es/o/api/p"
 
@@ -49,19 +57,19 @@ class BlogPostingListTest {
 
 	@Before
 	fun unlockScreen() {
-		val activity = activityRule.getActivity()
+		val activity = activityRule.activity
 		val wakeUpDevice = Runnable {
-			activity.getWindow().addFlags(
+			activity.window.addFlags(
 				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
 					WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
 					WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 		}
+
 		activity.runOnUiThread(wakeUpDevice)
 	}
 
 	@Test
 	fun appRendersLayoutTest() {
-
 		val view = withId(R.id.thing_screenlet_activity)
 
 		onView(view).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -69,28 +77,34 @@ class BlogPostingListTest {
 
 	@Test
 	fun requestABlogFilteredByGroupId() {
-		val thingId = "$TEST_DOMAIN/groups/57459/blogs"
+		runBlocking {
+			val result = getBlogPostingList()
 
-		val apioConsumer = ApioConsumer(Authorization(credentials))
-
-		apioConsumer.fetchResource(thingId) { result ->
-			result.fold({ thing ->
+			result.success { thing ->
 				Assert.assertNotNull(thing)
 				Assert.assertEquals("$TEST_DOMAIN/groups/57459/blogs", thing.id)
-			}, { _ ->
-				Assert.fail()
-			})
+			}
+
+			result.failure {
+				Assert.fail(it.message)
+			}
 		}
 	}
 
 	//	@Test
 	fun thingScreenletRenderingBlogsShowsResultsWithTextTest() {
-
 		appRendersLayoutTest()
 
 		onView(withId(R.id.headline))
 			.check(matches(isDisplayed()))
 			.check(matches(withText("My Title")))
+	}
+
+	private suspend fun getBlogPostingList(): Result<Thing, Exception> = suspendCoroutine { block ->
+		val thingId = "$TEST_DOMAIN/groups/57459/blogs"
+		val apioConsumer = ApioConsumer(Authorization(credentials))
+
+		apioConsumer.fetchResource(thingId) { block.resume(it) }
 	}
 
 }
