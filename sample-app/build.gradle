@@ -42,6 +42,8 @@ dependencies {
     implementation libraries.anko_commons
 
     implementation libraries.kotlin
+    implementation libraries.coroutines_core
+    implementation libraries.coroutines_android
 
     implementation libraries.circle_image_view
     implementation libraries.picasso
