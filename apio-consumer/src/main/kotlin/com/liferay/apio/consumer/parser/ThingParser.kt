@@ -194,9 +194,7 @@ class ThingParser {
 				val expects = it["expects"] as? String
 				val type = parseType(it["@type"])
 
-				val form = expects?.let { OperationForm(it) }
-
-				id to Operation(id, target, type, method, form)
+				id to Operation(id, target, method, type, expects)
 			}.toMap().toMutableMap()
 		}
 	}
