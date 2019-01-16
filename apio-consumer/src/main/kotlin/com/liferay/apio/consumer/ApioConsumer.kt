@@ -18,6 +18,7 @@ import com.github.kittinunf.result.Result
 import com.liferay.apio.consumer.configuration.*
 import com.liferay.apio.consumer.exception.InvalidRequestUrlException
 import com.liferay.apio.consumer.extensions.asHttpUrl
+import com.liferay.apio.consumer.model.OperationForm
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.request.*
@@ -51,6 +52,28 @@ class ApioConsumer constructor(val defaultHeaders: List<RequestHeader>) {
 	}
 
 	@JvmOverloads
+	fun getOperationForm(operationExpects: String, configs: RequestConfiguration = RequestConfiguration(),
+		onComplete: (Result<List<Property>, Exception>) -> Unit) {
+
+		GlobalScope.launch(Dispatchers.Main) {
+			withContext(Dispatchers.IO) {
+				try {
+					val headers = defaultHeaders.merge(configs.headers)
+					val url = operationExpects.asHttpUrl()
+
+					val operationForm = RequestExecutor.requestThing(url, headers = headers).let {
+						OperationForm.converter(it)
+					}
+
+					Result.of(operationForm.properties)
+				} catch (e: Exception) {
+					Result.error(e)
+				}
+			}.also(onComplete)
+		}
+	}
+
+	@JvmOverloads
 	fun performOperation(thingId: String, operationId: String, configs: RequestConfiguration = RequestConfiguration(),
 		fillFields: (List<Property>) -> Map<String, Any> = emptyFillFields(),
 		onComplete: (Result<Thing, Exception>) -> Unit) {
@@ -61,18 +84,6 @@ class ApioConsumer constructor(val defaultHeaders: List<RequestHeader>) {
 					val headers = defaultHeaders.merge(configs.headers)
 
 					Result.of(RequestExecutor.performOperation(thingId, operationId, headers, fillFields))
-				} catch (e: Exception) {
-					Result.error(e)
-				}
-			}.also(onComplete)
-		}
-	}
-
-	internal fun requestProperties(operationId: String, onComplete: (Result<List<Property>, Exception>) -> Unit) {
-		GlobalScope.launch(Dispatchers.Main) {
-			withContext(Dispatchers.IO) {
-				try {
-					Result.of(RequestExecutor.requestProperties(operationId))
 				} catch (e: Exception) {
 					Result.error(e)
 				}
