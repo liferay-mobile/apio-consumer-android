@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken
 import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.exception.CantParseToThingException
 import com.liferay.apio.consumer.cache.ThingsCache
+import com.liferay.apio.consumer.extensions.asJsonMap
 import com.liferay.apio.consumer.model.*
 import okhttp3.Response
 
@@ -30,9 +31,6 @@ import okhttp3.Response
 class ThingParser {
 
 	companion object {
-		private val gson = Gson()
-		private val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
-
 		@JvmStatic
 		@Throws(CantParseToThingException::class, JsonSyntaxException::class)
 		fun parse(response: Response): Thing {
@@ -50,15 +48,9 @@ class ThingParser {
 				?: listOf()
 		}
 
-		@JvmStatic
-		@Throws(JsonSyntaxException::class)
-		fun stringToJsonMap(json: String): Map<String, Any>? {
-			return gson.fromJson(json, mapType)
-		}
-
 		@Throws(JsonParseException::class, JsonSyntaxException::class)
-		internal fun parse(json: String): Pair<Thing, Map<String, Thing?>>? {
-			return stringToJsonMap(json)?.let {
+		internal fun parse(jsonString: String): Pair<Thing, Map<String, Thing?>>? {
+			return jsonString.asJsonMap()?.let {
 				flatten(it, null)
 			}
 		}

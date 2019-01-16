@@ -17,6 +17,7 @@ package com.liferay.apio.consumer
 import com.github.kittinunf.result.Result
 import com.liferay.apio.consumer.configuration.*
 import com.liferay.apio.consumer.exception.InvalidRequestUrlException
+import com.liferay.apio.consumer.extensions.asHttpUrl
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.request.*
@@ -39,7 +40,7 @@ class ApioConsumer constructor(val defaultHeaders: List<RequestHeader>) {
 			withContext(Dispatchers.IO) {
 				try {
 					val headers = defaultHeaders.merge(configs.headers)
-					val url = HttpUrl.parse(thingId) ?: throw InvalidRequestUrlException()
+					val url = thingId.asHttpUrl()
 
 					Result.of(RequestExecutor.requestThing(url, configs.fields, configs.embedded, headers))
 				} catch (e: Exception) {
