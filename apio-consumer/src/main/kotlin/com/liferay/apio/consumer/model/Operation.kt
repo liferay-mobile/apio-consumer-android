@@ -15,11 +15,12 @@
 package com.liferay.apio.consumer.model
 
 import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 /**
  * @author Javier Gamarra
  */
 @Parcelize
-data class Operation(val id: String, val target: String, val type: ThingType, val method: String,
-	var form: OperationForm?) : Parcelable
+data class Operation(val id: String, val target: String, val method: String, val type: ThingType,
+	val expects: String?, var form: OperationForm? = null) : Parcelable
