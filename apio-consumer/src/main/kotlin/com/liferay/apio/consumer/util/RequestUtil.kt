@@ -18,6 +18,7 @@ import com.google.gson.Gson
 import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.exception.RequestFailedException
 import com.liferay.apio.consumer.exception.ThingNotFoundException
+import com.liferay.apio.consumer.extensions.asJsonMap
 import com.liferay.apio.consumer.parser.ThingParser
 import okhttp3.*
 import java.io.ByteArrayOutputStream
@@ -85,7 +86,7 @@ internal class RequestUtil {
 
 		fun getResponseException(response: Response): Exception {
 			return response.body()?.string()?.let {
-				ThingParser.stringToJsonMap(it)
+				it.asJsonMap()
 			}?.let {
 				RequestFailedException(
 					(it["statusCode"] as Number).toInt(),

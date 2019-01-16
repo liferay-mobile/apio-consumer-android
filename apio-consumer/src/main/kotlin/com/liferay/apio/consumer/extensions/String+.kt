@@ -14,6 +14,11 @@
 
 package com.liferay.apio.consumer.extensions
 
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
+import com.liferay.apio.consumer.exception.InvalidRequestUrlException
+import okhttp3.HttpUrl
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,3 +29,11 @@ fun String.asDate(format: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:m
 	} catch (parseException: ParseException) {
 		null
 	}
+
+fun String.asHttpUrl(): HttpUrl = HttpUrl.parse(this) ?: throw InvalidRequestUrlException()
+
+private val gson = Gson()
+private val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
+
+@Throws(JsonSyntaxException::class)
+fun String.asJsonMap(): Map<String, Any>? = gson.fromJson(this, mapType)
