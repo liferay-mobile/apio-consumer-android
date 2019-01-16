@@ -18,28 +18,25 @@ import android.os.Parcelable
 import com.github.kittinunf.result.Result
 import com.github.kittinunf.result.success
 import com.liferay.apio.consumer.ApioConsumer
+import com.liferay.apio.consumer.parser.ThingParser
 import kotlinx.android.parcel.Parcelize
 
 /**
  * @author Javier Gamarra
  */
 @Parcelize
-data class OperationForm(val id: String, var properties: List<Property> = listOf()) : Parcelable {
+data class OperationForm(val id: String, val title: String, val description: String?, val properties: List<Property>)
+    : Parcelable {
 
-	fun getFormProperties(onSuccess: (List<Property>) -> Unit, onError: (Exception) -> Unit) {
-		getFormProperties {
-			it.fold(onSuccess, onError)
-		}
-	}
+    companion object {
+        val converter: (Thing) -> OperationForm = { it: Thing ->
+            val title = it["title"] as String
+            val description = it["description"] as? String
+            val supportedProperty = it["supportedProperty"] as List<Map<String, Any>>
 
-	fun getFormProperties(onComplete: (Result<List<Property>, Exception>) -> Unit) {
-		ApioConsumer().requestProperties(id) {
-			it.success { properties ->
-				this.properties = properties
-			}
+            val properties = supportedProperty.map { Property.converter(it) }
 
-			onComplete(it)
-		}
-	}
-
+            OperationForm(it.id, title, description, properties)
+        }
+    }
 }

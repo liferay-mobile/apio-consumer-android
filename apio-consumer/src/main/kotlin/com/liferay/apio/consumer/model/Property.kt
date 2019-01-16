@@ -15,10 +15,21 @@
 package com.liferay.apio.consumer.model
 
 import android.os.Parcelable
+import com.liferay.apio.consumer.parser.ThingParser
 import kotlinx.android.parcel.Parcelize
 
 /**
  * @author Javier Gamarra
  */
 @Parcelize
-data class Property(val type: ThingType, val name: String, val required: Boolean) : Parcelable
+data class Property(val type: ThingType, val name: String, val required: Boolean) : Parcelable {
+
+    companion object {
+        val converter: (Map<String, Any>) -> Property = { it: Map<String, Any> ->
+            val type = ThingParser.parseType(it["@type"])
+            val name = it["property"] as String
+            val required = it["required"] as Boolean
+            Property(type, name, required)
+        }
+    }
+}
