@@ -20,6 +20,8 @@ import com.google.gson.reflect.TypeToken
 import com.liferay.apio.consumer.cache.ThingsCache
 import com.liferay.apio.consumer.cache.ThingsCache.get
 import com.liferay.apio.consumer.exception.*
+import com.liferay.apio.consumer.extensions.asHttpUrl
+import com.liferay.apio.consumer.model.OperationForm
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.parser.ThingParser
@@ -46,18 +48,15 @@ internal class RequestExecutor {
 			val operation = thing.operations[operationId]
 				?: throw ThingWithoutOperationException(thingId, operationId)
 
-			var attributes = emptyMap<String, Any>()
-
-			if (operation.form != null) {
-				val form = operation.form!!
-
-				if (form.properties.isEmpty()) {
-					form.properties = requestProperties(form.id, headers)
-					thing.operations[operationId] = operation
+			if (operation.expects != null && operation.form == null) {
+				operation.form = requestThing(operation.expects.asHttpUrl(), headers = headers).let {
+					OperationForm.converter(it)
 				}
-
-				attributes = fillFields(form.properties)
 			}
+
+			val attributes = operation.form?.let {
+				fillFields(it.properties)
+			} ?: emptyMap()
 
 			val response = requestOperation(operation.method, operation.target, Headers.of(headers), attributes)
 
@@ -66,36 +65,14 @@ internal class RequestExecutor {
 
 		@Throws(ApioException::class, CantParseToThingException::class, IOException::class, JsonSyntaxException::class,
 			RequestFailedException::class, ThingNotFoundException::class)
-		fun requestThing(url: HttpUrl, fields: Map<String, List<String>>, embedded: List<String>,
-			headers: Map<String, String> = emptyMap()): Thing {
+		fun requestThing(url: HttpUrl, fields: Map<String, List<String>> = emptyMap(),
+			embedded: List<String> = emptyList(), headers: Map<String, String> = emptyMap()): Thing {
 
 			val httpUrl = RequestUtil.createUrl(url, fields, embedded)
 
 			val response = request(httpUrl, Headers.of(headers))
 
 			return checkResponseStatus(response)
-		}
-
-		@Throws(IOException::class)
-		internal fun requestProperties(url: String, headers: Map<String, String> = emptyMap()): List<Property> {
-			val httpUrl = HttpUrl.parse(url) ?: throw InvalidRequestUrlException()
-
-			val response = request(httpUrl, Headers.of(headers))
-
-			val json = response.body()?.string()
-
-			val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, Any::class.java).type
-
-			val jsonObject = Gson().fromJson<Map<String, Any>>(json, mapType)
-
-			val supportedProperties = jsonObject["supportedProperty"] as List<Map<String, Any>>
-
-			return supportedProperties.map {
-				val type = ThingParser.parseType(it["@type"])
-				val name = it["property"] as String
-				val required = it["required"] as Boolean
-				Property(type, name, required)
-			}
 		}
 
 		@Throws(ApioException::class, JsonSyntaxException::class, RequestFailedException::class,
@@ -123,7 +100,7 @@ internal class RequestExecutor {
 		}
 
 		@Throws(IOException::class, InvalidRequestUrlException::class)
-		private fun requestOperation(method: String, url: String, headers: Headers = Headers.of(),
+		private fun requestOperation(method: String, target: String, headers: Headers = Headers.of(),
 			attributes: Map<String, Any> = emptyMap()): Response {
 
 			val requestBody = attributes.let {
@@ -134,10 +111,8 @@ internal class RequestExecutor {
 				}
 			}
 
-			val httpUrl = HttpUrl.parse(url) ?: throw InvalidRequestUrlException()
-
-			val request =
-				RequestUtil.createRequest(httpUrl, headers, method, requestBody)
+			val url = target.asHttpUrl()
+			val request = RequestUtil.createRequest(url, headers, method, requestBody)
 
 			return RequestExecutor.execute(request)
 		}
