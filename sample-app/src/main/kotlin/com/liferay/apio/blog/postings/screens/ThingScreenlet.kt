@@ -18,8 +18,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import com.github.kittinunf.result.failure
-import com.github.kittinunf.result.success
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.delegates.observe
 import com.liferay.apio.blog.postings.extensions.inflate
@@ -92,7 +90,7 @@ class ThingScreenlet @JvmOverloads constructor(
 		)
 
 		apioConsumer.fetchResource(thingId) { result ->
-			result.success {
+			result.onSuccess {
 				if (scenario != null) {
 					this.scenario = scenario
 				}
@@ -102,7 +100,7 @@ class ThingScreenlet @JvmOverloads constructor(
 				onComplete?.invoke(this)
 			}
 
-			result.failure {
+			result.onFailure {
 				baseView?.showError(it.message)
 
 				onComplete?.invoke(this)
