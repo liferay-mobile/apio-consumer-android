@@ -15,9 +15,6 @@
 package com.liferay.apio.consumer.model
 
 import android.os.Parcelable
-import com.github.kittinunf.result.Result
-import com.github.kittinunf.result.success
-import com.liferay.apio.consumer.ApioConsumer
 import com.liferay.apio.consumer.parser.ThingParser
 import kotlinx.android.parcel.Parcelize
 
