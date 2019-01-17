@@ -25,9 +25,6 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.WindowManager
-import com.github.kittinunf.result.Result
-import com.github.kittinunf.result.failure
-import com.github.kittinunf.result.success
 import com.liferay.apio.blog.postings.R
 import com.liferay.apio.consumer.ApioConsumer
 import com.liferay.apio.consumer.configuration.Authorization
@@ -39,11 +36,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Exception
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-const val TEST_DOMAIN = "http://screens.liferay.org.es/o/api/p"
+const val TEST_DOMAIN = "https://apiosample.wedeploy.io/p"
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -78,16 +74,10 @@ class BlogPostingListTest {
 	@Test
 	fun requestABlogFilteredByGroupId() {
 		runBlocking {
-			val result = getBlogPostingList()
+			val thing = getBlogPostingList()
 
-			result.success { thing ->
-				Assert.assertNotNull(thing)
-				Assert.assertEquals("$TEST_DOMAIN/groups/57459/blogs", thing.id)
-			}
-
-			result.failure {
-				Assert.fail(it.message)
-			}
+			Assert.assertNotNull(thing)
+			Assert.assertEquals("$TEST_DOMAIN/blog-postings", thing.id)
 		}
 	}
 
@@ -100,11 +90,13 @@ class BlogPostingListTest {
 			.check(matches(withText("My Title")))
 	}
 
-	private suspend fun getBlogPostingList(): Result<Thing, Exception> = suspendCoroutine { block ->
-		val thingId = "$TEST_DOMAIN/groups/57459/blogs"
+	private suspend fun getBlogPostingList(): Thing = suspendCoroutine { block ->
+		val thingId = "$TEST_DOMAIN/blog-postings"
 		val apioConsumer = ApioConsumer(Authorization(credentials))
 
-		apioConsumer.fetchResource(thingId) { block.resume(it) }
+		apioConsumer.fetchResource(thingId) {
+			block.resume(it.getOrThrow())
+		}
 	}
 
 }
