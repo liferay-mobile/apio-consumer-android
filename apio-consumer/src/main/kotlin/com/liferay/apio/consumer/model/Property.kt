@@ -22,14 +22,4 @@ import kotlinx.android.parcel.Parcelize
  * @author Javier Gamarra
  */
 @Parcelize
-data class Property(val type: ThingType, val name: String, val required: Boolean) : Parcelable {
-
-    companion object {
-        val converter: (Map<String, Any>) -> Property = { it: Map<String, Any> ->
-            val type = ThingParser.parseType(it["@type"])
-            val name = it["property"] as String
-            val required = it["required"] as Boolean
-            Property(type, name, required)
-        }
-    }
-}
+data class Property(val type: ThingType, val name: String, val required: Boolean) : Parcelable
