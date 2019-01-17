@@ -84,7 +84,6 @@ ext.libraries = [appCompat          : 'com.android.support:appcompat-v7:' + supp
                  exifinterface      : 'com.android.support:exifinterface:' + supportLibsVersion,
                  gson               : 'com.google.code.gson:gson:2.8.2',
                  okhttp             : 'com.squareup.okhttp3:okhttp:3.10.0',
-                 result             : 'com.github.kittinunf.result:result:1.3.0',
                  anko_commons       : 'org.jetbrains.anko:anko-commons:0.10.4',
                  picasso            : 'com.squareup.picasso:picasso:2.71828',
                  circle_image_view  : 'de.hdodenhof:circleimageview:2.2.0',

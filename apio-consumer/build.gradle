@@ -40,7 +40,6 @@ dependencies {
 	implementation libraries.gson
 	implementation libraries.okhttp
 
-	implementation libraries.result
 	implementation libraries.anko_commons
 
 	implementation libraries.kotlin
