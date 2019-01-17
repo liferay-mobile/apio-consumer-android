@@ -34,9 +34,17 @@ data class OperationForm(val id: String, val title: String, val description: Str
             val description = it["description"] as? String
             val supportedProperty = it["supportedProperty"] as List<Map<String, Any>>
 
-            val properties = supportedProperty.map { Property.converter(it) }
+            val properties = supportedProperty.map { getProperty(it) }
 
             OperationForm(it.id, title, description, properties)
+        }
+
+        private fun getProperty(propertyMap: Map<String, Any>): Property {
+            val type = ThingParser.parseType(propertyMap["@type"])
+            val name = propertyMap["property"] as String
+            val required = propertyMap["required"] as Boolean
+
+            return Property(type, name, required)
         }
     }
 }
