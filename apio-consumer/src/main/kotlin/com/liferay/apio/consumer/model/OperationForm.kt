@@ -23,25 +23,25 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class OperationForm(val id: String, val title: String, val description: String?, val properties: List<Property>)
-    : Parcelable {
+	: Parcelable {
 
-    companion object {
-        val converter: (Thing) -> OperationForm = { it: Thing ->
-            val title = it["title"] as String
-            val description = it["description"] as? String
-            val supportedProperty = it["supportedProperty"] as List<Map<String, Any>>
+	companion object {
+		val converter: (Thing) -> OperationForm = { it: Thing ->
+			val title = it["title"] as String
+			val description = it["description"] as? String
+			val supportedProperty = it["supportedProperty"] as List<Map<String, Any>>
 
-            val properties = supportedProperty.map { getProperty(it) }
+			val properties = supportedProperty.map { getProperty(it) }
 
-            OperationForm(it.id, title, description, properties)
-        }
+			OperationForm(it.id, title, description, properties)
+		}
 
-        private fun getProperty(propertyMap: Map<String, Any>): Property {
-            val type = ThingParser.parseType(propertyMap["@type"])
-            val name = propertyMap["property"] as String
-            val required = propertyMap["required"] as Boolean
+		private fun getProperty(propertyMap: Map<String, Any>): Property {
+			val type = ThingParser.parseType(propertyMap["@type"])
+			val name = propertyMap["property"] as String
+			val required = propertyMap["required"] as Boolean
 
-            return Property(type, name, required)
-        }
-    }
+			return Property(type, name, required)
+		}
+	}
 }

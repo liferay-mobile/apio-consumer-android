@@ -15,7 +15,6 @@
 package com.liferay.apio.consumer.model
 
 import android.os.Parcelable
-import com.liferay.apio.consumer.parser.ThingParser
 import kotlinx.android.parcel.Parcelize
 
 /**
