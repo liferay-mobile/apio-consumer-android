@@ -14,13 +14,18 @@
 
 package com.liferay.apio.consumer
 
-import com.liferay.apio.consumer.configuration.*
+import com.liferay.apio.consumer.configuration.RequestConfiguration
+import com.liferay.apio.consumer.configuration.RequestHeader
+import com.liferay.apio.consumer.configuration.merge
 import com.liferay.apio.consumer.extensions.asHttpUrl
 import com.liferay.apio.consumer.model.OperationForm
 import com.liferay.apio.consumer.model.Property
 import com.liferay.apio.consumer.model.Thing
-import com.liferay.apio.consumer.request.*
-import kotlinx.coroutines.*
+import com.liferay.apio.consumer.request.RequestExecutor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * @author Javier Gamarra

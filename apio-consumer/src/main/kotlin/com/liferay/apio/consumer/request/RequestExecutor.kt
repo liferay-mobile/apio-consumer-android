@@ -14,9 +14,7 @@
 
 package com.liferay.apio.consumer.request
 
-import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import com.liferay.apio.consumer.cache.ThingsCache
 import com.liferay.apio.consumer.cache.ThingsCache.get
 import com.liferay.apio.consumer.exception.*

@@ -14,13 +14,11 @@
 
 package com.liferay.apio.consumer.parser
 
-import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
+import com.liferay.apio.consumer.cache.ThingsCache
 import com.liferay.apio.consumer.exception.ApioException
 import com.liferay.apio.consumer.exception.CantParseToThingException
-import com.liferay.apio.consumer.cache.ThingsCache
 import com.liferay.apio.consumer.extensions.asJsonMap
 import com.liferay.apio.consumer.model.*
 import okhttp3.Response
