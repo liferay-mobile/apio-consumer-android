@@ -3,3 +3,5 @@ rootProject.name='apio-consumer-android'
 include ':apio-consumer'
 
 include ':sample-app'
+
+enableFeaturePreview('STABLE_PUBLISHING')
