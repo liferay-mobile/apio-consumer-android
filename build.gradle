@@ -49,7 +49,7 @@ task clean(type: Delete) {
 
 ext {
 	minSdkVersion = 15
-	compileSdkVersion = 27
+	compileSdkVersion = 28
 	targetSdkVersion = compileSdkVersion
 	buildToolsVersion = '28.0.3'
 
@@ -75,7 +75,7 @@ ext {
 	allLicenses = ['LGPL-2.1']
 }
 
-def supportLibsVersion = '27.1.1'
+def supportLibsVersion = '28.0.0'
 
 ext.libraries = [appCompat          : 'com.android.support:appcompat-v7:' + supportLibsVersion,
                  recyclerView       : 'com.android.support:recyclerview-v7:' + supportLibsVersion,
